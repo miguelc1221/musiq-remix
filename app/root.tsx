@@ -1,12 +1,18 @@
-import type { MetaFunction, LinksFunction } from "@remix-run/node";
+import type { ReactNode } from "react";
+import type {
+  MetaFunction,
+  ErrorBoundaryComponent,
+  LinksFunction,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
   Meta,
-  Outlet,
   Scripts,
   ScrollRestoration,
+  Outlet,
 } from "@remix-run/react";
+import Layout from "./components/layout/layout";
 import styles from "./tailwind.css";
 
 export const meta: MetaFunction = () => ({
@@ -17,7 +23,7 @@ export const meta: MetaFunction = () => ({
 
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
-export default function App() {
+const Document = ({ children }: { children?: ReactNode }) => {
   return (
     <html lang="en">
       <head>
@@ -25,11 +31,37 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        {children}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
       </body>
     </html>
+  );
+};
+
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  console.log(error);
+  return (
+    <Document>
+      <Layout>
+        <section className="p-6">
+          <div className="relative mx-auto w-full max-w-7xl items-center px-5 py-12 md:px-12 lg:px-24">
+            <h1>There was an Error</h1>
+            <p>{error.message}</p>
+          </div>
+        </section>
+      </Layout>
+    </Document>
+  );
+};
+
+export default function App() {
+  return (
+    <Document>
+      <Layout>
+        <Outlet />
+      </Layout>
+    </Document>
   );
 }

@@ -1,10 +1,16 @@
 import type { ReactNode } from "react";
 import { Link } from "@remix-run/react";
-import { AppleLogo } from "../../appleLogo";
+import { AppleLogo, SquaresIcon, UserCircleIcon } from "../icons";
 
-export default function Layout({ children }: { children?: ReactNode }) {
+export default function Layout({
+  musicKit,
+  children,
+}: {
+  musicKit?: MusicKit.MusicKitInstance;
+  children?: ReactNode;
+}) {
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <aside className="sticky top-0 h-screen min-w-[250px] border-r-2">
         <nav>
           <ul className="flex flex-col">
@@ -17,22 +23,28 @@ export default function Layout({ children }: { children?: ReactNode }) {
               </h1>
             </li>
             <li className="hover:bg-slate-100">
-              <Link to="/" className="block w-full py-3 px-6">
-                Browse
+              <Link to="/" className="flex w-full py-3 px-6">
+                <SquaresIcon /> <span className="ml-2">Browse</span>
               </Link>
             </li>
             <li className="hover:bg-slate-100">
-              <span className="block w-full py-3 px-6">Login</span>
+              <span
+                className="flex w-full cursor-pointer py-3 px-6"
+                onClick={() => {
+                  console.log(musicKit, "musickit on login click");
+                  // return musicKit?.musicKit?.getInstance()?.authorize();
+                }}
+              >
+                <UserCircleIcon /> <span className="ml-2">Login</span>
+              </span>
             </li>
           </ul>
         </nav>
       </aside>
-      <main className="flex-1">
-        <div className="min-h-[calc(100%_-_55px)]">{children}</div>
-        <div className="sticky bottom-0 h-[55px] bg-slate-100">
-          <span>Audio Control</span>
-        </div>
-      </main>
+      <div className="z-[1] h-auto w-full overflow-auto bg-slate-50 pb-[55px]">
+        <main className="mx-10 h-full flex-1">{children}</main>
+        <div className="fixed bottom-0 h-[55px] w-full bg-gray-100"></div>
+      </div>
     </div>
   );
 }

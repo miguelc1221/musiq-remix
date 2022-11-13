@@ -3,6 +3,7 @@ import type {
   MetaFunction,
   ErrorBoundaryComponent,
   LinksFunction,
+  LoaderFunction,
 } from "@remix-run/node";
 import {
   Links,
@@ -14,6 +15,12 @@ import {
 } from "@remix-run/react";
 import Layout from "./components/layout/layout";
 import styles from "./tailwind.css";
+import { useEffect, useRef } from "react";
+import { useLoaderData } from "@remix-run/react";
+import { json } from "@remix-run/node"; // or cloudflare/deno
+import { developerToken } from "./server/developerToken.server";
+
+import rccss from "react-multi-carousel/lib/styles.css";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -21,18 +28,25 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
-export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: styles },
+  { rel: "stylesheet", href: rccss },
+];
 
 const Document = ({ children }: { children?: ReactNode }) => {
   return (
-    <html lang="en">
+    <html lang="en" className="text-slate-700">
       <head>
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="overflow-hidden">
         {children}
         <ScrollRestoration />
+        <script
+          src="https://js-cdn.music.apple.com/musickit/v3/musickit.js"
+          async
+        ></script>
         <Scripts />
         <LiveReload />
       </body>
@@ -56,12 +70,45 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   );
 };
 
+export const loader: LoaderFunction = async () => {
+  return json(developerToken);
+};
+
+export type ContextType = {
+  musicKit?: MusicKit.MusicKitInstance;
+};
+
 export default function App() {
+  const devToken = useLoaderData();
+  const musicKitContext = useRef<ContextType>({});
+
+  useEffect(() => {
+    const configureMusicKit = async () => {
+      try {
+        // Add Muskit onLoad eventListener
+        const music = await window.MusicKit.configure({
+          developerToken: devToken,
+          app: {
+            name: "musiqremix",
+            build: "1.0.0",
+          },
+        });
+
+        musicKitContext.current.musicKit = music;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    configureMusicKit();
+  }, [devToken]);
+
   return (
     <Document>
-      <Layout>
-        <Outlet />
+      <Layout musicKit={musicKitContext.current.musicKit}>
+        <Outlet context={musicKitContext.current.musicKit} />
       </Layout>
     </Document>
   );
 }
+

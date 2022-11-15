@@ -6,7 +6,9 @@
   .albumCard {
     @apply cursor-pointer
   }
+
   .albumCard:hover div:first-child > div {
     @apply opacity-50
   }
+
 }

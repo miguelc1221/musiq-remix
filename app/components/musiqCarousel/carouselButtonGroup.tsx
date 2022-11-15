@@ -11,14 +11,14 @@ export const ButtonGroup = ({
       <button
         className={`${
           carouselState?.currentSlide === 0 && "hidden"
-        } absolute top-1/2 -translate-y-1/2 -translate-x-1/2`}
+        } absolute top-0 -ml-[20px] h-full pb-[68px]`}
         onClick={() => previous && previous()}
       >
         <CheveronLeftIcon />
       </button>
       <button
         onClick={() => next && next()}
-        className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2"
+        className="absolute top-0 right-0 -mr-[20px] h-full pb-[68px]"
       >
         <CheveronRightIcon />
       </button>

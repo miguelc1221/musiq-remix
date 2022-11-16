@@ -8,20 +8,26 @@ export const ButtonGroup = ({
 }: ButtonGroupProps) => {
   return (
     <>
-      <button
+      <div
         className={`${
           carouselState?.currentSlide === 0 && "hidden"
-        } absolute top-0 -ml-[20px] h-full pb-[68px]`}
-        onClick={() => previous && previous()}
+        } absolute top-0 -ml-[25px] flex h-full items-center pb-[68px]`}
       >
-        <CheveronLeftIcon />
-      </button>
-      <button
-        onClick={() => next && next()}
-        className="absolute top-0 right-0 -mr-[20px] h-full pb-[68px]"
-      >
-        <CheveronRightIcon />
-      </button>
+        <button
+          onClick={() => previous && previous()}
+          className="hover:text-secondaryColor"
+        >
+          <CheveronLeftIcon />
+        </button>
+      </div>
+      <div className="absolute top-0 right-0 -mr-[25px] flex h-full items-center pb-[68px]">
+        <button
+          onClick={() => next && next()}
+          className="hover:text-secondaryColor"
+        >
+          <CheveronRightIcon />
+        </button>
+      </div>
     </>
   );
 };

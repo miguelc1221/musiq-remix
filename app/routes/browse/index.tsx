@@ -4,6 +4,10 @@ import { formatArtworkURL } from "~/utils/helpers";
 import { getCharts } from "~/server/musicKit.server";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
 import { CheveronRightIcon } from "~/components/icons";
+import { AlbumCard } from "~/components/albumCard/albumCard";
+import { SongItem } from "~/components/songItem/SongItem";
+
+import getChunk from "lodash.chunk";
 
 export const loader: LoaderFunction = async () => {
   try {
@@ -22,7 +26,7 @@ export default function BrowseIndex() {
   console.log(songs, "songs");
   return (
     <>
-      <h1 className="border-b border-slate-200 pt-6 pb-6 text-3xl font-bold">
+      <h1 className="border-b border-slate-200 pb-6 text-3xl font-bold">
         Browse
       </h1>
       <h2 className="my-4 pl-4 text-xl font-bold">
@@ -39,26 +43,12 @@ export default function BrowseIndex() {
       <MusiqCarousel>
         {albums[0].data.map((album: any, index: any) => {
           return (
-            <div key={index} className="albumCard mb-4 max-w-xs">
-              <div className="overflow-hidden rounded-md bg-cover bg-no-repeat drop-shadow-md">
-                <img
-                  src={formatArtworkURL(album?.attributes?.artwork?.url)}
-                  className="w-full rounded-md"
-                  alt={album.attributes.name}
-                />
-                <div className="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden rounded-md bg-stone-500 bg-fixed opacity-0 drop-shadow-md transition duration-300 ease-in-out"></div>
-              </div>
-              <div className="mt-2 flex flex-col gap-[2] text-sm">
-                <div>
-                  <a href="#" className="block w-full truncate hover:underline">
-                    {album.attributes.name}
-                  </a>
-                </div>
-                <span className="text-slate-400 ">
-                  {album.attributes.artistName}
-                </span>
-              </div>
-            </div>
+            <AlbumCard
+              key={index}
+              src={formatArtworkURL(album?.attributes?.artwork?.url)}
+              title={album.attributes.name}
+              subTitle={album.attributes.artistName}
+            />
           );
         })}
       </MusiqCarousel>
@@ -74,6 +64,31 @@ export default function BrowseIndex() {
           />
         </button>
       </h2>
+      <div>
+        <MusiqCarousel
+          responsive={{
+            desktop: {
+              breakpoint: { max: 3000, min: 1024 },
+              items: 3,
+              slidesToSlide: 6,
+            },
+            tablet: {
+              breakpoint: { max: 1024, min: 464 },
+              items: 2,
+              slidesToSlide: 2,
+            },
+            mobile: {
+              breakpoint: { max: 464, min: 0 },
+              items: 1,
+              slidesToSlide: 1,
+            },
+          }}
+        >
+          {getChunk(songs[0].data, 4).map((item, index) => {
+            return <SongItem songs={item} key={index} />;
+          })}
+        </MusiqCarousel>
+      </div>
     </>
   );
 }

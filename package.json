@@ -23,6 +23,7 @@
     "@remix-run/vercel": "^1.7.4",
     "@vercel/node": "^2.4.4",
     "jsonwebtoken": "^8.5.1",
+    "lodash.chunk": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-multi-carousel": "^2.8.2"
@@ -32,6 +33,7 @@
     "@remix-run/eslint-config": "^1.7.4",
     "@remix-run/serve": "^1.7.4",
     "@types/jsonwebtoken": "^8.5.9",
+    "@types/lodash.chunk": "^4.2.7",
     "@types/musickit-js": "^1.0.4",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",

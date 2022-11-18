@@ -6,7 +6,6 @@ export const ButtonGroup = ({
   previous,
   carouselState,
 }: ButtonGroupProps) => {
-  console.log(carouselState, "CARPSTATE");
   const lastSlide =
     carouselState?.currentSlide &&
     carouselState?.currentSlide + carouselState?.slidesToShow ===

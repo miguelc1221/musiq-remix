@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link, useLocation } from "@remix-run/react";
-import { AppleLogo, SquaresIcon, UserCircleIcon } from "../icons";
+import { AppleLogo } from "../icons";
+import { UserCircleIcon, Squares2X2Icon } from "@heroicons/react/20/solid";
 import { Controls } from "../controls/Controls";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
 import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
@@ -35,13 +36,14 @@ export default function Layout({
             <li className="px-8">
               <Link
                 to="/"
-                className={`flex w-full rounded-lg p-2 ${
+                className={`flex w-full items-center rounded-lg p-2 ${
                   isBrowseUrl
                     ? "bg-indigo-500 text-white"
                     : "hover:bg-slate-200"
                 }`}
               >
-                <SquaresIcon /> <span className="ml-2">Browse</span>
+                <Squares2X2Icon className="h-5 w-5" />
+                <span className="ml-2">Browse</span>
               </Link>
             </li>
             <li className="px-8 pt-6">
@@ -52,7 +54,8 @@ export default function Layout({
                   // return musicKit?.musicKit?.getInstance()?.authorize();
                 }}
               >
-                <UserCircleIcon /> <span className="ml-2">Login</span>
+                <UserCircleIcon className="h-6 w-6" />{" "}
+                <span className="ml-2">Login</span>
               </span>
             </li>
           </ul>

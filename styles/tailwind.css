@@ -5,19 +5,7 @@
 @layer components {
   @media screen and (-webkit-min-device-pixel-ratio: 0) {
 
-    .playBackProgress::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        @apply bg-slate-600;
-        cursor: pointer;
-        border-top-left-radius: 25px;
-        border-top-right-radius: 25px;
-        border: 1px solid #FFF;
-        margin-top: -0.4rem;
-        height: 0.8rem;
-        width: 0.5rem;
-    }
-    .volumeControl::-webkit-slider-thumb  {
+    .commonInputRange {
       -webkit-appearance: none;
       appearance: none;
       @apply bg-slate-600;
@@ -28,6 +16,21 @@
       margin-top: -0.4rem;
       height: 0.8rem;
       width: 0.5rem;
+    }
+
+    .playBackProgress {
+      @apply flex h-1 w-full cursor-pointer appearance-none bg-gray-400
+    }
+    .playBackProgress::-webkit-slider-thumb {
+      @apply commonInputRange
+    }
+
+    .volumeControl {
+      @apply flex h-1 cursor-pointer appearance-none bg-gray-400 rounded-2xl
+    }
+    .volumeControl::-webkit-slider-thumb  {
+      @apply commonInputRange rounded-full h-4 w-4 mt-0
+    
     }
   }
 

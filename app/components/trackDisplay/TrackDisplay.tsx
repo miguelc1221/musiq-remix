@@ -1,9 +1,6 @@
-import { useState } from "react";
+import { InputRange } from "../inputRange/inputRange";
 
 export const TrackDisplay = () => {
-  const [inputValue, setInputValue] = useState(0);
-
-  const gradientValue = (inputValue - 1) / (100 - 1);
   return (
     <div className="grid grid-cols-[auto_1fr] items-center">
       <img
@@ -16,20 +13,10 @@ export const TrackDisplay = () => {
           <span>Drake & 21 Savage - Her Loss</span>
         </div>
         <div className="w-full">
-          <label htmlFor="playback-progress" className="sr-only">
-            Playback Progress
-          </label>
-          <input
-            id="playback-progress"
-            type="range"
-            min="1"
-            max="100"
-            value={inputValue}
-            onChange={(evt) => setInputValue(Number(evt.target.value))}
-            className="playBackProgress flex h-1 w-full cursor-pointer appearance-none bg-gray-400"
-            style={{
-              backgroundImage: `-webkit-gradient(linear, left top, right top, color-stop(${gradientValue}, rgb(99 102 241)), color-stop(${gradientValue}, rgb(254 205 211)))`,
-            }}
+          <InputRange
+            className="playBackProgress"
+            labelId="playback-progress"
+            labelText="Playback Progress"
           />
         </div>
       </div>

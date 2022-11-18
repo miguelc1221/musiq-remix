@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
 import { Link, useLocation } from "@remix-run/react";
 import { AppleLogo, SquaresIcon, UserCircleIcon } from "../icons";
+import { Controls } from "../controls/Controls";
+import { TrackDisplay } from "../trackDisplay/TrackDisplay";
+import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
+
 export default function Layout({
   musicKit,
   children,
@@ -16,7 +20,7 @@ export default function Layout({
     <div className="flex h-screen">
       <aside
         aria-label="Sidebar"
-        className="sticky top-0 h-screen min-w-[300px] bg-gray-100"
+        className="sticky top-0 h-screen min-w-[300px] border-r bg-gray-100"
       >
         <nav>
           <ul className="flex flex-col gap-3">
@@ -56,8 +60,14 @@ export default function Layout({
       </aside>
       <div className="z-[1] h-auto w-full overflow-auto bg-white">
         <main className="h-full flex-1">
-          <div className="bg-neutral-00 fixed bottom-0 z-10 h-[55px] w-full bg-gray-100/80 backdrop-blur-md"></div>
-          <div className="mx-10 pb-[55px] pt-[37px]">{children}</div>
+          <div className="fixed bottom-0 z-10 h-[65px] w-[calc(100%_-_300px)] bg-gray-100/70 backdrop-blur-lg">
+            <div className="grid h-full grid-cols-[1fr_2fr_1fr] items-center">
+              <Controls />
+              <TrackDisplay />
+              <VolumeControl />
+            </div>
+          </div>
+          <div className="mx-10 pb-[100px] pt-[37px]">{children}</div>
         </main>
       </div>
     </div>

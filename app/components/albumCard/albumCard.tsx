@@ -1,4 +1,4 @@
-import { PlayButtonMini } from "../icons";
+import { PlayIcon } from "@heroicons/react/24/solid";
 
 export const AlbumCard = ({
   src,
@@ -11,7 +11,7 @@ export const AlbumCard = ({
   subTitle?: string;
 }) => {
   return (
-    <div className="albumCard mb-4 max-w-xs" {...otherProps}>
+    <div className="max-w-xs" {...otherProps}>
       <div className="group relative cursor-pointer after:absolute after:top-0 after:left-0 after:h-full after:w-full after:rounded-md after:bg-stone-600 after:opacity-0 after:transition after:duration-300 after:ease-in-out [&:after:hover]:opacity-40">
         {src && (
           <>
@@ -21,7 +21,7 @@ export const AlbumCard = ({
               aria-label="play"
               className="absolute left-3 bottom-2 z-[1] m-auto flex h-8 w-8 items-center justify-center rounded-full opacity-0 hover:bg-indigo-500 group-hover:opacity-100 [&>svg]:inline-block"
             >
-              <PlayButtonMini />
+              <PlayIcon className="h-5 w-5 text-white" />
             </button>
           </>
         )}
@@ -36,7 +36,13 @@ export const AlbumCard = ({
               {title}
             </a>
           </div>
-          <span className="text-xs text-slate-500">{subTitle}</span>
+          <span
+            className={`block w-full truncate text-xs text-slate-500 ${
+              !subTitle && "h-4"
+            }`}
+          >
+            {subTitle}
+          </span>
         </div>
       )}
     </div>

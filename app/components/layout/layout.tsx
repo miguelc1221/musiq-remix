@@ -5,12 +5,13 @@ import { UserCircleIcon, Squares2X2Icon } from "@heroicons/react/20/solid";
 import { Controls } from "../controls/Controls";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
 import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
+import type { AppContextType } from "~/appReducer";
 
 export default function Layout({
-  musicKit,
+  appState,
   children,
 }: {
-  musicKit?: MusicKit.MusicKitInstance;
+  appState?: AppContextType;
   children?: ReactNode;
 }) {
   const location = useLocation();
@@ -50,7 +51,7 @@ export default function Layout({
               <span
                 className="flex w-full cursor-pointer items-center justify-center border-t border-slate-300 p-4 font-bold hover:text-indigo-500"
                 onClick={() => {
-                  console.log(musicKit, "musickit on login click");
+                  console.log(appState?.musicKit, "musickit on login click");
                   // return musicKit?.musicKit?.getInstance()?.authorize();
                 }}
               >
@@ -63,11 +64,24 @@ export default function Layout({
       </aside>
       <div className="z-[1] h-auto w-full overflow-auto bg-white">
         <main className="h-full flex-1">
-          <div className="fixed bottom-0 z-10 h-[65px] w-[calc(100%_-_300px)] bg-gray-100/70 backdrop-blur-lg">
+          <div className="group/audioBar fixed bottom-0 z-10 h-[65px] w-[calc(100%_-_300px)] bg-gray-100">
             <div className="grid h-full grid-cols-[1fr_2fr_1fr] items-center">
-              <Controls />
-              <TrackDisplay />
-              <VolumeControl />
+              {appState && (
+                <>
+                  <Controls
+                    player={appState.player}
+                    dispatch={appState.dispatch}
+                  />
+                  <TrackDisplay
+                    player={appState.player}
+                    dispatch={appState.dispatch}
+                  />
+                  {/* <VolumeControl
+                    player={appState.player}
+                    dispatch={appState.dispatch}
+                  /> */}
+                </>
+              )}
             </div>
           </div>
           <div className="mx-10 pb-[100px] pt-[37px]">{children}</div>

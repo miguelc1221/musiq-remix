@@ -5,7 +5,7 @@ import { getCharts } from "~/server/musicKit.server";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { AlbumCard } from "~/components/albumCard/albumCard";
-import { SongItem } from "~/components/songItem/SongItem";
+import { SongList } from "~/components/songList/SongList";
 
 import getChunk from "lodash.chunk";
 
@@ -78,7 +78,7 @@ export default function BrowseIndex() {
             }}
           >
             {getChunk(songs[0].data, 4).map((item, index) => {
-              return <SongItem songs={item} key={index} />;
+              return <SongList songs={item} key={index} />;
             })}
           </MusiqCarousel>
         </div>

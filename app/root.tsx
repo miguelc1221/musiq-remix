@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import type {
   MetaFunction,
   ErrorBoundaryComponent,
@@ -15,10 +14,16 @@ import {
 } from "@remix-run/react";
 import Layout from "./components/layout/layout";
 import styles from "./tailwind.css";
-import { useEffect, useRef } from "react";
+import type { ReactNode } from "react";
+import { useEffect, useReducer } from "react";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node"; // or cloudflare/deno
 import { developerToken } from "./server/developerToken.server";
+import {
+  appReducer,
+  appInitialState,
+  AppReducerActionType,
+} from "./appReducer";
 
 import rccss from "react-multi-carousel/lib/styles.css";
 
@@ -75,13 +80,9 @@ export const loader: LoaderFunction = async () => {
   return json(developerToken);
 };
 
-export type ContextType = {
-  musicKit?: MusicKit.MusicKitInstance;
-};
-
 export default function App() {
+  const [state, dispatch] = useReducer(appReducer, appInitialState);
   const devToken = useLoaderData();
-  const musicKitContext = useRef<ContextType>({});
 
   useEffect(() => {
     const configureMusicKit = async () => {
@@ -95,21 +96,27 @@ export default function App() {
           },
         });
 
-        musicKitContext.current.musicKit = music;
+        dispatch({
+          type: AppReducerActionType.SET_MUSICKIT_INSTANCE,
+          payload: music,
+        });
       } catch (err) {
         console.log(err);
       }
     };
 
-    configureMusicKit();
-  }, [devToken]);
+    if (!state.musicKit) {
+      configureMusicKit();
+    }
+  }, [devToken, state.musicKit]);
+
+  console.log(state, "STATE>>>>>>>musicKitContext>>>>");
 
   return (
     <Document>
-      <Layout musicKit={musicKitContext.current.musicKit}>
-        <Outlet context={musicKitContext.current.musicKit} />
+      <Layout appState={{ ...state, dispatch }}>
+        <Outlet context={{ ...state, dispatch }} />
       </Layout>
     </Document>
   );
 }
-

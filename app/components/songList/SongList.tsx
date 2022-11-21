@@ -1,12 +1,17 @@
 import { formatArtworkURL } from "~/utils/helpers";
 import { PlayIcon } from "@heroicons/react/20/solid";
+import { useOutletContext } from "@remix-run/react";
+import { AppReducerActionType } from "~/appReducer";
+import type { AppContextType } from "~/appReducer";
 
-export const SongItem = ({
+export const SongList = ({
   songs,
   ...otherProps
 }: {
   songs: MusicKit.Songs[];
 }) => {
+  const { dispatch } = useOutletContext<AppContextType>();
+
   return (
     <div className="grid grid-cols-1 gap-2 divide-y" {...otherProps}>
       {songs.map((song, idx) => {
@@ -22,7 +27,15 @@ export const SongItem = ({
                 className="h-[50px] w-[50px] rounded-md"
               />
               <button
-                onClick={() => console.log("hi")}
+                onClick={() => {
+                  if (!song.attributes?.previews[0].url) {
+                    return;
+                  }
+                  return dispatch({
+                    type: AppReducerActionType.SET_SELECTED_SONG,
+                    payload: song,
+                  });
+                }}
                 aria-label="play"
                 className="absolute bottom-0 top-0 right-0 left-0 z-[1] m-auto opacity-0 group-hover:opacity-100 [&>svg]:inline-block"
               >

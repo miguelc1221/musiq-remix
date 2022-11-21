@@ -3,35 +3,103 @@
 @tailwind utilities;
 
 @layer components {
-  @media screen and (-webkit-min-device-pixel-ratio: 0) {
 
-    .commonInputRange {
-      -webkit-appearance: none;
-      appearance: none;
-      @apply bg-slate-600;
-      cursor: pointer;
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      border: 1px solid #FFF;
-      margin-top: -0.4rem;
-      height: 0.8rem;
-      width: 0.5rem;
-    }
+  .trackStyles {
+    @apply h-1 w-full cursor-pointer bg-rose-200 outline-none relative
+  }
 
-    .playBackProgress {
-      @apply flex h-1 w-full cursor-pointer appearance-none bg-gray-400
-    }
-    .playBackProgress::-webkit-slider-thumb {
-      @apply commonInputRange
-    }
+  .progressBar {
+    --seek-before-width: 0;
+    @apply h-1 w-full cursor-pointer appearance-none bg-rose-200 outline-none relative
+  }
 
-    .volumeControl {
-      @apply flex h-1 cursor-pointer appearance-none bg-gray-400 rounded-2xl
-    }
-    .volumeControl::-webkit-slider-thumb  {
-      @apply commonInputRange rounded-full h-4 w-4 mt-0
-    
-    }
+  .progressBar::-moz-focus-outer {
+    @apply border-none
+  }
+
+  /* progress bar - safari */
+  .progressBar::-webkit-slider-runnable-track {
+    @apply trackStyles
+  }
+
+  /* progress bar - firefox */
+  .progressBar::-moz-range-track {
+    @apply trackStyles
+  }
+
+  /* progress bar - chrome and safari */
+  .progressBar::before {
+    content: '';
+    width: var(--seek-before-width);
+    @apply absolute h-1 bg-indigo-500 top-0 left-0 z-[2] cursor-pointer
+  }
+
+  /* progress bar - firefox */
+  .progressBar::-moz-range-progress {
+    @apply bg-indigo-500 h-1
+  }
+
+  /* Knob - chrome and safari */
+  .progressBar::-webkit-slider-thumb {
+    @apply appearance-none bg-slate-600 cursor-pointer rounded-t-3xl -mt-[0.5rem] h-[0.8rem] w-[0.5rem] border-[1px] border-solid border-white relative z-[3] 
+  }
+
+    /* Knob - firefox */
+  .progressBar::-moz-range-thumb {
+    @apply appearance-none bg-slate-600 cursor-pointer rounded-t-3xl -mt-[0.5rem] h-[0.8rem] w-[0.5rem] border-[1px] border-solid border-white relative z-[3] 
+  }
+
+  /* Knob while dragging - chrome and safari */
+  .progressBar:active::-webkit-slider-thumb {
+    transform: scale(1.2);
+  }
+
+    /* Knob while dragging - firefox */
+  .progressBar:active::-moz-range-thumb {
+    transform: scale(1.2);
+  }
+  
+  .volumeControl {
+    --seek-before-width-volume: 40%;
+    @apply h-1 cursor-pointer appearance-none bg-gray-400 rounded-2xl outline-none relative
+  }
+
+  .volumeControl::-moz-focus-outer {
+    @apply border-none
+  }
+
+  /* progress bar - safari */
+  .volumeControl::-webkit-slider-runnable-track {
+    @apply trackStyles bg-gray-400
+  }
+
+  /* progress bar - firefox */
+  .volumeControl::-moz-range-track {
+    @apply trackStyles bg-gray-400
+  }
+
+  /* progress bar - chrome and safari */
+  .volumeControl::before {
+    content: '';
+    width: var(--seek-before-width-volume);
+    @apply absolute h-1 bg-indigo-500 top-0 left-0 z-[2] cursor-pointer
+  }
+
+  /* progress bar - firefox */
+  .volumeControl::-moz-range-progress {
+    @apply bg-indigo-500 h-1
+  }
+
+  /* Knob - chrome and safari */
+  .volumeControl::-webkit-slider-thumb {
+    @apply appearance-none bg-slate-600 cursor-pointer rounded-full h-4 w-4 border-[1px] border-solid border-white relative z-[3]; 
+    margin-top: -0.37rem
+  }
+
+    /* Knob - firefox */
+  .volumeControl::-moz-range-thumb {
+    @apply appearance-none bg-slate-600 cursor-pointer rounded-full h-4 w-4 border-[1px] border-solid border-white relative z-[3];
+    margin-top: -0.37rem   
   }
 
 }

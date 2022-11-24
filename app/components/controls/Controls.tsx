@@ -12,14 +12,17 @@ import type { PlayerType, DispatchType } from "~/appReducer";
 export const Controls = ({
   player,
   dispatch,
+  onRepeatClick,
 }: {
   player: PlayerType;
   dispatch: DispatchType;
+  onRepeatClick: () => void;
 }) => {
   const isDisabled = !player.selectedSong;
   const disableColor = isDisabled
     ? "text-gray-300 hover:text-gray-300"
     : "hover:text-slate-700/60";
+
   return (
     <>
       <div className="flex items-center justify-center gap-2">
@@ -55,7 +58,11 @@ export const Controls = ({
         <button className={`${disableColor}`} disabled={isDisabled}>
           <ForwardIcon className="h-7 w-7" />
         </button>
-        <button className={`ml-1 ${disableColor}`} disabled={isDisabled}>
+        <button
+          className={`ml-1 ${disableColor}`}
+          disabled={isDisabled}
+          onClick={onRepeatClick}
+        >
           <ArrowPathIcon className="h-5 w-5" />
         </button>
       </div>

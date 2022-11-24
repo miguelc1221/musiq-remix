@@ -105,7 +105,7 @@ export default function App() {
       }
     };
 
-    if (!state.musicKit) {
+    if (!state.musicKit && devToken && window.MusicKit) {
       configureMusicKit();
     }
   }, [devToken, state.musicKit]);

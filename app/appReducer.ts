@@ -1,7 +1,7 @@
 import type { Dispatch } from "react";
 
 export type PlayerType = {
-  selectedSongInfo?: MusicKit.Songs;
+  selectedSongInfo?: MusicKit.Songs | MusicKit.MusicVideos;
   selectedSong?: string;
   isPlaying: boolean;
 };
@@ -29,7 +29,7 @@ export type AppReducerAction =
     }
   | {
       type: AppReducerActionType.SET_SELECTED_SONG;
-      payload: MusicKit.Songs;
+      payload: MusicKit.Songs | MusicKit.MusicVideos;
     }
   | {
       type: AppReducerActionType.SET_IS_PLAYING_ON;

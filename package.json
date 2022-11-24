@@ -22,17 +22,22 @@
     "@remix-run/node": "^1.7.4",
     "@remix-run/react": "^1.7.4",
     "@remix-run/vercel": "^1.7.4",
+    "@types/react-transition-group": "^4.4.5",
     "@vercel/node": "^2.4.4",
     "jsonwebtoken": "^8.5.1",
     "lodash.chunk": "^4.2.0",
     "react": "^18.2.0",
+    "react-aria": "^3.21.0",
     "react-dom": "^18.2.0",
-    "react-multi-carousel": "^2.8.2"
+    "react-multi-carousel": "^2.8.2",
+    "react-stately": "^3.19.0",
+    "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.7.4",
     "@remix-run/eslint-config": "^1.7.4",
     "@remix-run/serve": "^1.7.4",
+    "@tailwindcss/line-clamp": "^0.4.2",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/lodash.chunk": "^4.2.7",
     "@types/musickit-js": "^1.0.4",

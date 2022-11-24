@@ -39,14 +39,8 @@ export default function BrowseIndex() {
         </h2>
         <MusiqCarousel>
           {albums[0].data.map((album, index) => {
-            return (
-              <AlbumCard
-                key={index}
-                src={formatArtworkURL(album?.attributes?.artwork?.url)}
-                title={album.attributes?.name}
-                subTitle={album.attributes?.artistName}
-              />
-            );
+            console.log(album, "Album>>");
+            return <AlbumCard album={album} key={index} />;
           })}
         </MusiqCarousel>
       </div>
@@ -90,17 +84,16 @@ export default function BrowseIndex() {
             <ChevronRightIcon className="mt-1 h-4 w-4" />
           </button>
         </h2>
-        <MusiqCarousel>
+        {/* <MusiqCarousel>
           {playlists[0].data.map((playlist, index) => {
             return (
               <AlbumCard
                 key={index}
-                src={formatArtworkURL(playlist.attributes?.artwork?.url)}
-                title={playlist.attributes?.name}
+                album={playlist}
               />
             );
           })}
-        </MusiqCarousel>
+        </MusiqCarousel> */}
       </div>
     </div>
   );

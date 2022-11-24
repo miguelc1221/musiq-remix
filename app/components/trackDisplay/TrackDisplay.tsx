@@ -1,8 +1,9 @@
 import type { PlayerType, DispatchType } from "~/appReducer";
-import { formatArtworkURL } from "~/utils/helpers";
+import { formatArtworkURL, calculateTime } from "~/utils/helpers";
 import { AppleIcon, MusicNote } from "../icons";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
+import { Controls } from "../controls/Controls";
 
 export const TrackDisplay = ({
   player,
@@ -13,6 +14,7 @@ export const TrackDisplay = ({
 }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState("0.4");
+  const [isOnRepeat, setIsOnRepeat] = useState(false);
 
   const audioPlayer = useRef<HTMLAudioElement | null>(null); // reference our audio component
   const progressBar = useRef<HTMLInputElement | null>(null); // reference our progress bar
@@ -68,13 +70,6 @@ export const TrackDisplay = ({
     }
   }, [player.selectedSong, player.isPlaying, whilePlaying]);
 
-  const calculateTime = (secs: number) => {
-    const minutes = Math.floor(secs / 60);
-    const seconds = Math.floor(secs % 60);
-    const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-    return `${minutes}:${returnedSeconds}`;
-  };
-
   const changeRange = () => {
     if (audioPlayer.current && progressBar.current) {
       changePlayerCurrentTime();
@@ -96,8 +91,18 @@ export const TrackDisplay = ({
     setVolume(volume);
   };
 
+  const handleOnRepeatClick = useCallback(() => {
+    return setIsOnRepeat((prev) => !prev);
+  }, []);
+
   return (
     <>
+      <Controls
+        player={player}
+        dispatch={dispatch}
+        onRepeatClick={handleOnRepeatClick}
+      />
+
       <div className="grid grid-cols-[auto_1fr] items-center">
         {player.selectedSongInfo ? (
           <img

@@ -2,9 +2,7 @@ import type { ReactNode } from "react";
 import { Link, useLocation } from "@remix-run/react";
 import { AppleLogo } from "../icons";
 import { UserCircleIcon, Squares2X2Icon } from "@heroicons/react/20/solid";
-import { Controls } from "../controls/Controls";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
-import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
 import type { AppContextType } from "~/appReducer";
 
 export default function Layout({
@@ -15,8 +13,9 @@ export default function Layout({
   children?: ReactNode;
 }) {
   const location = useLocation();
-
+  console.log(location, "locations");
   const isBrowseUrl = location.pathname === "/browse";
+  const isAlbumUrl = location.pathname.includes("/album/");
 
   return (
     <div className="flex h-screen">
@@ -67,24 +66,16 @@ export default function Layout({
           <div className="group/audioBar fixed bottom-0 z-10 h-[65px] w-[calc(100%_-_300px)] bg-gray-100">
             <div className="grid h-full grid-cols-[1fr_2fr_1fr] items-center">
               {appState && (
-                <>
-                  <Controls
-                    player={appState.player}
-                    dispatch={appState.dispatch}
-                  />
-                  <TrackDisplay
-                    player={appState.player}
-                    dispatch={appState.dispatch}
-                  />
-                  {/* <VolumeControl
-                    player={appState.player}
-                    dispatch={appState.dispatch}
-                  /> */}
-                </>
+                <TrackDisplay
+                  player={appState.player}
+                  dispatch={appState.dispatch}
+                />
               )}
             </div>
           </div>
-          <div className="mx-10 pb-[100px] pt-[37px]">{children}</div>
+          <div className={`pb-[100px] ${isAlbumUrl ? "" : "mx-10 pt-[37px]"}`}>
+            {children}
+          </div>
         </main>
       </div>
     </div>

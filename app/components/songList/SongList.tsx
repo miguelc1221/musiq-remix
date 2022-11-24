@@ -1,8 +1,9 @@
-import { formatArtworkURL } from "~/utils/helpers";
+import { formatArtworkURL, getAlbumId } from "~/utils/helpers";
 import { PlayIcon } from "@heroicons/react/20/solid";
 import { useOutletContext } from "@remix-run/react";
 import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
+import { useFetcher } from "@remix-run/react";
 
 export const SongList = ({
   songs,
@@ -10,11 +11,17 @@ export const SongList = ({
 }: {
   songs: MusicKit.Songs[];
 }) => {
+  const fetcher = useFetcher();
   const { dispatch } = useOutletContext<AppContextType>();
 
   return (
     <div className="grid grid-cols-1 gap-2 divide-y" {...otherProps}>
       {songs.map((song, idx) => {
+        const albumUrl = `/album/${song.attributes?.albumName.replace(
+          " ",
+          "-"
+        )}/${getAlbumId(song.attributes?.url)}?sId=${song.id}`;
+
         return (
           <div
             key={idx}
@@ -31,6 +38,9 @@ export const SongList = ({
                   if (!song.attributes?.previews[0].url) {
                     return;
                   }
+
+                  fetcher.load(albumUrl);
+
                   return dispatch({
                     type: AppReducerActionType.SET_SELECTED_SONG,
                     payload: song,
@@ -44,12 +54,9 @@ export const SongList = ({
             </div>
             <div className="col-span-2 ml-2 text-sm ">
               <div>
-                <a
-                  href="#"
-                  className="block w-full truncate text-[13px] hover:underline"
-                >
+                <span className="block w-full truncate text-[13px]">
                   {song.attributes?.name}
-                </a>
+                </span>
               </div>
               <span className="block w-full truncate text-xs text-slate-500">
                 {song.attributes?.artistName}

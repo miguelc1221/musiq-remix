@@ -61,7 +61,7 @@
   
   .volumeControl {
     --seek-before-width-volume: 40%;
-    @apply h-1 cursor-pointer appearance-none bg-gray-400 rounded-2xl outline-none relative
+    @apply h-1 cursor-pointer appearance-none bg-gray-400 rounded-full outline-none relative
   }
 
   .volumeControl::-moz-focus-outer {
@@ -70,24 +70,24 @@
 
   /* progress bar - safari */
   .volumeControl::-webkit-slider-runnable-track {
-    @apply trackStyles bg-gray-400
+    @apply trackStyles bg-gray-400 rounded-full
   }
 
   /* progress bar - firefox */
   .volumeControl::-moz-range-track {
-    @apply trackStyles bg-gray-400
+    @apply trackStyles bg-gray-400 rounded-full
   }
 
   /* progress bar - chrome and safari */
   .volumeControl::before {
     content: '';
     width: var(--seek-before-width-volume);
-    @apply absolute h-1 bg-indigo-500 top-0 left-0 z-[2] cursor-pointer
+    @apply absolute h-1 bg-indigo-500 top-0 left-0 z-[2] cursor-pointer rounded-full
   }
 
   /* progress bar - firefox */
   .volumeControl::-moz-range-progress {
-    @apply bg-indigo-500 h-1
+    @apply bg-indigo-500 h-1 rounded-3xl
   }
 
   /* Knob - chrome and safari */

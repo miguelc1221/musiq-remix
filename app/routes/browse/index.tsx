@@ -1,13 +1,12 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { formatArtworkURL } from "~/utils/helpers";
 import { getCharts } from "~/server/musicKit.server";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { AlbumCard } from "~/components/albumCard/albumCard";
-import { SongList } from "~/components/songList/SongList";
-
+import { SongCarouselList } from "~/components/songCarouselList/SongCarouselList";
 import getChunk from "lodash.chunk";
+import { PlayListCard } from "~/components/playlistCard/PlayListCard";
 
 export const loader: LoaderFunction = async () => {
   try {
@@ -39,7 +38,6 @@ export default function BrowseIndex() {
         </h2>
         <MusiqCarousel>
           {albums[0].data.map((album, index) => {
-            console.log(album, "Album>>");
             return <AlbumCard album={album} key={index} />;
           })}
         </MusiqCarousel>
@@ -72,7 +70,7 @@ export default function BrowseIndex() {
             }}
           >
             {getChunk(songs[0].data, 4).map((item, index) => {
-              return <SongList songs={item} key={index} />;
+              return <SongCarouselList songs={item} key={index} />;
             })}
           </MusiqCarousel>
         </div>
@@ -84,16 +82,11 @@ export default function BrowseIndex() {
             <ChevronRightIcon className="mt-1 h-4 w-4" />
           </button>
         </h2>
-        {/* <MusiqCarousel>
+        <MusiqCarousel>
           {playlists[0].data.map((playlist, index) => {
-            return (
-              <AlbumCard
-                key={index}
-                album={playlist}
-              />
-            );
+            return <PlayListCard key={index} playList={playlist} />;
           })}
-        </MusiqCarousel> */}
+        </MusiqCarousel>
       </div>
     </div>
   );

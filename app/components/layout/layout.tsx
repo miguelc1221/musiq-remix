@@ -16,6 +16,7 @@ export default function Layout({
   console.log(location, "locations");
   const isBrowseUrl = location.pathname === "/browse";
   const isAlbumUrl = location.pathname.includes("/album/");
+  const isPlaylistUrl = location.pathname.includes("/playlist/");
 
   return (
     <div className="flex h-screen">
@@ -73,7 +74,11 @@ export default function Layout({
               )}
             </div>
           </div>
-          <div className={`pb-[100px] ${isAlbumUrl ? "" : "mx-10 pt-[37px]"}`}>
+          <div
+            className={`pb-[100px] ${
+              isAlbumUrl || isPlaylistUrl ? "" : "mx-10 pt-[37px]"
+            }`}
+          >
             {children}
           </div>
         </main>

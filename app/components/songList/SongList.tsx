@@ -1,70 +1,19 @@
-import { formatArtworkURL, getAlbumId } from "~/utils/helpers";
-import { PlayIcon } from "@heroicons/react/20/solid";
-import { useOutletContext } from "@remix-run/react";
-import { AppReducerActionType } from "~/appReducer";
-import type { AppContextType } from "~/appReducer";
-import { useFetcher } from "@remix-run/react";
+import { SongItem } from "./SongItem";
 
 export const SongList = ({
   songs,
-  ...otherProps
 }: {
-  songs: MusicKit.Songs[];
+  songs: (MusicKit.MusicVideos | MusicKit.Songs)[];
 }) => {
-  const fetcher = useFetcher();
-  const { dispatch } = useOutletContext<AppContextType>();
+  if (!songs.length) {
+    return null;
+  }
 
   return (
-    <div className="grid grid-cols-1 gap-2 divide-y" {...otherProps}>
-      {songs.map((song, idx) => {
-        const albumUrl = `/album/${song.attributes?.albumName.replace(
-          " ",
-          "-"
-        )}/${getAlbumId(song.attributes?.url)}?sId=${song.id}`;
-
-        return (
-          <div
-            key={idx}
-            className="grid grid-cols-[auto_auto_1fr_auto] items-center pt-2"
-          >
-            <div className="group relative cursor-pointer after:absolute after:top-0 after:left-0 after:h-full after:w-full after:rounded-md after:bg-stone-600 after:opacity-0 after:transition after:duration-300 after:ease-in-out [&:after:hover]:opacity-40">
-              <img
-                src={formatArtworkURL(song.attributes?.artwork?.url, 96, 96)}
-                alt={song.attributes?.name}
-                className="h-[50px] w-[50px] rounded-md"
-              />
-              <button
-                onClick={() => {
-                  if (!song.attributes?.previews[0].url) {
-                    return;
-                  }
-
-                  fetcher.load(albumUrl);
-
-                  return dispatch({
-                    type: AppReducerActionType.SET_SELECTED_SONG,
-                    payload: song,
-                  });
-                }}
-                aria-label="play"
-                className="absolute bottom-0 top-0 right-0 left-0 z-[1] m-auto opacity-0 group-hover:opacity-100 [&>svg]:inline-block"
-              >
-                <PlayIcon className="h-5 w-5 text-white" />
-              </button>
-            </div>
-            <div className="col-span-2 ml-2 text-sm ">
-              <div>
-                <span className="block w-full truncate text-[13px]">
-                  {song.attributes?.name}
-                </span>
-              </div>
-              <span className="block w-full truncate text-xs text-slate-500">
-                {song.attributes?.artistName}
-              </span>
-            </div>
-          </div>
-        );
+    <ul className="mt-4 flex flex-col px-10 text-sm">
+      {songs.map((track, index) => {
+        return <SongItem key={index} index={index} track={track} />;
       })}
-    </div>
+    </ul>
   );
 };

@@ -1,12 +1,13 @@
 import { useParams, useSearchParams, useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node"; // or cloudflare/deno
 import { getAlbum } from "~/server/musicKit.server";
-import { SongItem } from "~/components/songItem/SongItem";
+import { SongList } from "~/components/songList/SongList";
 import { formatArtworkURL } from "~/utils/helpers";
 import { useOverlayTriggerState } from "@react-stately/overlays";
 import { MusiqModal } from "~/components/modal/MusiqModal";
 import { useButton } from "@react-aria/button";
 import { useRef } from "react";
+import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 
 export const loader: LoaderFunction = async ({ params }) => {
   if (!params.albumId) {
@@ -42,7 +43,7 @@ export default function AlbumRoute() {
           <img
             src={formatArtworkURL(results.attributes?.artwork.url, 300, 300)}
             alt={"album cover"}
-            className="h-[250px] w-[250px]"
+            className="h-[250px] w-[250px] drop-shadow-md"
           />
         </div>
         <div>
@@ -58,19 +59,28 @@ export default function AlbumRoute() {
           </p>
           {results.attributes?.editorialNotes?.standard && (
             <div className="max-w-[540px]">
-              <div className="relative">
+              <div className="flex flex-col">
                 <p
-                  className="line-clamp-3"
+                  className="text-sm line-clamp-3"
                   dangerouslySetInnerHTML={{
                     __html: results.attributes?.editorialNotes?.standard,
                   }}
                 />
+                <div>
+                  <button
+                    className="text-xs font-bold uppercase"
+                    {...openButton.buttonProps}
+                    ref={openButtonRef}
+                  >
+                    More
+                  </button>
+                </div>
                 <button
-                  className="absolute right-0 bottom-[2px] pl-1 text-xs font-bold uppercase"
-                  {...openButton.buttonProps}
-                  ref={openButtonRef}
+                  onClick={(e) => {}}
+                  aria-label="play"
+                  className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
                 >
-                  More
+                  <PlayIcon className="h-7 w-7 text-white" />
                 </button>
               </div>
             </div>
@@ -78,11 +88,7 @@ export default function AlbumRoute() {
         </div>
       </div>
       <div>
-        <ul className="mt-4 flex flex-col px-10 text-sm">
-          {results.relationships.tracks.data.map((track, index) => {
-            return <SongItem key={index} index={index} track={track} />;
-          })}
-        </ul>
+        <SongList songs={results.relationships.tracks.data} />
       </div>
       <MusiqModal
         state={state}

@@ -44,9 +44,6 @@ const SongControl = ({
   }
 
   return <>{count}</>;
-  // if (!isMouseOver && !isSelectedSong) {
-  //   return <PlayIcon className="h-6 w-6" />;
-  // }
 };
 
 export const SongItem = ({

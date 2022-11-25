@@ -1,4 +1,4 @@
-import { useParams, useSearchParams, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node"; // or cloudflare/deno
 import { getAlbum } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
@@ -8,6 +8,9 @@ import { MusiqModal } from "~/components/modal/MusiqModal";
 import { useButton } from "@react-aria/button";
 import { useRef } from "react";
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
+import { useOutletContext } from "@remix-run/react";
+import { AppReducerActionType } from "~/appReducer";
+import type { AppContextType } from "~/appReducer";
 
 export const loader: LoaderFunction = async ({ params }) => {
   if (!params.albumId) {
@@ -25,16 +28,10 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function AlbumRoute() {
   const results = useLoaderData<MusicKit.API["album"]>();
-  const params = useParams();
-  const [searchParams] = useSearchParams();
+  const { player, dispatch } = useOutletContext<AppContextType>();
   const state = useOverlayTriggerState({});
-  const songId = searchParams.get("sId");
   const openButtonRef = useRef(null);
   const openButton = useButton({ onPress: state.open }, openButtonRef);
-
-  console.log(params, "PARMAS IN COMPONENT");
-  console.log(songId, "songId query param");
-  console.log(results, "RESULTS>>>>>>");
 
   return (
     <>
@@ -76,11 +73,36 @@ export default function AlbumRoute() {
                   </button>
                 </div>
                 <button
-                  onClick={(e) => {}}
                   aria-label="play"
                   className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
+                  onClick={() => {
+                    if (!player.selectedSong) {
+                      return dispatch({
+                        type: AppReducerActionType.SET_SELECTED_SONG,
+                        payload: {
+                          selectedSong: results.relationships.tracks.data[0],
+                          selectedSongPlaylist:
+                            results.relationships.tracks.data,
+                        },
+                      });
+                    }
+
+                    if (player?.isPlaying) {
+                      return dispatch({
+                        type: AppReducerActionType.SET_IS_PLAYING_OFF,
+                      });
+                    }
+
+                    return dispatch({
+                      type: AppReducerActionType.SET_IS_PLAYING_ON,
+                    });
+                  }}
                 >
-                  <PlayIcon className="h-7 w-7 text-white" />
+                  {player.isPlaying ? (
+                    <PauseIcon className="h-7 w-7 text-white" />
+                  ) : (
+                    <PlayIcon className="h-7 w-7 text-white" />
+                  )}
                 </button>
               </div>
             </div>

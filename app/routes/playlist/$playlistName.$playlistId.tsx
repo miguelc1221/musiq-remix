@@ -1,4 +1,4 @@
-import { useParams, useSearchParams, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node"; // or cloudflare/deno
 import { getPlaylist } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
@@ -22,13 +22,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function PlaylistRoute() {
   const results = useLoaderData<MusicKit.API["playlist"]>();
-  const params = useParams();
-  const [searchParams] = useSearchParams();
-  const songId = searchParams.get("sId");
-
-  console.log(params, "PARMAS IN COMPONENT");
-  console.log(songId, "songId query param");
-  console.log(results, "RESULTS>>>>>>");
 
   return (
     <>

@@ -22,7 +22,6 @@ export const loader: LoaderFunction = async () => {
 export default function BrowseIndex() {
   const { albums, songs, playlists } = useLoaderData<MusicKit.API["charts"]>();
 
-  console.log(playlists, "playlists");
   return (
     <div className="flex flex-col gap-8">
       <div>

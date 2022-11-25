@@ -12,6 +12,16 @@ export const formatArtworkURL = (url = "", width = 220, height = 220) => {
     .replace("{f}", "jpeg");
 };
 
+export const formatUrlName = (str: string) => {
+  console.log(str, "str");
+  return str
+    .replace(/[^a-zA-Z0-9 ]/g, "")
+    .split(" ")
+    .filter(Boolean)
+    .join("-")
+    .toLowerCase();
+};
+
 export const calculateTime = (secs: number) => {
   const minutes = Math.floor(secs / 60);
   const seconds = Math.floor(secs % 60);
@@ -21,4 +31,46 @@ export const calculateTime = (secs: number) => {
 
 export const getAlbumId = (url: string = "") => {
   return new URL(url).pathname.split("/").filter(Boolean).pop();
+};
+
+export const findNextSong = (
+  currentSong: MusicKit.Songs | MusicKit.MusicVideos,
+  songs: (MusicKit.Songs | MusicKit.MusicVideos)[]
+) => {
+  const currentSongId = currentSong.id;
+  let results;
+
+  songs.forEach((song, idx) => {
+    if (song.id === currentSongId) {
+      const nextId = idx + 1;
+      if (nextId === songs.length) {
+        results = songs[0];
+      } else {
+        results = songs[nextId];
+      }
+    }
+  });
+
+  return results;
+};
+
+export const findPreviousSong = (
+  currentSong: MusicKit.Songs | MusicKit.MusicVideos,
+  songs: (MusicKit.Songs | MusicKit.MusicVideos)[]
+) => {
+  const currentSongId = currentSong.id;
+  let results;
+
+  songs.forEach((song, idx) => {
+    if (song.id === currentSongId) {
+      const nextId = idx - 1;
+      if (nextId < 0) {
+        results = songs[songs.length - 1];
+      } else {
+        results = songs[nextId];
+      }
+    }
+  });
+
+  return results;
 };

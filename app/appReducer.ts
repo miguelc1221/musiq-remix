@@ -1,8 +1,11 @@
 import type { Dispatch } from "react";
+import { findNextSong, findPreviousSong } from "./utils/helpers";
 
 export type PlayerType = {
-  selectedSongInfo?: MusicKit.Songs | MusicKit.MusicVideos;
-  selectedSong?: string;
+  selectedSong?: MusicKit.Songs | MusicKit.MusicVideos;
+  selectedSongPlaylist?: (MusicKit.Songs | MusicKit.MusicVideos)[];
+  nextSong?: MusicKit.Songs | MusicKit.MusicVideos;
+  previousSong?: MusicKit.Songs | MusicKit.MusicVideos;
   isPlaying: boolean;
 };
 
@@ -29,7 +32,10 @@ export type AppReducerAction =
     }
   | {
       type: AppReducerActionType.SET_SELECTED_SONG;
-      payload: MusicKit.Songs | MusicKit.MusicVideos;
+      payload: {
+        selectedSong: MusicKit.Songs | MusicKit.MusicVideos;
+        selectedSongPlaylist: (MusicKit.Songs | MusicKit.MusicVideos)[];
+      };
     }
   | {
       type: AppReducerActionType.SET_IS_PLAYING_ON;
@@ -44,8 +50,9 @@ export type AppReducerAction =
 export const appInitialState: initialStateType = {
   musicKit: undefined,
   player: {
-    selectedSongInfo: undefined,
-    selectedSong: "",
+    selectedSong: undefined,
+    selectedSongPlaylist: [],
+    nextSong: undefined,
     isPlaying: false,
   },
   isAuthenticated: false,
@@ -66,10 +73,16 @@ export const appReducer = (
         ...state,
         player: {
           ...state.player,
-          selectedSongInfo: action.payload,
-          selectedSong: state.isAuthenticated
-            ? ""
-            : action.payload.attributes?.previews[0].url,
+          selectedSong: action.payload.selectedSong,
+          selectedSongPlaylist: action.payload.selectedSongPlaylist,
+          nextSong: findNextSong(
+            action.payload.selectedSong,
+            action.payload.selectedSongPlaylist
+          ),
+          previousSong: findPreviousSong(
+            action.payload.selectedSong,
+            action.payload.selectedSongPlaylist
+          ),
           isPlaying: true,
         },
       };

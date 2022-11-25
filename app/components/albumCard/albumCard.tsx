@@ -1,6 +1,6 @@
 import { PlayIcon } from "@heroicons/react/24/solid";
 import { Link } from "@remix-run/react";
-import { formatArtworkURL } from "~/utils/helpers";
+import { formatArtworkURL, formatUrlName } from "~/utils/helpers";
 import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 import { useOutletContext } from "@remix-run/react";
@@ -19,13 +19,16 @@ export const AlbumCard = ({
   const title = album.attributes?.name;
   const subTitle = album.attributes?.artistName;
   const albumId = album.id;
-  const albumUrl = `/album/${title?.replace(" ", "-")}/${albumId}`;
+  const albumUrl = `/album/${formatUrlName(title || "")}/${albumId}`;
 
   useEffect(() => {
     if (fetcher.data) {
       return dispatch({
         type: AppReducerActionType.SET_SELECTED_SONG,
-        payload: fetcher.data.relationships.tracks.data[0],
+        payload: {
+          selectedSong: fetcher.data.relationships.tracks.data[0],
+          selectedSongPlaylist: fetcher.data.relationships.tracks.data,
+        },
       });
     }
   }, [fetcher.data, dispatch]);

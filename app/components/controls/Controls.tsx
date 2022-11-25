@@ -13,15 +13,22 @@ export const Controls = ({
   player,
   dispatch,
   onRepeatClick,
+  isOnRepeat,
+  previousSong,
+  nextSong,
 }: {
   player: PlayerType;
   dispatch: DispatchType;
   onRepeatClick: () => void;
+  nextSong: () => void;
+  previousSong: () => void;
+  isOnRepeat: boolean;
 }) => {
   const isDisabled = !player.selectedSong;
   const disableColor = isDisabled
     ? "text-gray-300 hover:text-gray-300"
     : "hover:text-slate-700/60";
+  const repeatOn = isOnRepeat ? "text-indigo-500" : "";
 
   return (
     <>
@@ -29,7 +36,11 @@ export const Controls = ({
         <button className={`mr-1 ${disableColor}`} disabled={isDisabled}>
           <ShuffleIcon className="h-4 w-4" />
         </button>
-        <button className={`${disableColor}`} disabled={isDisabled}>
+        <button
+          className={`${disableColor}`}
+          disabled={isDisabled}
+          onClick={previousSong}
+        >
           <BackwardIcon className="h-7 w-7" />
         </button>
         <button
@@ -55,11 +66,15 @@ export const Controls = ({
             <PlayIcon className="h-9 w-9" />
           )}
         </button>
-        <button className={`${disableColor}`} disabled={isDisabled}>
+        <button
+          className={`${disableColor}`}
+          disabled={isDisabled}
+          onClick={nextSong}
+        >
           <ForwardIcon className="h-7 w-7" />
         </button>
         <button
-          className={`ml-1 ${disableColor}`}
+          className={`ml-1 ${disableColor} ${repeatOn}`}
           disabled={isDisabled}
           onClick={onRepeatClick}
         >

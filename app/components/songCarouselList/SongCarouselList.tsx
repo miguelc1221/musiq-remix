@@ -1,9 +1,8 @@
-import { formatArtworkURL, getAlbumId } from "~/utils/helpers";
+import { formatArtworkURL } from "~/utils/helpers";
 import { PlayIcon } from "@heroicons/react/20/solid";
 import { useOutletContext } from "@remix-run/react";
 import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
-import { useFetcher } from "@remix-run/react";
 
 export const SongCarouselList = ({
   songs,
@@ -11,17 +10,11 @@ export const SongCarouselList = ({
 }: {
   songs: MusicKit.Songs[];
 }) => {
-  const fetcher = useFetcher();
   const { dispatch } = useOutletContext<AppContextType>();
 
   return (
     <div className="grid grid-cols-1 gap-2 divide-y" {...otherProps}>
       {songs.map((song, idx) => {
-        const albumUrl = `/album/${song.attributes?.albumName.replace(
-          " ",
-          "-"
-        )}/${getAlbumId(song.attributes?.url)}?sId=${song.id}`;
-
         return (
           <div
             key={idx}
@@ -39,11 +32,12 @@ export const SongCarouselList = ({
                     return;
                   }
 
-                  fetcher.load(albumUrl);
-
                   return dispatch({
                     type: AppReducerActionType.SET_SELECTED_SONG,
-                    payload: song,
+                    payload: {
+                      selectedSong: song,
+                      selectedSongPlaylist: songs,
+                    },
                   });
                 }}
                 aria-label="play"

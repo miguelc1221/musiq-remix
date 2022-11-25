@@ -4,6 +4,7 @@ import { AppleIcon, MusicNote } from "../icons";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
 import { Controls } from "../controls/Controls";
+import { AppReducerActionType } from "~/appReducer";
 
 export const TrackDisplay = ({
   player,
@@ -95,23 +96,73 @@ export const TrackDisplay = ({
     return setIsOnRepeat((prev) => !prev);
   }, []);
 
+  const nextSong = useCallback(() => {
+    if (!player.nextSong || !player.selectedSongPlaylist?.length) {
+      return;
+    }
+
+    return dispatch({
+      type: AppReducerActionType.SET_SELECTED_SONG,
+      payload: {
+        selectedSong: player.nextSong,
+        selectedSongPlaylist: player.selectedSongPlaylist,
+      },
+    });
+  }, [dispatch, player.nextSong, player.selectedSongPlaylist]);
+
+  const previousSong = useCallback(() => {
+    if (!player.previousSong || !player.selectedSongPlaylist?.length) {
+      return;
+    }
+
+    return dispatch({
+      type: AppReducerActionType.SET_SELECTED_SONG,
+      payload: {
+        selectedSong: player.previousSong,
+        selectedSongPlaylist: player.selectedSongPlaylist,
+      },
+    });
+  }, [dispatch, player.previousSong, player.selectedSongPlaylist]);
+
+  const onEnded = () => {
+    if (
+      !player.selectedSongPlaylist?.length ||
+      !player.nextSong ||
+      !player.selectedSong ||
+      isOnRepeat
+    ) {
+      return;
+    }
+
+    return dispatch({
+      type: AppReducerActionType.SET_SELECTED_SONG,
+      payload: {
+        selectedSong: player.nextSong,
+        selectedSongPlaylist: player.selectedSongPlaylist,
+      },
+    });
+  };
+
   return (
     <>
       <Controls
         player={player}
         dispatch={dispatch}
         onRepeatClick={handleOnRepeatClick}
+        isOnRepeat={isOnRepeat}
+        nextSong={nextSong}
+        previousSong={previousSong}
       />
 
       <div className="grid grid-cols-[auto_1fr] items-center">
-        {player.selectedSongInfo ? (
+        {player.selectedSong ? (
           <img
             src={formatArtworkURL(
-              player.selectedSongInfo?.attributes?.artwork.url,
+              player.selectedSong?.attributes?.artwork.url,
               96,
               96
             )}
-            alt={player.selectedSongInfo?.attributes?.name}
+            alt={player.selectedSong?.attributes?.name}
             className="h-[55px] w-[55px]"
           />
         ) : (
@@ -122,14 +173,14 @@ export const TrackDisplay = ({
 
         <div className="flex h-full flex-col items-center justify-center bg-slate-200 text-xs shadow-inner">
           <div className="relative flex w-full flex-1 flex-col items-center justify-center">
-            {player.selectedSongInfo ? (
+            {player.selectedSong ? (
               <>
                 <span className="block">
-                  {player.selectedSongInfo?.attributes?.name}
+                  {player.selectedSong?.attributes?.name}
                 </span>
                 <span>
-                  {player.selectedSongInfo?.attributes?.artistName}-{" "}
-                  {player.selectedSongInfo?.attributes?.albumName}
+                  {player.selectedSong?.attributes?.artistName}-{" "}
+                  {player.selectedSong?.attributes?.albumName}
                 </span>
                 <time
                   className="invisible absolute left-2 bottom-0 text-[0.625rem] font-bold text-slate-600 group-hover/audioBar:visible "
@@ -175,9 +226,11 @@ export const TrackDisplay = ({
         </div>
         <audio
           preload="metadata"
-          src={player.selectedSong}
+          src={player.selectedSong?.attributes?.previews[0].url}
           ref={audioPlayer}
           onLoadedMetadata={onLoadedMetadata}
+          onEnded={onEnded}
+          loop={isOnRepeat}
         />
       </div>
 

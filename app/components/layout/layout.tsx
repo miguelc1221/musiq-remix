@@ -13,7 +13,6 @@ export default function Layout({
   children?: ReactNode;
 }) {
   const location = useLocation();
-  console.log(location, "locations");
   const isBrowseUrl = location.pathname === "/browse";
   const isAlbumUrl = location.pathname.includes("/album/");
   const isPlaylistUrl = location.pathname.includes("/playlist/");

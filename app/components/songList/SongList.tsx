@@ -11,8 +11,8 @@ export const SongList = ({
 
   return (
     <ul className="mt-4 flex flex-col px-10 text-sm">
-      {songs.map((track, index) => {
-        return <SongItem key={index} index={index} track={track} />;
+      {songs.map((song, index) => {
+        return <SongItem key={index} index={index} song={song} songs={songs} />;
       })}
     </ul>
   );

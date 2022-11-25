@@ -4,6 +4,7 @@ import { useOutletContext } from "@remix-run/react";
 import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
 import { calculateTime } from "~/utils/helpers";
+import { Equalizer } from "~/components/icons";
 
 const SongControl = ({
   isSelectedSong,
@@ -34,29 +35,33 @@ const SongControl = ({
   }
 
   if (isSelectedSong) {
-    if (isPlaying) {
+    if (isPlaying && isMouseOver) {
       return (
         <button onClick={onPauseClick}>
           <PauseIcon className="h-6 w-6" />
         </button>
       );
     }
+
+    return <Equalizer className="h-6 w-6 fill-white" />;
   }
 
   return <>{count}</>;
 };
 
 export const SongItem = ({
-  track,
+  song,
+  songs,
   index,
   ...otherProps
 }: {
-  track: MusicKit.Songs | MusicKit.MusicVideos;
+  song: MusicKit.Songs | MusicKit.MusicVideos;
+  songs: (MusicKit.Songs | MusicKit.MusicVideos)[];
   index: number;
 }) => {
   const [isMouseOver, setIsMouseOver] = useState(false);
   const { dispatch, player } = useOutletContext<AppContextType>();
-  const isSelectedSong = track.id === player.selectedSongInfo?.id;
+  const isSelectedSong = song.id === player.selectedSong?.id;
 
   return (
     <li
@@ -78,7 +83,10 @@ export const SongItem = ({
             }
             return dispatch({
               type: AppReducerActionType.SET_SELECTED_SONG,
-              payload: track,
+              payload: {
+                selectedSong: song,
+                selectedSongPlaylist: songs,
+              },
             });
           }}
           onPauseClick={() => {
@@ -90,13 +98,13 @@ export const SongItem = ({
         />
       </div>
       <div className="flex-1">
-        <span className="block font-semibold">{track.attributes?.name}</span>
-        <span className="text-xs">{track.attributes?.artistName}</span>
+        <span className="block font-semibold">{song.attributes?.name}</span>
+        <span className="text-xs">{song.attributes?.artistName}</span>
       </div>
       <div>
-        {track.attributes?.durationInMillis && (
+        {song.attributes?.durationInMillis && (
           <time className="tabular-nums">
-            {calculateTime(track.attributes?.durationInMillis / 1000)}
+            {calculateTime(song.attributes?.durationInMillis / 1000)}
           </time>
         )}
       </div>

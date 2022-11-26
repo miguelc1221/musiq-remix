@@ -7,3 +7,5 @@ export { VolumeX1 } from "./volume/volumeX1";
 export { VolumeX0 } from "./volume/volumeX0";
 export { MusicNote } from "./musicNote";
 export { Equalizer } from "./equalizer";
+export { RepeatIcon } from "./repeatIcon";
+export { RepeatOneIcon } from "./repeatOneIcon";

@@ -15,7 +15,7 @@ export const TrackDisplay = ({
 }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState("0.4");
-  const [isOnRepeat, setIsOnRepeat] = useState(false);
+  const [isOnRepeat, setIsOnRepeat] = useState(0);
 
   const audioPlayer = useRef<HTMLAudioElement | null>(null); // reference our audio component
   const progressBar = useRef<HTMLInputElement | null>(null); // reference our progress bar
@@ -93,7 +93,17 @@ export const TrackDisplay = ({
   };
 
   const handleOnRepeatClick = useCallback(() => {
-    return setIsOnRepeat((prev) => !prev);
+    return setIsOnRepeat((prev) => {
+      if (prev === 0) {
+        return 1;
+      }
+
+      if (prev === 1) {
+        return 2;
+      }
+
+      return 0;
+    });
   }, []);
 
   const nextSong = useCallback(() => {
@@ -128,17 +138,30 @@ export const TrackDisplay = ({
     if (
       !player.selectedSongPlaylist?.length ||
       !player.nextSong ||
-      !player.selectedSong ||
-      isOnRepeat
+      !player.selectedSong
     ) {
       return;
     }
 
+    if (isOnRepeat === 1) {
+      return dispatch({
+        type: AppReducerActionType.SET_SELECTED_SONG,
+        payload: {
+          selectedSong: player.nextSong,
+          selectedSongPlaylist: player.selectedSongPlaylist,
+        },
+      });
+    }
+
+    const lastSong =
+      player.selectedSongPlaylist[player.selectedSongPlaylist.length - 1];
+    const isLastSongSame = lastSong.id === player.selectedSong.id;
+
     return dispatch({
       type: AppReducerActionType.SET_SELECTED_SONG,
       payload: {
-        selectedSong: player.nextSong,
-        selectedSongPlaylist: player.selectedSongPlaylist,
+        selectedSong: isLastSongSame ? undefined : player.nextSong,
+        selectedSongPlaylist: isLastSongSame ? [] : player.selectedSongPlaylist,
       },
     });
   };
@@ -230,7 +253,7 @@ export const TrackDisplay = ({
           ref={audioPlayer}
           onLoadedMetadata={onLoadedMetadata}
           onEnded={onEnded}
-          loop={isOnRepeat}
+          loop={isOnRepeat === 2}
         />
       </div>
 

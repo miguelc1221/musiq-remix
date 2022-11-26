@@ -33,13 +33,17 @@ export const getAlbumId = (url: string = "") => {
 };
 
 export const findNextSong = (
-  currentSong: MusicKit.Songs | MusicKit.MusicVideos,
-  songs: (MusicKit.Songs | MusicKit.MusicVideos)[]
+  currentSong?: MusicKit.Songs | MusicKit.MusicVideos,
+  songs?: (MusicKit.Songs | MusicKit.MusicVideos)[]
 ) => {
+  if (!songs?.length || !currentSong) {
+    return;
+  }
+
   const currentSongId = currentSong.id;
   let results;
 
-  songs.forEach((song, idx) => {
+  songs?.forEach((song, idx) => {
     if (song.id === currentSongId) {
       const nextId = idx + 1;
       if (nextId === songs.length) {
@@ -54,9 +58,12 @@ export const findNextSong = (
 };
 
 export const findPreviousSong = (
-  currentSong: MusicKit.Songs | MusicKit.MusicVideos,
-  songs: (MusicKit.Songs | MusicKit.MusicVideos)[]
+  currentSong?: MusicKit.Songs | MusicKit.MusicVideos,
+  songs?: (MusicKit.Songs | MusicKit.MusicVideos)[]
 ) => {
+  if (!songs?.length || !currentSong) {
+    return;
+  }
   const currentSongId = currentSong.id;
   let results;
 

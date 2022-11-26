@@ -33,7 +33,7 @@ export type AppReducerAction =
   | {
       type: AppReducerActionType.SET_SELECTED_SONG;
       payload: {
-        selectedSong: MusicKit.Songs | MusicKit.MusicVideos;
+        selectedSong?: MusicKit.Songs | MusicKit.MusicVideos;
         selectedSongPlaylist: (MusicKit.Songs | MusicKit.MusicVideos)[];
       };
     }

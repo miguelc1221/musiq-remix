@@ -4,8 +4,7 @@ import {
   ForwardIcon,
   PauseIcon,
 } from "@heroicons/react/24/solid";
-import { ArrowPathIcon } from "@heroicons/react/20/solid";
-import { ShuffleIcon } from "../icons";
+import { RepeatIcon, RepeatOneIcon, ShuffleIcon } from "../icons";
 import { AppReducerActionType } from "~/appReducer";
 import type { PlayerType, DispatchType } from "~/appReducer";
 
@@ -22,13 +21,13 @@ export const Controls = ({
   onRepeatClick: () => void;
   nextSong: () => void;
   previousSong: () => void;
-  isOnRepeat: boolean;
+  isOnRepeat: number;
 }) => {
   const isDisabled = !player.selectedSong;
   const disableColor = isDisabled
     ? "text-gray-300 hover:text-gray-300"
     : "hover:text-slate-700/60";
-  const repeatOn = isOnRepeat ? "text-indigo-500" : "";
+  const repeatOn = isOnRepeat ? "text-indigo-500 hover:text-indigo-600" : "";
 
   return (
     <>
@@ -74,11 +73,15 @@ export const Controls = ({
           <ForwardIcon className="h-7 w-7" />
         </button>
         <button
-          className={`ml-1 ${disableColor} ${repeatOn}`}
+          className={`ml-1 cursor-default ${disableColor} ${repeatOn}`}
           disabled={isDisabled}
           onClick={onRepeatClick}
         >
-          <ArrowPathIcon className="h-5 w-5" />
+          {isOnRepeat === 1 || !isOnRepeat ? (
+            <RepeatIcon className="h-5 w-5" />
+          ) : (
+            <RepeatOneIcon className="h-5 w-5" />
+          )}
         </button>
       </div>
     </>

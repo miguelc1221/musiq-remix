@@ -32,6 +32,13 @@ export default function AlbumRoute() {
   const state = useOverlayTriggerState({});
   const openButtonRef = useRef(null);
   const openButton = useButton({ onPress: state.open }, openButtonRef);
+  const isSongInCurrentResults = results.relationships.tracks.data.find(
+    (track) => {
+      return track.id === player.selectedSong?.id;
+    }
+  );
+
+  const isPlayerPlaying = player.isPlaying && isSongInCurrentResults;
 
   return (
     <>
@@ -54,59 +61,60 @@ export default function AlbumRoute() {
             {results.attributes?.releaseDate &&
               new Date(results.attributes?.releaseDate).getFullYear()}
           </p>
-          {results.attributes?.editorialNotes?.standard && (
-            <div className="max-w-[540px]">
-              <div className="flex flex-col">
-                <p
-                  className="text-sm line-clamp-3"
-                  dangerouslySetInnerHTML={{
-                    __html: results.attributes?.editorialNotes?.standard,
-                  }}
-                />
-                <div>
-                  <button
-                    className="text-xs font-bold uppercase"
-                    {...openButton.buttonProps}
-                    ref={openButtonRef}
-                  >
-                    More
-                  </button>
-                </div>
-                <button
-                  aria-label="play"
-                  className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
-                  onClick={() => {
-                    if (!player.selectedSong) {
-                      return dispatch({
-                        type: AppReducerActionType.SET_SELECTED_SONG,
-                        payload: {
-                          selectedSong: results.relationships.tracks.data[0],
-                          selectedSongPlaylist:
-                            results.relationships.tracks.data,
-                        },
-                      });
-                    }
-
-                    if (player?.isPlaying) {
-                      return dispatch({
-                        type: AppReducerActionType.SET_IS_PLAYING_OFF,
-                      });
-                    }
-
+          <div className="max-w-[540px]">
+            <div className="flex flex-col">
+              {results.attributes?.editorialNotes?.standard && (
+                <>
+                  <p
+                    className="text-sm line-clamp-3"
+                    dangerouslySetInnerHTML={{
+                      __html: results.attributes?.editorialNotes?.standard,
+                    }}
+                  />
+                  <div>
+                    <button
+                      className="text-xs font-bold uppercase"
+                      {...openButton.buttonProps}
+                      ref={openButtonRef}
+                    >
+                      More
+                    </button>
+                  </div>
+                </>
+              )}
+              <button
+                aria-label="play"
+                className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
+                onClick={() => {
+                  if (!player.selectedSong || !isSongInCurrentResults) {
                     return dispatch({
-                      type: AppReducerActionType.SET_IS_PLAYING_ON,
+                      type: AppReducerActionType.SET_SELECTED_SONG,
+                      payload: {
+                        selectedSong: results.relationships.tracks.data[0],
+                        selectedSongPlaylist: results.relationships.tracks.data,
+                      },
                     });
-                  }}
-                >
-                  {player.isPlaying ? (
-                    <PauseIcon className="h-7 w-7 text-white" />
-                  ) : (
-                    <PlayIcon className="h-7 w-7 text-white" />
-                  )}
-                </button>
-              </div>
+                  }
+
+                  if (isPlayerPlaying) {
+                    return dispatch({
+                      type: AppReducerActionType.SET_IS_PLAYING_OFF,
+                    });
+                  }
+
+                  return dispatch({
+                    type: AppReducerActionType.SET_IS_PLAYING_ON,
+                  });
+                }}
+              >
+                {isPlayerPlaying ? (
+                  <PauseIcon className="h-7 w-7 text-white" />
+                ) : (
+                  <PlayIcon className="h-7 w-7 text-white" />
+                )}
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
       <div>

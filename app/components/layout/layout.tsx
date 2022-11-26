@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
 import { Link, useLocation } from "@remix-run/react";
 import { AppleLogo } from "../icons";
 import { UserCircleIcon, Squares2X2Icon } from "@heroicons/react/20/solid";
@@ -12,10 +14,15 @@ export default function Layout({
   appState?: AppContextType;
   children?: ReactNode;
 }) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const isBrowseUrl = location.pathname === "/browse";
   const isAlbumUrl = location.pathname.includes("/album/");
   const isPlaylistUrl = location.pathname.includes("/playlist/");
+
+  useEffect(() => {
+    containerRef.current?.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <div className="flex h-screen">
@@ -61,7 +68,10 @@ export default function Layout({
           </ul>
         </nav>
       </aside>
-      <div className="z-[1] h-auto w-full overflow-auto bg-white">
+      <div
+        className="z-[1] h-auto w-full overflow-auto bg-white"
+        ref={containerRef}
+      >
         <main className="h-full flex-1">
           <div className="group/audioBar fixed bottom-0 z-10 h-[65px] w-[calc(100%_-_300px)] bg-gray-100">
             <div className="grid h-full grid-cols-[1fr_2fr_1fr] items-center">

@@ -13,7 +13,6 @@ export const formatArtworkURL = (url = "", width = 220, height = 220) => {
 };
 
 export const formatUrlName = (str: string) => {
-  console.log(str, "str");
   return str
     .replace(/[^a-zA-Z0-9 ]/g, "")
     .split(" ")

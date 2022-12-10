@@ -27,7 +27,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export default function AlbumRoute() {
-  const results = useLoaderData<MusicKit.API["album"]>();
+  const results = useLoaderData<MusicKit.Albums>();
   const { player, dispatch } = useOutletContext<AppContextType>();
   const state = useOverlayTriggerState({});
   const openButtonRef = useRef(null);

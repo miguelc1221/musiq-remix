@@ -1,53 +1,9 @@
 import { useState } from "react";
-import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useOutletContext } from "@remix-run/react";
 import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
 import { calculateTime } from "~/utils/helpers";
-import { Equalizer } from "~/components/icons";
-
-const SongControl = ({
-  isSelectedSong,
-  isMouseOver,
-  isPlaying,
-  onPlayClick,
-  onPauseClick,
-  count,
-}: {
-  isSelectedSong: boolean;
-  isMouseOver: boolean;
-  isPlaying: boolean;
-  count: number;
-  onPlayClick: () => void;
-  onPauseClick: () => void;
-}) => {
-  const isSelectedSongPlaying = isPlaying && isSelectedSong;
-
-  if (
-    (isMouseOver && !isSelectedSong) ||
-    (isSelectedSong && !isSelectedSongPlaying)
-  ) {
-    return (
-      <button onClick={onPlayClick}>
-        <PlayIcon className="h-5 w-5" />
-      </button>
-    );
-  }
-
-  if (isSelectedSong) {
-    if (isPlaying && isMouseOver) {
-      return (
-        <button onClick={onPauseClick}>
-          <PauseIcon className="h-6 w-6" />
-        </button>
-      );
-    }
-
-    return <Equalizer className="h-6 w-6 fill-white" />;
-  }
-
-  return <>{count}</>;
-};
+import { SongControl } from "./SongControl";
 
 export const SongItem = ({
   song,
@@ -74,12 +30,14 @@ export const SongItem = ({
     >
       <div className="mr-4 flex h-6 w-6 items-center justify-center">
         <SongControl
-          count={index + 1}
+          defaultValue={`${index + 1}`}
           isMouseOver={isMouseOver}
           isPlaying={player.isPlaying}
           onPlayClick={() => {
             if (isSelectedSong) {
-              return dispatch({ type: AppReducerActionType.SET_IS_PLAYING_ON });
+              return dispatch({
+                type: AppReducerActionType.SET_IS_PLAYING_ON,
+              });
             }
             return dispatch({
               type: AppReducerActionType.SET_SELECTED_SONG,

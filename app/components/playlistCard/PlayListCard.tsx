@@ -13,7 +13,7 @@ export const PlayListCard = ({
 }: {
   playList: MusicKit.Playlists;
 }) => {
-  const fetcher = useFetcher<MusicKit.API["album"]>();
+  const fetcher = useFetcher<MusicKit.Albums[]>();
   const { dispatch } = useOutletContext<AppContextType>();
   const imageSrc = formatArtworkURL(playList?.attributes?.artwork?.url);
   const title = playList.attributes?.name;
@@ -23,11 +23,13 @@ export const PlayListCard = ({
 
   useEffect(() => {
     if (fetcher.data) {
+      const fetcherData = fetcher.data[0];
+
       return dispatch({
         type: AppReducerActionType.SET_SELECTED_SONG,
         payload: {
-          selectedSong: fetcher.data.relationships.tracks.data[0],
-          selectedSongPlaylist: fetcher.data.relationships.tracks.data,
+          selectedSong: fetcherData.relationships.tracks.data[0],
+          selectedSongPlaylist: fetcherData.relationships.tracks.data,
         },
       });
     }

@@ -1,8 +1,80 @@
+import { useState } from "react";
 import { formatArtworkURL } from "~/utils/helpers";
-import { PlayIcon } from "@heroicons/react/20/solid";
 import { useOutletContext } from "@remix-run/react";
 import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
+import { SongControl } from "../songList/SongControl";
+
+const SongCarouselListItem = ({
+  song,
+  songs,
+  ...otherProps
+}: {
+  song: MusicKit.Songs | MusicKit.MusicVideos;
+  songs: (MusicKit.Songs | MusicKit.MusicVideos)[];
+}) => {
+  const [isMouseOver, setIsMouseOver] = useState(false);
+  const { dispatch, player } = useOutletContext<AppContextType>();
+  const isSelectedSong = song.id === player.selectedSong?.id;
+
+  return (
+    <div
+      {...otherProps}
+      className="grid grid-cols-[auto_auto_1fr_auto] items-center pt-2"
+    >
+      <div
+        className={`relative cursor-pointer after:absolute after:top-0 after:left-0 after:h-full after:w-full after:rounded-md after:bg-stone-600 after:opacity-0 after:transition after:duration-300 after:ease-in-out ${
+          isMouseOver || isSelectedSong ? "[&:after]:opacity-40" : ""
+        }`}
+        onMouseOver={() => setIsMouseOver(true)}
+        onMouseLeave={() => setIsMouseOver(false)}
+      >
+        <img
+          src={formatArtworkURL(song.attributes?.artwork?.url, 96, 96)}
+          alt={song.attributes?.name}
+          className="h-[50px] w-[50px] rounded-md drop-shadow-md"
+        />
+        <SongControl
+          className={`absolute bottom-0 top-0 right-0 left-0 z-[1] m-auto flex items-center justify-center text-white opacity-0 [&>svg]:inline-block ${
+            isMouseOver || isSelectedSong ? "opacity-100" : ""
+          }`}
+          isMouseOver={isMouseOver}
+          isPlaying={player.isPlaying}
+          onPlayClick={() => {
+            if (isSelectedSong) {
+              return dispatch({
+                type: AppReducerActionType.SET_IS_PLAYING_ON,
+              });
+            }
+            return dispatch({
+              type: AppReducerActionType.SET_SELECTED_SONG,
+              payload: {
+                selectedSong: song,
+                selectedSongPlaylist: songs,
+              },
+            });
+          }}
+          onPauseClick={() => {
+            return dispatch({
+              type: AppReducerActionType.SET_IS_PLAYING_OFF,
+            });
+          }}
+          isSelectedSong={isSelectedSong}
+        />
+      </div>
+      <div className="col-span-2 ml-2 text-sm ">
+        <div>
+          <span className="block w-full truncate text-[13px]">
+            {song.attributes?.name}
+          </span>
+        </div>
+        <span className="block w-full truncate text-xs text-slate-500">
+          {song.attributes?.artistName}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 export const SongCarouselList = ({
   songs,
@@ -10,54 +82,10 @@ export const SongCarouselList = ({
 }: {
   songs: MusicKit.Songs[];
 }) => {
-  const { dispatch } = useOutletContext<AppContextType>();
-
   return (
     <div className="grid grid-cols-1 gap-2 divide-y" {...otherProps}>
       {songs.map((song, idx) => {
-        return (
-          <div
-            key={idx}
-            className="grid grid-cols-[auto_auto_1fr_auto] items-center pt-2"
-          >
-            <div className="group relative cursor-pointer after:absolute after:top-0 after:left-0 after:h-full after:w-full after:rounded-md after:bg-stone-600 after:opacity-0 after:transition after:duration-300 after:ease-in-out [&:after:hover]:opacity-40">
-              <img
-                src={formatArtworkURL(song.attributes?.artwork?.url, 96, 96)}
-                alt={song.attributes?.name}
-                className="h-[50px] w-[50px] rounded-md"
-              />
-              <button
-                onClick={() => {
-                  if (!song.attributes?.previews[0].url) {
-                    return;
-                  }
-
-                  return dispatch({
-                    type: AppReducerActionType.SET_SELECTED_SONG,
-                    payload: {
-                      selectedSong: song,
-                      selectedSongPlaylist: songs,
-                    },
-                  });
-                }}
-                aria-label="play"
-                className="absolute bottom-0 top-0 right-0 left-0 z-[1] m-auto opacity-0 group-hover:opacity-100 [&>svg]:inline-block"
-              >
-                <PlayIcon className="h-5 w-5 text-white" />
-              </button>
-            </div>
-            <div className="col-span-2 ml-2 text-sm ">
-              <div>
-                <span className="block w-full truncate text-[13px]">
-                  {song.attributes?.name}
-                </span>
-              </div>
-              <span className="block w-full truncate text-xs text-slate-500">
-                {song.attributes?.artistName}
-              </span>
-            </div>
-          </div>
-        );
+        return <SongCarouselListItem song={song} songs={songs} key={idx} />;
       })}
     </div>
   );

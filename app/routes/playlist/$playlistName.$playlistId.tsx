@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   }
 
   try {
-    const res = await getPlaylist(params.playlistId);
+    const res = await getPlaylist(`/${params.playlistId}`);
     return res;
   } catch (error) {
     return error;
@@ -22,23 +22,27 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export default function PlaylistRoute() {
-  const results = useLoaderData<MusicKit.API["playlist"]>();
+  const results = useLoaderData<MusicKit.Playlists[]>();
   const { player, dispatch } = useOutletContext<AppContextType>();
+
+  const playlist = results[0];
 
   return (
     <>
       <div className="flex min-h-[300px] items-center gap-6 bg-rose-100 bg-gradient-to-t from-indigo-200/75 to-rose-100 px-10">
         <div className="shrink-0">
           <img
-            src={formatArtworkURL(results.attributes?.artwork?.url, 300, 300)}
+            src={formatArtworkURL(playlist.attributes?.artwork?.url, 300, 300)}
             alt={"album cover"}
             className="h-[250px] w-[250px] drop-shadow-md"
           />
         </div>
         <div>
-          <h1 className="text-2xl font-bold">{results.attributes?.name}</h1>
+          <h1 className="text-2xl font-bold">{playlist.attributes?.name}</h1>
           <p className="py-2 text-lg font-semibold">
-            <span className="uppercase">{results.attributes?.curatorName}</span>
+            <span className="uppercase">
+              {playlist.attributes?.curatorName}
+            </span>
           </p>
           <button
             aria-label="play"
@@ -48,8 +52,8 @@ export default function PlaylistRoute() {
                 return dispatch({
                   type: AppReducerActionType.SET_SELECTED_SONG,
                   payload: {
-                    selectedSong: results.relationships.tracks.data[0],
-                    selectedSongPlaylist: results.relationships.tracks.data,
+                    selectedSong: playlist.relationships.tracks.data[0],
+                    selectedSongPlaylist: playlist.relationships.tracks.data,
                   },
                 });
               }
@@ -74,7 +78,7 @@ export default function PlaylistRoute() {
         </div>
       </div>
       <div>
-        <SongList songs={results.relationships.tracks.data} />
+        <SongList songs={playlist.relationships.tracks.data} />
       </div>
     </>
   );

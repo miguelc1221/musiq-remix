@@ -1,27 +1,87 @@
-import type { PlayerType, DispatchType } from "~/appReducer";
-import { formatArtworkURL, calculateTime } from "~/utils/helpers";
+import type { PlayerType } from "~/appReducer";
+import { formatArtworkURL } from "~/utils/helpers";
 import { AppleIcon, MusicNote } from "../icons";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
 import { Controls } from "../controls/Controls";
-import { AppReducerActionType } from "~/appReducer";
+import { useMusicKitListener } from "~/hooks/useMusicKitListener";
+import { calculateTime } from "~/utils/helpers";
+
+interface MusickitPlayBackTime {
+  currentPlaybackDuration: number;
+  currentPlaybackTime: number;
+  currentPlaybackTimeRemaining: number;
+}
 
 export const TrackDisplay = ({
   player,
-  dispatch,
+  musicKit,
 }: {
-  player: PlayerType;
-  dispatch: DispatchType;
+  player?: PlayerType;
+  musicKit?: MusicKit.MusicKitInstance;
 }) => {
-  const [currentTime, setCurrentTime] = useState(0);
+  const [currentTime, setCurrentTime] = useState<MusickitPlayBackTime | null>(
+    null
+  );
   const [volume, setVolume] = useState("0.4");
-  const [isOnRepeat, setIsOnRepeat] = useState(0);
 
   const audioPlayer = useRef<HTMLAudioElement | null>(null); // reference our audio component
   const progressBar = useRef<HTMLInputElement | null>(null); // reference our progress bar
-  const animationRef = useRef<number | null>(null); // reference the animation
-  const durationRef = useRef<number | null>(null); // reference the animation
   const mouseIsDown = useRef<boolean>(false); // reference the animation
+
+  const selectedSong = player?.selectedMediaItem;
+
+  const getDuration = useCallback(() => {
+    if (!selectedSong) {
+      return 0;
+    }
+
+    return Math.ceil(
+      musicKit?.isAuthorized ? selectedSong.playbackDuration / 1000 : 30
+    );
+  }, [selectedSong, musicKit?.isAuthorized]);
+
+  const changePlayerCurrentTime = useCallback(
+    (value: number) => {
+      const duration = getDuration();
+      if (progressBar.current && duration && audioPlayer.current) {
+        let progressBarStyleValue = Number(value) / duration;
+        let progressBarValue = value;
+
+        if (value >= duration) {
+          progressBarStyleValue = 0;
+          progressBarValue = 0;
+        }
+
+        if (!mouseIsDown.current) {
+          progressBar.current.value = `${progressBarValue}`;
+        }
+
+        progressBar.current.style.setProperty(
+          "--seek-before-width",
+          `${progressBarStyleValue * 100}%`
+        );
+      }
+    },
+    [getDuration]
+  );
+
+  const handlePlaybackTimeDidChange = useCallback(
+    (state: MusickitPlayBackTime) => {
+      if (progressBar.current && !mouseIsDown.current) {
+        changePlayerCurrentTime(state.currentPlaybackTime);
+        setCurrentTime(state);
+      }
+    },
+    [changePlayerCurrentTime]
+  );
+
+  useMusicKitListener("playbackTimeDidChange", handlePlaybackTimeDidChange);
+
+  useEffect(() => {
+    const audioRef = document.querySelector("audio");
+    audioPlayer.current = audioRef;
+  }, [getDuration]);
 
   useEffect(() => {
     if (audioPlayer.current) {
@@ -29,59 +89,26 @@ export const TrackDisplay = ({
     }
   }, [volume]);
 
-  const onLoadedMetadata = () => {
-    if (audioPlayer.current && progressBar.current) {
-      const seconds = Math.ceil(audioPlayer.current.duration);
-      durationRef.current = seconds;
-      progressBar.current.max = `${seconds}`;
-    }
+  const getCurrentPlaybackDuration = () => {
+    if (!currentTime) return;
+
+    return calculateTime(currentTime?.currentPlaybackTimeRemaining * 1000);
   };
 
-  const changePlayerCurrentTime = useCallback(() => {
-    if (progressBar.current && durationRef.current) {
-      progressBar.current.style.setProperty(
-        "--seek-before-width",
-        `${(Number(progressBar.current.value) / durationRef.current) * 100}%`
-      );
-      setCurrentTime(Number(progressBar.current.value));
-    }
-  }, []);
+  const getCurrentPlaybackTime = () => {
+    if (!currentTime) return;
 
-  const whilePlaying = useCallback(() => {
-    if (progressBar.current && audioPlayer.current) {
-      if (!mouseIsDown.current) {
-        progressBar.current.value = `${audioPlayer.current.currentTime}`;
-      }
-      changePlayerCurrentTime();
-      animationRef.current = requestAnimationFrame(whilePlaying);
-    }
-  }, [changePlayerCurrentTime]);
-
-  useEffect(() => {
-    if (audioPlayer.current && player.selectedSong) {
-      if (player.isPlaying) {
-        audioPlayer.current.play();
-        animationRef.current = requestAnimationFrame(whilePlaying);
-      } else {
-        audioPlayer.current.pause();
-        if (animationRef.current) {
-          cancelAnimationFrame(animationRef.current);
-        }
-      }
-    }
-  }, [player.selectedSong, player.isPlaying, whilePlaying]);
-
-  const changeRange = () => {
-    if (audioPlayer.current && progressBar.current) {
-      changePlayerCurrentTime();
-    }
+    return calculateTime(currentTime?.currentPlaybackTime * 1000);
   };
 
-  const onMouseUp = () => {
-    if (audioPlayer.current && progressBar.current) {
-      audioPlayer.current.currentTime = Number(progressBar.current.value);
-      mouseIsDown.current = false;
-    }
+  const changeRange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    changePlayerCurrentTime(Number(evt.target.value));
+  };
+
+  const onMouseUp = async (evt: React.SyntheticEvent<HTMLInputElement>) => {
+    const eventTarget = evt.target as HTMLInputElement;
+    await musicKit?.seekToTime(Number(eventTarget.value));
+    mouseIsDown.current = false;
   };
 
   const onMouseDown = () => {
@@ -92,100 +119,19 @@ export const TrackDisplay = ({
     setVolume(volume);
   };
 
-  const handleOnRepeatClick = useCallback(() => {
-    return setIsOnRepeat((prev) => {
-      if (prev === 0) {
-        return 1;
-      }
-
-      if (prev === 1) {
-        return 2;
-      }
-
-      return 0;
-    });
-  }, []);
-
-  const nextSong = useCallback(() => {
-    if (!player.nextSong || !player.selectedSongPlaylist?.length) {
-      return;
-    }
-
-    return dispatch({
-      type: AppReducerActionType.SET_SELECTED_SONG,
-      payload: {
-        selectedSong: player.nextSong,
-        selectedSongPlaylist: player.selectedSongPlaylist,
-      },
-    });
-  }, [dispatch, player.nextSong, player.selectedSongPlaylist]);
-
-  const previousSong = useCallback(() => {
-    if (!player.previousSong || !player.selectedSongPlaylist?.length) {
-      return;
-    }
-
-    return dispatch({
-      type: AppReducerActionType.SET_SELECTED_SONG,
-      payload: {
-        selectedSong: player.previousSong,
-        selectedSongPlaylist: player.selectedSongPlaylist,
-      },
-    });
-  }, [dispatch, player.previousSong, player.selectedSongPlaylist]);
-
-  const onEnded = () => {
-    if (
-      !player.selectedSongPlaylist?.length ||
-      !player.nextSong ||
-      !player.selectedSong
-    ) {
-      return;
-    }
-
-    if (isOnRepeat === 1) {
-      return dispatch({
-        type: AppReducerActionType.SET_SELECTED_SONG,
-        payload: {
-          selectedSong: player.nextSong,
-          selectedSongPlaylist: player.selectedSongPlaylist,
-        },
-      });
-    }
-
-    const lastSong =
-      player.selectedSongPlaylist[player.selectedSongPlaylist.length - 1];
-    const isLastSongSame = lastSong.id === player.selectedSong.id;
-
-    return dispatch({
-      type: AppReducerActionType.SET_SELECTED_SONG,
-      payload: {
-        selectedSong: isLastSongSame ? undefined : player.nextSong,
-        selectedSongPlaylist: isLastSongSame ? [] : player.selectedSongPlaylist,
-      },
-    });
-  };
-
   return (
     <>
-      <Controls
-        player={player}
-        dispatch={dispatch}
-        onRepeatClick={handleOnRepeatClick}
-        isOnRepeat={isOnRepeat}
-        nextSong={nextSong}
-        previousSong={previousSong}
-      />
+      <Controls musicKit={musicKit} player={player} />
 
       <div className="grid grid-cols-[auto_1fr] items-center">
-        {player.selectedSong ? (
+        {selectedSong ? (
           <img
             src={formatArtworkURL(
-              player.selectedSong?.attributes?.artwork.url,
+              selectedSong?.attributes?.artwork.url,
               96,
               96
             )}
-            alt={player.selectedSong?.attributes?.name}
+            alt={selectedSong?.attributes?.name}
             className="h-[55px] w-[55px]"
           />
         ) : (
@@ -196,32 +142,24 @@ export const TrackDisplay = ({
 
         <div className="flex h-full flex-col items-center justify-center bg-slate-200 text-xs shadow-inner">
           <div className="relative flex w-full flex-1 flex-col items-center justify-center">
-            {player.selectedSong ? (
+            {selectedSong ? (
               <>
-                <span className="block">
-                  {player.selectedSong?.attributes?.name}
-                </span>
+                <span className="block">{selectedSong?.attributes?.name}</span>
                 <span>
-                  {player.selectedSong?.attributes?.artistName}-{" "}
-                  {player.selectedSong?.attributes?.albumName}
+                  {selectedSong?.attributes?.artistName}-{" "}
+                  {selectedSong?.attributes?.albumName}
                 </span>
                 <time
-                  className="invisible absolute left-2 bottom-0 text-[0.625rem] font-bold text-slate-600 group-hover/audioBar:visible "
+                  className="invisible absolute left-2 bottom-1 text-[0.625rem] font-bold text-slate-600 group-hover/audioBar:visible "
                   role="timer"
                 >
-                  {calculateTime(currentTime)}
+                  {getCurrentPlaybackTime()}
                 </time>
                 <time
-                  className="invisible absolute right-2 bottom-0 text-[0.625rem] font-bold text-slate-600 group-hover/audioBar:visible "
+                  className="invisible absolute right-2 bottom-1 text-[0.625rem] font-bold text-slate-600 group-hover/audioBar:visible "
                   role="timer"
                 >
-                  -
-                  {durationRef.current &&
-                    progressBar.current &&
-                    !isNaN(durationRef.current) &&
-                    calculateTime(
-                      durationRef.current - Number(progressBar.current.value)
-                    )}
+                  -{getCurrentPlaybackDuration()}
                 </time>
               </>
             ) : (
@@ -229,7 +167,7 @@ export const TrackDisplay = ({
             )}
           </div>
 
-          {player.selectedSong && (
+          {selectedSong && (
             <>
               <label htmlFor='playback-progress"' className="sr-only">
                 Playback Progress
@@ -243,18 +181,11 @@ export const TrackDisplay = ({
                 onChange={changeRange}
                 onMouseUp={onMouseUp}
                 onMouseDown={onMouseDown}
+                max={getDuration()}
               />
             </>
           )}
         </div>
-        <audio
-          preload="metadata"
-          src={player.selectedSong?.attributes?.previews[0].url}
-          ref={audioPlayer}
-          onLoadedMetadata={onLoadedMetadata}
-          onEnded={onEnded}
-          loop={isOnRepeat === 2}
-        />
       </div>
 
       <VolumeControl

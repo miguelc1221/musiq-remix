@@ -1,21 +1,22 @@
 import { useState } from "react";
 import { formatArtworkURL } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
-import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
 import { SongControl } from "../songList/SongControl";
 
 const SongCarouselListItem = ({
   song,
   songs,
+  allSongsId,
   ...otherProps
 }: {
-  song: MusicKit.Songs | MusicKit.MusicVideos;
-  songs: (MusicKit.Songs | MusicKit.MusicVideos)[];
+  song: MusicKit.Songs;
+  songs: MusicKit.Songs[];
+  allSongsId: string[];
 }) => {
   const [isMouseOver, setIsMouseOver] = useState(false);
-  const { dispatch, player } = useOutletContext<AppContextType>();
-  const isSelectedSong = song.id === player.selectedSong?.id;
+  const { player, musicKit } = useOutletContext<AppContextType>();
+  const isSelectedSong = song.id === player?.selectedMediaItem?.id;
 
   return (
     <div
@@ -39,26 +40,16 @@ const SongCarouselListItem = ({
             isMouseOver || isSelectedSong ? "opacity-100" : ""
           }`}
           isMouseOver={isMouseOver}
-          isPlaying={player.isPlaying}
-          onPlayClick={() => {
-            if (isSelectedSong) {
-              return dispatch({
-                type: AppReducerActionType.SET_IS_PLAYING_ON,
-              });
-            }
-            return dispatch({
-              type: AppReducerActionType.SET_SELECTED_SONG,
-              payload: {
-                selectedSong: song,
-                selectedSongPlaylist: songs,
-              },
+          isPlaying={player.playerState === "PLAYING"}
+          isLoading={player.playerState === "LOADING"}
+          onPlayClick={async () => {
+            await musicKit?.setQueue({
+              songs: allSongsId,
             });
+
+            await musicKit?.changeToMediaItem(song.id);
           }}
-          onPauseClick={() => {
-            return dispatch({
-              type: AppReducerActionType.SET_IS_PLAYING_OFF,
-            });
-          }}
+          onPauseClick={() => musicKit?.pause()}
           isSelectedSong={isSelectedSong}
         />
       </div>
@@ -78,14 +69,23 @@ const SongCarouselListItem = ({
 
 export const SongCarouselList = ({
   songs,
+  allSongsId,
   ...otherProps
 }: {
   songs: MusicKit.Songs[];
+  allSongsId: string[];
 }) => {
   return (
     <div className="grid grid-cols-1 gap-2 divide-y" {...otherProps}>
       {songs.map((song, idx) => {
-        return <SongCarouselListItem song={song} songs={songs} key={idx} />;
+        return (
+          <SongCarouselListItem
+            song={song}
+            songs={songs}
+            key={idx}
+            allSongsId={allSongsId}
+          />
+        );
       })}
     </div>
   );

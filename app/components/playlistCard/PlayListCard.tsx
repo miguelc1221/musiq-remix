@@ -1,10 +1,7 @@
 import { PlayIcon } from "@heroicons/react/24/solid";
 import { Link } from "@remix-run/react";
 import { formatArtworkURL, formatUrlName } from "~/utils/helpers";
-import { useFetcher } from "@remix-run/react";
-import { useEffect } from "react";
 import { useOutletContext } from "@remix-run/react";
-import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
 
 export const PlayListCard = ({
@@ -13,27 +10,12 @@ export const PlayListCard = ({
 }: {
   playList: MusicKit.Playlists;
 }) => {
-  const fetcher = useFetcher<MusicKit.Albums[]>();
-  const { dispatch } = useOutletContext<AppContextType>();
+  const { musicKit } = useOutletContext<AppContextType>();
   const imageSrc = formatArtworkURL(playList?.attributes?.artwork?.url);
   const title = playList.attributes?.name;
   const subTitle = playList.attributes?.curatorName;
   const playListId = playList.id;
   const playListUrl = `/playlist/${formatUrlName(title || "")}/${playListId}`;
-
-  useEffect(() => {
-    if (fetcher.data) {
-      const fetcherData = fetcher.data[0];
-
-      return dispatch({
-        type: AppReducerActionType.SET_SELECTED_SONG,
-        payload: {
-          selectedSong: fetcherData.relationships.tracks.data[0],
-          selectedSongPlaylist: fetcherData.relationships.tracks.data,
-        },
-      });
-    }
-  }, [fetcher.data, dispatch]);
 
   return (
     <div className="max-w-xs" {...otherProps}>
@@ -43,10 +25,13 @@ export const PlayListCard = ({
             <>
               <img src={imageSrc} className="w-full rounded-md" alt={title} />
               <button
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  fetcher.load(playListUrl);
+                  await musicKit?.setQueue({
+                    playlist: playListId,
+                    startPlaying: true,
+                  });
                 }}
                 aria-label="play"
                 className="absolute left-3 bottom-2 z-[1] m-auto flex h-8 w-8 items-center justify-center rounded-full opacity-0 hover:bg-indigo-500 group-hover:opacity-100 [&>svg]:inline-block"

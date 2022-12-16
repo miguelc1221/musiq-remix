@@ -35,6 +35,8 @@ export default function BrowseIndex() {
     cityCharts: MusicKit.Playlists[];
   }>();
 
+  const allSongsId = songs[0].data.map((song) => song.id);
+
   return (
     <>
       <h1 className="mb-4 border-b border-slate-200 pb-6 text-3xl font-bold">
@@ -82,7 +84,13 @@ export default function BrowseIndex() {
               }}
             >
               {getChunk(songs[0].data, 4).map((item, index) => {
-                return <SongCarouselList songs={item} key={index} />;
+                return (
+                  <SongCarouselList
+                    songs={item}
+                    key={index}
+                    allSongsId={allSongsId}
+                  />
+                );
               })}
             </MusiqCarousel>
           </div>

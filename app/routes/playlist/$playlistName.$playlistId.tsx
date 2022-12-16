@@ -5,8 +5,8 @@ import { SongList } from "~/components/songList/SongList";
 import { formatArtworkURL } from "~/utils/helpers";
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useOutletContext } from "@remix-run/react";
-import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
+import { useState, useEffect } from "react";
 
 export const loader: LoaderFunction = async ({ params }) => {
   if (!params.playlistId) {
@@ -23,9 +23,28 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function PlaylistRoute() {
   const results = useLoaderData<MusicKit.Playlists[]>();
-  const { player, dispatch } = useOutletContext<AppContextType>();
-
+  const { player, musicKit } = useOutletContext<AppContextType>();
+  const [isPlaying, setIsPlaying] = useState(player?.playerState === "PLAYING");
+  const [queueLoaded, setQueueLoaded] = useState(false);
   const playlist = results[0];
+
+  const isSongInCurrentResults = playlist.relationships.tracks.data.find(
+    (track) => {
+      return track.id === musicKit?.nowPlayingItem?.id;
+    }
+  );
+
+  const isPlayerPlaying =
+    player.playerState === "PLAYING" && isSongInCurrentResults;
+
+  useEffect(() => {
+    if (player.playerState === "PAUSE") {
+      setIsPlaying(false);
+    }
+    if (player.playerState === "PLAYING") {
+      setIsPlaying(true);
+    }
+  }, [player.playerState]);
 
   return (
     <>
@@ -47,38 +66,36 @@ export default function PlaylistRoute() {
           <button
             aria-label="play"
             className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
-            onClick={() => {
-              if (!player.selectedSong) {
-                return dispatch({
-                  type: AppReducerActionType.SET_SELECTED_SONG,
-                  payload: {
-                    selectedSong: playlist.relationships.tracks.data[0],
-                    selectedSongPlaylist: playlist.relationships.tracks.data,
-                  },
+            onClick={async () => {
+              if (!player.queueLength || !isSongInCurrentResults) {
+                await musicKit?.setQueue({
+                  playlist: playlist.id,
+                  startPlaying: true,
                 });
+                return;
               }
-
-              if (player?.isPlaying) {
-                return dispatch({
-                  type: AppReducerActionType.SET_IS_PLAYING_OFF,
-                });
+              if (isPlayerPlaying) {
+                return musicKit?.pause();
               }
-
-              return dispatch({
-                type: AppReducerActionType.SET_IS_PLAYING_ON,
-              });
+              return musicKit?.play();
             }}
           >
-            {player.isPlaying ? (
-              <PauseIcon className="h-7 w-7 text-white" />
-            ) : (
+            {!isPlaying ? (
               <PlayIcon className="h-7 w-7 text-white" />
-            )}{" "}
+            ) : (
+              <PauseIcon className="h-7 w-7 text-white" />
+            )}
           </button>
         </div>
       </div>
       <div>
-        <SongList songs={playlist.relationships.tracks.data} />
+        <SongList
+          songs={playlist.relationships.tracks.data}
+          playlistId={
+            !isSongInCurrentResults || !queueLoaded ? playlist.id : undefined
+          }
+          setQueueLoaded={setQueueLoaded}
+        />
       </div>
     </>
   );

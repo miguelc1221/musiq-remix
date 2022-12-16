@@ -79,7 +79,6 @@ export const getPlaylist: MusicKit.API["playlist"] = async (id) => {
     });
     const data = await response.json();
 
-    console.log(data, "data>>><<><");
     if (data.errors) {
       throw data.error;
     }

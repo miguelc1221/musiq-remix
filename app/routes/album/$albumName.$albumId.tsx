@@ -6,10 +6,9 @@ import { formatArtworkURL } from "~/utils/helpers";
 import { useOverlayTriggerState } from "@react-stately/overlays";
 import { MusiqModal } from "~/components/modal/MusiqModal";
 import { useButton } from "@react-aria/button";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useOutletContext } from "@remix-run/react";
-import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -28,17 +27,29 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function AlbumRoute() {
   const results = useLoaderData<MusicKit.Albums>();
-  const { player, dispatch } = useOutletContext<AppContextType>();
+  const { player, musicKit } = useOutletContext<AppContextType>();
+  const [isPlaying, setIsPlaying] = useState(player?.playerState === "PLAYING");
+  const [queueLoaded, setQueueLoaded] = useState(false);
   const state = useOverlayTriggerState({});
   const openButtonRef = useRef(null);
   const openButton = useButton({ onPress: state.open }, openButtonRef);
   const isSongInCurrentResults = results.relationships.tracks.data.find(
     (track) => {
-      return track.id === player.selectedSong?.id;
+      return track.id === musicKit?.nowPlayingItem?.id;
     }
   );
 
-  const isPlayerPlaying = player.isPlaying && isSongInCurrentResults;
+  const isPlayerPlaying =
+    player.playerState === "PLAYING" && isSongInCurrentResults;
+
+  useEffect(() => {
+    if (player.playerState === "PAUSE") {
+      setIsPlaying(false);
+    }
+    if (player.playerState === "PLAYING") {
+      setIsPlaying(true);
+    }
+  }, [player.playerState]);
 
   return (
     <>
@@ -85,32 +96,26 @@ export default function AlbumRoute() {
               <button
                 aria-label="play"
                 className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
-                onClick={() => {
-                  if (!player.selectedSong || !isSongInCurrentResults) {
-                    return dispatch({
-                      type: AppReducerActionType.SET_SELECTED_SONG,
-                      payload: {
-                        selectedSong: results.relationships.tracks.data[0],
-                        selectedSongPlaylist: results.relationships.tracks.data,
-                      },
+                onClick={async () => {
+                  if (!player.queueLength || !isSongInCurrentResults) {
+                    await musicKit?.setQueue({
+                      album: results.id,
+                      startPlaying: true,
                     });
+                    return;
                   }
 
                   if (isPlayerPlaying) {
-                    return dispatch({
-                      type: AppReducerActionType.SET_IS_PLAYING_OFF,
-                    });
+                    return musicKit?.pause();
                   }
 
-                  return dispatch({
-                    type: AppReducerActionType.SET_IS_PLAYING_ON,
-                  });
+                  return musicKit?.play();
                 }}
               >
-                {isPlayerPlaying ? (
-                  <PauseIcon className="h-7 w-7 text-white" />
-                ) : (
+                {!isPlaying ? (
                   <PlayIcon className="h-7 w-7 text-white" />
+                ) : (
+                  <PauseIcon className="h-7 w-7 text-white" />
                 )}
               </button>
             </div>
@@ -118,7 +123,13 @@ export default function AlbumRoute() {
         </div>
       </div>
       <div>
-        <SongList songs={results.relationships.tracks.data} />
+        <SongList
+          songs={results.relationships.tracks.data}
+          albumId={
+            !isSongInCurrentResults || !queueLoaded ? results.id : undefined
+          }
+          setQueueLoaded={setQueueLoaded}
+        />
       </div>
       <MusiqModal
         state={state}

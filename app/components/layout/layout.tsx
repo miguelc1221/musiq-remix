@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
-import { Link, useLocation } from "@remix-run/react";
+import { Link, useLocation, useFetcher } from "@remix-run/react";
 import { AppleLogo } from "../icons";
 import { UserCircleIcon, Squares2X2Icon } from "@heroicons/react/20/solid";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
@@ -9,11 +9,14 @@ import type { AppContextType } from "~/appReducer";
 
 export default function Layout({
   appState,
+  isAuthenticated,
   children,
 }: {
   appState?: AppContextType;
+  isAuthenticated?: boolean;
   children?: ReactNode;
 }) {
+  const fetcher = useFetcher();
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const isBrowseUrl = location.pathname === "/browse";
@@ -53,12 +56,31 @@ export default function Layout({
                 <span className="ml-2">Browse</span>
               </Link>
             </li>
+            {isAuthenticated && (
+              <>
+                <li className="px-8">
+                  <button onClick={async () => {}}>
+                    <span className="ml-2">Library</span>
+                  </button>
+                </li>
+              </>
+            )}
             <li className="px-8 pt-6">
               <span
                 className="flex w-full cursor-pointer items-center justify-center border-t border-slate-300 p-4 font-bold hover:text-indigo-500"
-                onClick={() => {
-                  console.log(appState?.musicKit, "musickit on login click");
-                  // return musicKit?.musicKit?.getInstance()?.authorize();
+                onClick={async () => {
+                  try {
+                    const token = await appState?.musicKit?.authorize();
+
+                    if (token) {
+                      fetcher.submit(
+                        { appleMusicToken: token },
+                        { method: "post", action: "/session/newSession" }
+                      );
+                    }
+                  } catch (error) {
+                    console.log(error, "Authorization Error");
+                  }
                 }}
               >
                 <UserCircleIcon className="h-6 w-6" />{" "}
@@ -75,12 +97,10 @@ export default function Layout({
         <main className="h-full flex-1">
           <div className="group/audioBar fixed bottom-0 z-10 h-[65px] w-[calc(100%_-_300px)] bg-gray-100">
             <div className="grid h-full grid-cols-[1fr_2fr_1fr] items-center">
-              {appState && (
-                <TrackDisplay
-                  player={appState.player}
-                  dispatch={appState.dispatch}
-                />
-              )}
+              <TrackDisplay
+                player={appState?.player}
+                musicKit={appState?.musicKit}
+              />
             </div>
           </div>
           <div

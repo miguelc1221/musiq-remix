@@ -5,29 +5,33 @@ import {
   PauseIcon,
 } from "@heroicons/react/24/solid";
 import { RepeatIcon, RepeatOneIcon, ShuffleIcon } from "../icons";
-import { AppReducerActionType } from "~/appReducer";
-import type { PlayerType, DispatchType } from "~/appReducer";
+import type { PlayerType } from "~/appReducer";
+import { useEffect, useState } from "react";
 
 export const Controls = ({
+  musicKit,
   player,
-  dispatch,
-  onRepeatClick,
-  isOnRepeat,
-  previousSong,
-  nextSong,
 }: {
-  player: PlayerType;
-  dispatch: DispatchType;
-  onRepeatClick: () => void;
-  nextSong: () => void;
-  previousSong: () => void;
-  isOnRepeat: number;
+  player?: PlayerType;
+  musicKit?: MusicKit.MusicKitInstance;
 }) => {
-  const isDisabled = !player.selectedSong;
+  const [isPlaying, setIsPlaying] = useState(player?.playerState === "PLAYING");
+  const isDisabled = !player?.queueLength;
   const disableColor = isDisabled
     ? "text-gray-300 hover:text-gray-300"
     : "hover:text-slate-700/60";
-  const repeatOn = isOnRepeat ? "text-indigo-500 hover:text-indigo-600" : "";
+  // const repeatOn = isOnRepeat ? "text-indigo-500 hover:text-indigo-600" : "";
+
+  const playerState = player?.playerState;
+
+  useEffect(() => {
+    if (playerState === "PAUSE") {
+      setIsPlaying(false);
+    }
+    if (playerState === "PLAYING") {
+      setIsPlaying(true);
+    }
+  }, [playerState]);
 
   return (
     <>
@@ -38,7 +42,9 @@ export const Controls = ({
         <button
           className={`${disableColor}`}
           disabled={isDisabled}
-          onClick={previousSong}
+          onClick={async () => {
+            await musicKit?.skipToPreviousItem();
+          }}
         >
           <BackwardIcon className="h-7 w-7" />
         </button>
@@ -46,33 +52,33 @@ export const Controls = ({
           className={`${disableColor}`}
           disabled={isDisabled}
           onClick={() => {
-            if (!player.selectedSong) {
+            if (!musicKit || playerState === "LOADING") {
               return;
             }
 
-            if (player?.isPlaying) {
-              return dispatch({
-                type: AppReducerActionType.SET_IS_PLAYING_OFF,
-              });
+            if (playerState === "PLAYING") {
+              return musicKit.pause();
             }
 
-            return dispatch({ type: AppReducerActionType.SET_IS_PLAYING_ON });
+            return musicKit.play();
           }}
         >
-          {player?.isPlaying ? (
-            <PauseIcon className="h-9 w-9" />
-          ) : (
+          {!isPlaying ? (
             <PlayIcon className="h-9 w-9" />
+          ) : (
+            <PauseIcon className="h-9 w-9" />
           )}
         </button>
         <button
           className={`${disableColor}`}
           disabled={isDisabled}
-          onClick={nextSong}
+          onClick={async () => {
+            await musicKit?.skipToNextItem();
+          }}
         >
           <ForwardIcon className="h-7 w-7" />
         </button>
-        <button
+        {/* <button
           className={`ml-1 cursor-default ${disableColor} ${repeatOn}`}
           disabled={isDisabled}
           onClick={onRepeatClick}
@@ -82,8 +88,8 @@ export const Controls = ({
           ) : (
             <RepeatOneIcon className="h-5 w-5" />
           )}
-        </button>
+        </button> */}
       </div>
     </>
   );
-};
+};;;;;;;

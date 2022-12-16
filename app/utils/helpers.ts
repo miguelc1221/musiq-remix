@@ -21,11 +21,18 @@ export const formatUrlName = (str: string) => {
     .toLowerCase();
 };
 
-export const calculateTime = (secs: number) => {
-  const minutes = Math.floor(secs / 60);
-  const seconds = Math.floor(secs % 60);
-  const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-  return `${minutes}:${returnedSeconds}`;
+export const calculateTime = (ms: number) => {
+  if (!ms || isNaN(ms) || ms < 0) {
+    ms = 0;
+    return;
+  }
+
+  const time = 1000 * Math.round(ms / 1000);
+  const date = new Date(time);
+
+  return `${date.getUTCMinutes()}:${String(`0${date.getUTCSeconds()}`).slice(
+    -2
+  )}`;
 };
 
 export const getAlbumId = (url: string = "") => {

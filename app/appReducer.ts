@@ -1,18 +1,16 @@
 import type { Dispatch } from "react";
-import { findNextSong, findPreviousSong } from "./utils/helpers";
+
+export type PlayerState = "PLAYING" | "PAUSE" | "LOADING";
 
 export type PlayerType = {
-  selectedSong?: MusicKit.Songs | MusicKit.MusicVideos;
-  selectedSongPlaylist?: (MusicKit.Songs | MusicKit.MusicVideos)[];
-  nextSong?: MusicKit.Songs | MusicKit.MusicVideos;
-  previousSong?: MusicKit.Songs | MusicKit.MusicVideos;
-  isPlaying: boolean;
+  playerState: PlayerState;
+  queueLength: number;
+  selectedMediaItem?: MusicKit.MediaItem;
 };
 
 export type initialStateType = {
   musicKit?: MusicKit.MusicKitInstance;
   player: PlayerType;
-  isAuthenticated: boolean;
 };
 
 /**
@@ -20,9 +18,9 @@ export type initialStateType = {
  */
 export enum AppReducerActionType {
   SET_MUSICKIT_INSTANCE,
-  SET_SELECTED_SONG,
-  SET_IS_PLAYING_ON,
-  SET_IS_PLAYING_OFF,
+  SET_PLAYER_STATE,
+  SET_QUEUE_LENGTH,
+  SET_SELECTED_MEDIA_ITEM,
 }
 
 export type AppReducerAction =
@@ -31,17 +29,16 @@ export type AppReducerAction =
       payload: MusicKit.MusicKitInstance;
     }
   | {
-      type: AppReducerActionType.SET_SELECTED_SONG;
-      payload: {
-        selectedSong?: MusicKit.Songs | MusicKit.MusicVideos;
-        selectedSongPlaylist: (MusicKit.Songs | MusicKit.MusicVideos)[];
-      };
+      type: AppReducerActionType.SET_PLAYER_STATE;
+      payload: PlayerState;
     }
   | {
-      type: AppReducerActionType.SET_IS_PLAYING_ON;
+      type: AppReducerActionType.SET_QUEUE_LENGTH;
+      payload: number;
     }
   | {
-      type: AppReducerActionType.SET_IS_PLAYING_OFF;
+      type: AppReducerActionType.SET_SELECTED_MEDIA_ITEM;
+      payload: any;
     };
 
 /**
@@ -50,12 +47,10 @@ export type AppReducerAction =
 export const appInitialState: initialStateType = {
   musicKit: undefined,
   player: {
-    selectedSong: undefined,
-    selectedSongPlaylist: [],
-    nextSong: undefined,
-    isPlaying: false,
+    playerState: "PAUSE",
+    queueLength: 0,
+    selectedMediaItem: undefined,
   },
-  isAuthenticated: false,
 };
 
 export const appReducer = (
@@ -68,38 +63,28 @@ export const appReducer = (
         ...state,
         musicKit: action.payload,
       };
-    case AppReducerActionType.SET_SELECTED_SONG:
+    case AppReducerActionType.SET_PLAYER_STATE:
       return {
         ...state,
         player: {
           ...state.player,
-          selectedSong: action.payload.selectedSong,
-          selectedSongPlaylist: action.payload.selectedSongPlaylist,
-          nextSong: findNextSong(
-            action.payload.selectedSong,
-            action.payload.selectedSongPlaylist
-          ),
-          previousSong: findPreviousSong(
-            action.payload.selectedSong,
-            action.payload.selectedSongPlaylist
-          ),
-          isPlaying: true,
+          playerState: action.payload,
         },
       };
-    case AppReducerActionType.SET_IS_PLAYING_ON:
+    case AppReducerActionType.SET_QUEUE_LENGTH:
       return {
         ...state,
         player: {
           ...state.player,
-          isPlaying: true,
+          queueLength: action.payload,
         },
       };
-    case AppReducerActionType.SET_IS_PLAYING_OFF:
+    case AppReducerActionType.SET_SELECTED_MEDIA_ITEM:
       return {
         ...state,
         player: {
           ...state.player,
-          isPlaying: false,
+          selectedMediaItem: action.payload,
         },
       };
     default:

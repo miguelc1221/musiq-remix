@@ -24,6 +24,8 @@ import {
   appInitialState,
   AppReducerActionType,
 } from "./appReducer";
+import { getUserSession } from "./server/session.server";
+import { MusicKitEvents } from "./components/musicKitEvents/MusicKitEvents";
 
 import rccss from "react-multi-carousel/lib/styles.css";
 
@@ -76,20 +78,24 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   );
 };
 
-export const loader: LoaderFunction = async () => {
-  return json(developerToken);
+export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getUserSession(request);
+  const token = session.get("appleMusicToken");
+
+  console.log(token, "ITS THE TOKEN<<<<<<");
+  return json({ developerToken, isAuthenticated: !!token });
 };
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, appInitialState);
-  const devToken = useLoaderData();
+
+  const { developerToken, isAuthenticated } = useLoaderData();
 
   useEffect(() => {
     const configureMusicKit = async () => {
       try {
-        // Add Muskit onLoad eventListener
         const music = await window.MusicKit.configure({
-          developerToken: devToken,
+          developerToken,
           app: {
             name: "musiqremix",
             build: "1.0.0",
@@ -104,17 +110,28 @@ export default function App() {
         console.log(err);
       }
     };
-
-    if (!state.musicKit && devToken && window.MusicKit) {
+    if (!state.musicKit && developerToken && window.MusicKit) {
       configureMusicKit();
+    } else {
+      document.addEventListener("musickitloaded", configureMusicKit);
     }
-  }, [devToken, state.musicKit]);
+
+    return () => {
+      document.removeEventListener("musickitloaded", configureMusicKit);
+    };
+  }, [developerToken, state.musicKit]);
 
   console.log(state, "STATE>>>>>>>musicKitContext>>>>");
 
   return (
     <Document>
-      <Layout appState={{ ...state, dispatch }}>
+      {state?.musicKit && (
+        <MusicKitEvents dispatch={dispatch} player={state?.player} />
+      )}
+      <Layout
+        appState={{ ...state, dispatch }}
+        isAuthenticated={isAuthenticated}
+      >
         <Outlet context={{ ...state, dispatch }} />
       </Layout>
     </Document>

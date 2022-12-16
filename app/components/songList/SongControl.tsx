@@ -1,8 +1,10 @@
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { Equalizer } from "~/components/icons";
+import { Spinner } from "../spinner/Spinner";
 
 export const SongControl = ({
   className,
+  isLoading,
   isSelectedSong,
   isMouseOver,
   isPlaying,
@@ -11,6 +13,7 @@ export const SongControl = ({
   defaultValue = "",
 }: {
   isSelectedSong: boolean;
+  isLoading: boolean;
   isMouseOver: boolean;
   isPlaying: boolean;
   defaultValue?: string;
@@ -19,6 +22,10 @@ export const SongControl = ({
   onPauseClick: () => void;
 }) => {
   const isSelectedSongPlaying = isPlaying && isSelectedSong;
+
+  if (isLoading && isSelectedSong) {
+    return <Spinner className={className} />;
+  }
 
   if (
     (isMouseOver && !isSelectedSong) ||
@@ -44,7 +51,6 @@ export const SongControl = ({
       return <>{defaultValue}</>;
     }
 
-    console.log("here>>");
     return (
       <div className={className}>
         <Equalizer className="h-6 w-6 fill-white" />

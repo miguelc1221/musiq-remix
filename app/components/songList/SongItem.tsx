@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useOutletContext } from "@remix-run/react";
-import { AppReducerActionType } from "~/appReducer";
 import type { AppContextType } from "~/appReducer";
 import { calculateTime } from "~/utils/helpers";
 import { SongControl } from "./SongControl";
@@ -9,15 +8,21 @@ export const SongItem = ({
   song,
   songs,
   index,
+  albumId,
+  playlistId,
+  setQueueLoaded,
   ...otherProps
 }: {
   song: MusicKit.Songs | MusicKit.MusicVideos;
   songs: (MusicKit.Songs | MusicKit.MusicVideos)[];
   index: number;
+  albumId?: string;
+  playlistId?: string;
+  setQueueLoaded: (b: boolean) => void;
 }) => {
   const [isMouseOver, setIsMouseOver] = useState(false);
-  const { dispatch, player } = useOutletContext<AppContextType>();
-  const isSelectedSong = song.id === player.selectedSong?.id;
+  const { player, musicKit } = useOutletContext<AppContextType>();
+  const isSelectedSong = song.id === musicKit?.nowPlayingItem?.id;
 
   return (
     <li
@@ -31,26 +36,32 @@ export const SongItem = ({
       <div className="mr-4 flex h-6 w-6 items-center justify-center">
         <SongControl
           defaultValue={`${index + 1}`}
+          isLoading={player.playerState === "LOADING"}
           isMouseOver={isMouseOver}
-          isPlaying={player.isPlaying}
-          onPlayClick={() => {
-            if (isSelectedSong) {
-              return dispatch({
-                type: AppReducerActionType.SET_IS_PLAYING_ON,
-              });
+          isPlaying={player.playerState === "PLAYING"}
+          onPlayClick={async () => {
+            if (player?.playerState === "LOADING") {
+              return;
             }
-            return dispatch({
-              type: AppReducerActionType.SET_SELECTED_SONG,
-              payload: {
-                selectedSong: song,
-                selectedSongPlaylist: songs,
-              },
-            });
+
+            if (albumId) {
+              await musicKit?.setQueue({
+                album: albumId,
+              });
+              setQueueLoaded(true);
+            }
+
+            if (playlistId) {
+              await musicKit?.setQueue({
+                playlist: playlistId,
+              });
+              setQueueLoaded(true);
+            }
+
+            await musicKit?.changeToMediaItem(song.id);
           }}
           onPauseClick={() => {
-            return dispatch({
-              type: AppReducerActionType.SET_IS_PLAYING_OFF,
-            });
+            musicKit?.pause();
           }}
           isSelectedSong={isSelectedSong}
         />

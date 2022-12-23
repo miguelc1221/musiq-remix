@@ -9,3 +9,7 @@ export { MusicNote } from "./musicNote";
 export { Equalizer } from "./equalizer";
 export { RepeatIcon } from "./repeatIcon";
 export { RepeatOneIcon } from "./repeatOneIcon";
+export { AlbumIcon } from "./albumIcon";
+export { MusicSongNote } from "./musicSongNote";
+export { ExplicitIcon } from "./explicit";
+

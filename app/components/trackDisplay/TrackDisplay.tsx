@@ -150,13 +150,13 @@ export const TrackDisplay = ({
                   {selectedSong?.attributes?.albumName}
                 </span>
                 <time
-                  className="invisible absolute left-2 bottom-1 text-[0.625rem] font-bold text-slate-600 group-hover/audioBar:visible "
+                  className="absolute left-2 bottom-1 text-[0.625rem] font-bold text-slate-600"
                   role="timer"
                 >
                   {getCurrentPlaybackTime()}
                 </time>
                 <time
-                  className="invisible absolute right-2 bottom-1 text-[0.625rem] font-bold text-slate-600 group-hover/audioBar:visible "
+                  className="absolute right-2 bottom-1 text-[0.625rem] font-bold text-slate-600"
                   role="timer"
                 >
                   -{getCurrentPlaybackDuration()}

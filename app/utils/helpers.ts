@@ -35,55 +35,31 @@ export const calculateTime = (ms: number) => {
   )}`;
 };
 
+export const timeConversion = (duration: number) => {
+  const portions: string[] = [];
+
+  const msInHour = 1000 * 60 * 60;
+  const hours = Math.trunc(duration / msInHour);
+  if (hours > 0) {
+    portions.push(hours + " hours");
+    duration = duration - hours * msInHour;
+  }
+
+  const msInMinute = 1000 * 60;
+  const minutes = Math.trunc(duration / msInMinute);
+  if (minutes > 0) {
+    portions.push(minutes + " minutes");
+    duration = duration - minutes * msInMinute;
+  }
+
+  const seconds = Math.trunc(duration / 1000);
+  if (seconds > 0) {
+    portions.push(seconds + " seconds");
+  }
+
+  return portions.join(" ");
+};
+
 export const getAlbumId = (url: string = "") => {
   return new URL(url).pathname.split("/").filter(Boolean).pop();
-};
-
-export const findNextSong = (
-  currentSong?: MusicKit.Songs | MusicKit.MusicVideos,
-  songs?: (MusicKit.Songs | MusicKit.MusicVideos)[]
-) => {
-  if (!songs?.length || !currentSong) {
-    return;
-  }
-
-  const currentSongId = currentSong.id;
-  let results;
-
-  songs?.forEach((song, idx) => {
-    if (song.id === currentSongId) {
-      const nextId = idx + 1;
-      if (nextId === songs.length) {
-        results = songs[0];
-      } else {
-        results = songs[nextId];
-      }
-    }
-  });
-
-  return results;
-};
-
-export const findPreviousSong = (
-  currentSong?: MusicKit.Songs | MusicKit.MusicVideos,
-  songs?: (MusicKit.Songs | MusicKit.MusicVideos)[]
-) => {
-  if (!songs?.length || !currentSong) {
-    return;
-  }
-  const currentSongId = currentSong.id;
-  let results;
-
-  songs.forEach((song, idx) => {
-    if (song.id === currentSongId) {
-      const nextId = idx - 1;
-      if (nextId < 0) {
-        results = songs[songs.length - 1];
-      } else {
-        results = songs[nextId];
-      }
-    }
-  });
-
-  return results;
 };

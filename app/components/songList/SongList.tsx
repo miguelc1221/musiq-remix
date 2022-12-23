@@ -5,18 +5,20 @@ export const SongList = ({
   albumId,
   playlistId,
   setQueueLoaded,
+  className,
 }: {
   songs: (MusicKit.MusicVideos | MusicKit.Songs)[];
   albumId?: string;
   playlistId?: string;
-  setQueueLoaded: (b: boolean) => void;
+  className?: string;
+  setQueueLoaded?: (b: boolean) => void;
 }) => {
   if (!songs.length) {
     return null;
   }
 
   return (
-    <ul className="mt-4 flex flex-col px-10 text-sm">
+    <ul className={`mt-4 flex flex-col px-10 text-sm ${className || ""}`}>
       {songs.map((song, index) => {
         return (
           <SongItem

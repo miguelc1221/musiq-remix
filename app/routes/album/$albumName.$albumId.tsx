@@ -2,7 +2,7 @@ import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node"; // or cloudflare/deno
 import { getAlbum } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
-import { formatArtworkURL } from "~/utils/helpers";
+import { formatArtworkURL, timeConversion } from "~/utils/helpers";
 import { useOverlayTriggerState } from "@react-stately/overlays";
 import { MusiqModal } from "~/components/modal/MusiqModal";
 import { useButton } from "@react-aria/button";
@@ -51,9 +51,19 @@ export default function AlbumRoute() {
     }
   }, [player.playerState]);
 
+  const totalAlbumTime = results.relationships.tracks.data.reduce(
+    (acc, val) => {
+      if (val.attributes?.durationInMillis) {
+        acc += val.attributes?.durationInMillis;
+      }
+      return acc;
+    },
+    0
+  );
+
   return (
     <>
-      <div className="flex min-h-[300px] items-center gap-6 bg-rose-100 bg-gradient-to-t from-indigo-200/75 to-rose-100 px-10">
+      <div className="flex min-h-[350px] items-center gap-6 bg-rose-100 bg-gradient-to-t from-indigo-200/75 to-rose-100 px-10">
         <div className="shrink-0">
           <img
             src={formatArtworkURL(results.attributes?.artwork.url, 300, 300)}
@@ -61,65 +71,72 @@ export default function AlbumRoute() {
             className="h-[250px] w-[250px] drop-shadow-md"
           />
         </div>
-        <div>
-          <h1 className="text-2xl font-bold">{results.attributes?.name}</h1>
-          <p className="py-2 text-lg font-semibold">
-            {results.attributes?.artistName} &#183;{" "}
-            <span className="uppercase">
-              {results.attributes?.genreNames[0]}
-            </span>{" "}
-            &#183;{" "}
-            {results.attributes?.releaseDate &&
-              new Date(results.attributes?.releaseDate).getFullYear()}
-          </p>
-          <div className="max-w-[540px]">
-            <div className="flex flex-col">
-              {results.attributes?.editorialNotes?.standard && (
-                <>
-                  <p
-                    className="text-sm line-clamp-3"
-                    dangerouslySetInnerHTML={{
-                      __html: results.attributes?.editorialNotes?.standard,
-                    }}
-                  />
-                  <div>
-                    <button
-                      className="text-xs font-bold uppercase"
-                      {...openButton.buttonProps}
-                      ref={openButtonRef}
-                    >
-                      More
-                    </button>
-                  </div>
-                </>
-              )}
-              <button
-                aria-label="play"
-                className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
-                onClick={async () => {
-                  if (!player.queueLength || !isSongInCurrentResults) {
-                    await musicKit?.setQueue({
-                      album: results.id,
-                      startPlaying: true,
-                    });
-                    return;
-                  }
 
-                  if (isPlayerPlaying) {
-                    return musicKit?.pause();
-                  }
-
-                  return musicKit?.play();
-                }}
-              >
-                {!isPlaying ? (
-                  <PlayIcon className="h-7 w-7 text-white" />
-                ) : (
-                  <PauseIcon className="h-7 w-7 text-white" />
+        <div className="flex h-[250px] flex-col">
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold">{results.attributes?.name}</h1>
+            <p className="text-lg font-semibold">
+              {results.attributes?.artistName} &#183;{" "}
+              <span className="uppercase">
+                {results.attributes?.genreNames[0]}
+              </span>{" "}
+              &#183;{" "}
+              {results.attributes?.releaseDate &&
+                new Date(results.attributes?.releaseDate).getFullYear()}
+            </p>
+            <p className="py-2">
+              {results.attributes?.trackCount} Songs,{" "}
+              {timeConversion(totalAlbumTime)}
+            </p>
+            <div className="max-w-[540px]">
+              <div className="flex flex-col">
+                {results.attributes?.editorialNotes?.standard && (
+                  <>
+                    <p
+                      className="text-sm line-clamp-3"
+                      dangerouslySetInnerHTML={{
+                        __html: results.attributes?.editorialNotes?.standard,
+                      }}
+                    />
+                    <div>
+                      <button
+                        className="text-xs font-bold uppercase"
+                        {...openButton.buttonProps}
+                        ref={openButtonRef}
+                      >
+                        More
+                      </button>
+                    </div>
+                  </>
                 )}
-              </button>
+              </div>
             </div>
           </div>
+          <button
+            aria-label="play"
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
+            onClick={async () => {
+              if (!player.queueLength || !isSongInCurrentResults) {
+                await musicKit?.setQueue({
+                  album: results.id,
+                  startPlaying: true,
+                });
+                return;
+              }
+
+              if (isPlayerPlaying) {
+                return musicKit?.pause();
+              }
+
+              return musicKit?.play();
+            }}
+          >
+            {!isPlaying ? (
+              <PlayIcon className="h-7 w-7 text-white" />
+            ) : (
+              <PauseIcon className="h-7 w-7 text-white" />
+            )}
+          </button>
         </div>
       </div>
       <div>

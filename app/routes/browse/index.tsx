@@ -6,11 +6,11 @@ import {
   getPlaylist,
 } from "~/server/musicKit.server";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
-import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { AlbumCard } from "~/components/albumCard/albumCard";
 import { SongCarouselList } from "~/components/songCarouselList/SongCarouselList";
 import getChunk from "lodash.chunk";
 import { PlayListCard } from "~/components/playlistCard/PlayListCard";
+import { formatUrlName } from "~/utils/helpers";
 
 export const loader: LoaderFunction = async () => {
   try {
@@ -44,25 +44,21 @@ export default function BrowseIndex() {
       </h1>
       <div className="flex flex-col gap-9">
         <div>
-          <h2 className="mb-6 pl-4 text-xl font-bold">
-            <button className="flex items-center">
-              {albums[0].name}
-              <ChevronRightIcon className="mt-1 h-4 w-4" />
-            </button>
-          </h2>
+          <h2 className="mb-6 pl-4 text-xl font-bold">{albums[0].name}</h2>
           <MusiqCarousel>
             {albums[0].data.map((album, index) => {
-              return <AlbumCard album={album} key={index} />;
+              const title = album.attributes?.name;
+              const albumId = album.id;
+              const albumUrl = `/album/${formatUrlName(
+                title || ""
+              )}/${albumId}`;
+
+              return <AlbumCard album={album} key={index} linkTo={albumUrl} />;
             })}
           </MusiqCarousel>
         </div>
         <div>
-          <h2 className="mb-6 pl-4 text-xl font-bold">
-            <button className="flex items-center">
-              {songs[0]?.name}
-              <ChevronRightIcon className="mt-1 h-4 w-4" />
-            </button>
-          </h2>
+          <h2 className="mb-6 pl-4 text-xl font-bold">{songs[0]?.name}</h2>
           <div>
             <MusiqCarousel
               responsive={{
@@ -96,12 +92,7 @@ export default function BrowseIndex() {
           </div>
         </div>
         <div>
-          <h2 className="mb-6 pl-4 text-xl font-bold">
-            <button className="flex items-center">
-              {playlists[0].name}
-              <ChevronRightIcon className="mt-1 h-4 w-4" />
-            </button>
-          </h2>
+          <h2 className="mb-6 pl-4 text-xl font-bold">{playlists[0].name}</h2>
           <MusiqCarousel>
             {playlists[0].data.map((playlist, index) => {
               return <PlayListCard key={index} playList={playlist} />;
@@ -109,12 +100,7 @@ export default function BrowseIndex() {
           </MusiqCarousel>
         </div>
         <div>
-          <h2 className="mb-6 pl-4 text-xl font-bold">
-            <button className="flex items-center">
-              City Charts
-              <ChevronRightIcon className="mt-1 h-4 w-4" />
-            </button>
-          </h2>
+          <h2 className="mb-6 pl-4 text-xl font-bold">City Charts</h2>
           <MusiqCarousel>
             {cityCharts.map((playlist, index) => {
               return <PlayListCard key={index} playList={playlist} />;

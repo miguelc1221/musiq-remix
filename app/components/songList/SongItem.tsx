@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
-import { calculateTime } from "~/utils/helpers";
+import { calculateTime, formatArtworkURL } from "~/utils/helpers";
 import { SongControl } from "./SongControl";
+import { ExplicitIcon } from "../icons";
 
 export const SongItem = ({
   song,
@@ -18,7 +19,7 @@ export const SongItem = ({
   index: number;
   albumId?: string;
   playlistId?: string;
-  setQueueLoaded: (b: boolean) => void;
+  setQueueLoaded?: (b: boolean) => void;
 }) => {
   const [isMouseOver, setIsMouseOver] = useState(false);
   const { player, musicKit } = useOutletContext<AppContextType>();
@@ -48,16 +49,23 @@ export const SongItem = ({
               await musicKit?.setQueue({
                 album: albumId,
               });
-              setQueueLoaded(true);
             }
 
             if (playlistId) {
               await musicKit?.setQueue({
                 playlist: playlistId,
               });
-              setQueueLoaded(true);
             }
 
+            if (!albumId || !playlistId) {
+              await musicKit?.setQueue({
+                songs: songs.map((song) => song.id),
+              });
+            }
+
+            if (setQueueLoaded) {
+              setQueueLoaded(true);
+            }
             await musicKit?.changeToMediaItem(song.id);
           }}
           onPauseClick={() => {
@@ -66,14 +74,28 @@ export const SongItem = ({
           isSelectedSong={isSelectedSong}
         />
       </div>
-      <div className="flex-1">
-        <span className="block font-semibold">{song.attributes?.name}</span>
-        <span className="text-xs">{song.attributes?.artistName}</span>
+      <div className="flex flex-1 items-center">
+        <img
+          className="mr-2 h-[40px] w-[40px] drop-shadow-md"
+          src={formatArtworkURL(song.attributes?.artwork.url, 90, 90)}
+          alt={song.attributes?.name}
+        />
+        <div>
+          <span className="block font-semibold">{song.attributes?.name}</span>
+          <span className="flex items-center text-xs">
+            {song.attributes?.contentRating === "explicit" && (
+              <span className="mr-1">
+                <ExplicitIcon className="h-4 w-4" />
+              </span>
+            )}
+            {song.attributes?.artistName}
+          </span>
+        </div>
       </div>
       <div>
         {song.attributes?.durationInMillis && (
           <time className="tabular-nums">
-            {calculateTime(song.attributes?.durationInMillis / 1000)}
+            {calculateTime(song.attributes?.durationInMillis)}
           </time>
         )}
       </div>

@@ -1,25 +1,30 @@
 import { PlayIcon } from "@heroicons/react/24/solid";
 import { Link } from "@remix-run/react";
-import { formatArtworkURL, formatUrlName } from "~/utils/helpers";
+import { formatArtworkURL } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
+import { ExplicitIcon } from "../icons";
 
 export const AlbumCard = ({
   album,
+  linkTo = "/",
+  className,
   ...otherProps
 }: {
   album: MusicKit.Albums;
+  linkTo: string;
+  className?: string;
 }) => {
   const { musicKit } = useOutletContext<AppContextType>();
   const imageSrc = formatArtworkURL(album?.attributes?.artwork?.url);
   const title = album.attributes?.name;
   const subTitle = album.attributes?.artistName;
   const albumId = album.id;
-  const albumUrl = `/album/${formatUrlName(title || "")}/${albumId}`;
+  const contentRating = album.attributes?.contentRating === "explicit";
 
   return (
-    <div className="max-w-xs" {...otherProps}>
-      <Link to={albumUrl}>
+    <div className={`max-w-xs ${className || ""}`} {...otherProps}>
+      <Link to={linkTo}>
         <div className="group relative cursor-pointer after:absolute after:top-0 after:left-0 after:h-full after:w-full after:rounded-md after:bg-stone-600 after:opacity-0 after:transition after:duration-300 after:ease-in-out [&:after:hover]:opacity-40">
           {imageSrc && (
             <>
@@ -45,13 +50,18 @@ export const AlbumCard = ({
 
       {(title || subTitle) && (
         <div className="mt-2 flex flex-col gap-[2] text-sm">
-          <div>
+          <div className="flex">
             <Link
-              to={albumUrl}
+              to={linkTo}
               className="block w-full truncate text-xs hover:underline"
             >
               {title}
             </Link>
+            {contentRating && (
+              <span>
+                <ExplicitIcon className="h-4 w-4" />
+              </span>
+            )}
           </div>
           <span
             className={`block w-full truncate text-xs text-slate-500 ${

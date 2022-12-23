@@ -3,6 +3,7 @@ import { formatArtworkURL } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { SongControl } from "../songList/SongControl";
+import { ExplicitIcon } from "../icons";
 
 const SongCarouselListItem = ({
   song,
@@ -17,6 +18,7 @@ const SongCarouselListItem = ({
   const [isMouseOver, setIsMouseOver] = useState(false);
   const { player, musicKit } = useOutletContext<AppContextType>();
   const isSelectedSong = song.id === player?.selectedMediaItem?.id;
+  const contentRating = song.attributes?.contentRating === "explicit";
 
   return (
     <div
@@ -59,9 +61,16 @@ const SongCarouselListItem = ({
             {song.attributes?.name}
           </span>
         </div>
-        <span className="block w-full truncate text-xs text-slate-500">
-          {song.attributes?.artistName}
-        </span>
+        <div className="flex">
+          <span className="truncate text-xs text-slate-500">
+            {song.attributes?.artistName}
+          </span>
+          {contentRating && (
+            <span className="ml-1">
+              <ExplicitIcon className="h-4 w-4" />
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

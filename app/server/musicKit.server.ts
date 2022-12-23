@@ -1,6 +1,7 @@
 import { developerToken } from "./developerToken.server";
 
 const rootUrl = "https://api.music.apple.com/v1";
+const meUrl = `${rootUrl}/me`;
 
 export const CITY_CHARTS_ID = [
   "pl.a88b5c26caea48a59484370b6f79c9df",
@@ -84,6 +85,72 @@ export const getPlaylist: MusicKit.API["playlist"] = async (id) => {
     }
     return data.data;
   } catch (error) {
+    throw error;
+  }
+};
+
+// Authenticated Personalized Calls
+
+export const getLibrarySongs: MusicKit.API["library"]["songs"] = async (
+  ids = [],
+  params
+) => {
+  const limit = params?.limit || 100;
+  const offset = params?.offset || 0;
+  try {
+    const response = await fetch(
+      `${meUrl}/library/songs?${new URLSearchParams({
+        limit,
+        offset,
+        ...(ids?.length ? { ids: ids.join(",") } : {}),
+      }).toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${developerToken}`,
+          "Music-User-Token": params?.userToken,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.errors) {
+      throw data.error;
+    }
+    return data.data;
+  } catch (error) {
+    console.log(error, "error>");
+    throw error;
+  }
+};
+
+export const getLibraryAlbums: MusicKit.API["library"]["albums"] = async (
+  ids = [],
+  params
+) => {
+  const limit = params?.limit || 100;
+  const offset = params?.offset || 0;
+  try {
+    const response = await fetch(
+      `${meUrl}/library/albums?${new URLSearchParams(
+        ids?.length ? { ids: ids.join(",") } : { limit, offset }
+      ).toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${developerToken}`,
+          "Music-User-Token": params?.userToken,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.errors) {
+      throw data.error;
+    }
+    return data.data;
+  } catch (error) {
+    console.log(error, "error>");
     throw error;
   }
 };

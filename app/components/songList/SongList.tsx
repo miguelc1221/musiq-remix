@@ -18,7 +18,32 @@ export const SongList = ({
   }
 
   return (
-    <ul className={`mt-4 flex flex-col px-10 text-sm ${className || ""}`}>
+    <div role="table" className="text-sm">
+      <div
+        role="rowgroup"
+        className={`sticky top-0 z-10 -mt-[37px] -ml-10 -mr-10 mb-4 bg-gray-100 px-[2.5rem] ${
+          className || ""
+        }`}
+      >
+        <div
+          role="row"
+          className="flex w-full items-center rounded-lg py-2 px-5 "
+        >
+          <span
+            role="columnheader"
+            className="mr-4 flex h-6 w-6 items-center justify-center"
+          >
+            #
+          </span>
+          <span role="columnheader" className="flex-1">
+            NAME
+          </span>
+          <span role="columnheader" className="flex-1">
+            ALBUM
+          </span>
+          <span role="columnheader">TIME</span>
+        </div>
+      </div>
       {songs.map((song, index) => {
         return (
           <SongItem
@@ -32,6 +57,6 @@ export const SongList = ({
           />
         );
       })}
-    </ul>
+    </div>
   );
 };

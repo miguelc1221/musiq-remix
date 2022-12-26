@@ -27,8 +27,7 @@ export default function AlbumRoute() {
 
   return (
     <>
-      <h1 className="mb-6 pl-6 text-2xl font-bold">My Songs</h1>
-      <SongList songs={songs} className="pl-0 pr-0" />
+      <SongList songs={songs} />
     </>
   );
 }

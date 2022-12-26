@@ -26,79 +26,90 @@ export const SongItem = ({
   const isSelectedSong = song.id === musicKit?.nowPlayingItem?.id;
 
   return (
-    <li
-      className={`flex	w-full items-center rounded-lg py-3 px-5 ${
-        isSelectedSong ? "bg-indigo-500 text-white" : "hover:bg-slate-200 "
-      }`}
+    <div
+      role="rowgroup"
       onMouseOver={() => setIsMouseOver(true)}
       onMouseLeave={() => setIsMouseOver(false)}
       {...otherProps}
     >
-      <div className="mr-4 flex h-6 w-6 items-center justify-center">
-        <SongControl
-          defaultValue={`${index + 1}`}
-          isLoading={player.playerState === "LOADING"}
-          isMouseOver={isMouseOver}
-          isPlaying={player.playerState === "PLAYING"}
-          onPlayClick={async () => {
-            if (player?.playerState === "LOADING") {
-              return;
-            }
+      <div
+        role="row"
+        className={`flex w-full items-center rounded-lg py-3 px-5 ${
+          isSelectedSong ? "bg-indigo-500 text-white" : "hover:bg-slate-200 "
+        }`}
+      >
+        <div
+          role="cell"
+          className="mr-4 flex h-6 w-6 items-center justify-center"
+        >
+          <SongControl
+            defaultValue={`${index + 1}`}
+            isLoading={player.playerState === "LOADING"}
+            isMouseOver={isMouseOver}
+            isPlaying={player.playerState === "PLAYING"}
+            onPlayClick={async () => {
+              if (player?.playerState === "LOADING") {
+                return;
+              }
 
-            if (albumId) {
-              await musicKit?.setQueue({
-                album: albumId,
-              });
-            }
+              if (albumId) {
+                await musicKit?.setQueue({
+                  album: albumId,
+                });
+              }
 
-            if (playlistId) {
-              await musicKit?.setQueue({
-                playlist: playlistId,
-              });
-            }
+              if (playlistId) {
+                await musicKit?.setQueue({
+                  playlist: playlistId,
+                });
+              }
 
-            if (!albumId || !playlistId) {
-              await musicKit?.setQueue({
-                songs: songs.map((song) => song.id),
-              });
-            }
+              if (!albumId || !playlistId) {
+                await musicKit?.setQueue({
+                  songs: songs.map((song) => song.id),
+                });
+              }
 
-            if (setQueueLoaded) {
-              setQueueLoaded(true);
-            }
-            await musicKit?.changeToMediaItem(song.id);
-          }}
-          onPauseClick={() => {
-            musicKit?.pause();
-          }}
-          isSelectedSong={isSelectedSong}
-        />
-      </div>
-      <div className="flex flex-1 items-center">
-        <img
-          className="mr-2 h-[40px] w-[40px] drop-shadow-md"
-          src={formatArtworkURL(song.attributes?.artwork.url, 90, 90)}
-          alt={song.attributes?.name}
-        />
-        <div>
-          <span className="block font-semibold">{song.attributes?.name}</span>
-          <span className="flex items-center text-xs">
-            {song.attributes?.contentRating === "explicit" && (
-              <span className="mr-1">
-                <ExplicitIcon className="h-4 w-4" />
-              </span>
-            )}
-            {song.attributes?.artistName}
-          </span>
+              if (setQueueLoaded) {
+                setQueueLoaded(true);
+              }
+              await musicKit?.changeToMediaItem(song.id);
+            }}
+            onPauseClick={() => {
+              musicKit?.pause();
+            }}
+            isSelectedSong={isSelectedSong}
+          />
+        </div>
+        <div className="flex flex-1 items-center" role="cell">
+          <img
+            className="mr-2 h-[40px] w-[40px] drop-shadow-md"
+            src={formatArtworkURL(song.attributes?.artwork.url, 90, 90)}
+            alt={song.attributes?.name}
+          />
+          <div>
+            <span className="block font-semibold">{song.attributes?.name}</span>
+            <span className="flex items-center text-xs">
+              {song.attributes?.contentRating === "explicit" && (
+                <span className="mr-1">
+                  <ExplicitIcon className="h-4 w-4" />
+                </span>
+              )}
+              {song.attributes?.artistName}
+            </span>
+          </div>
+        </div>
+        <div role="cell" className="flex-1">
+          <span>{song.attributes?.albumName}</span>
+        </div>
+        <div role="cell">
+          {song.attributes?.durationInMillis && (
+            <time className="tabular-nums">
+              {calculateTime(song.attributes?.durationInMillis)}
+            </time>
+          )}
         </div>
       </div>
-      <div>
-        {song.attributes?.durationInMillis && (
-          <time className="tabular-nums">
-            {calculateTime(song.attributes?.durationInMillis)}
-          </time>
-        )}
-      </div>
-    </li>
+    </div>
   );
 };

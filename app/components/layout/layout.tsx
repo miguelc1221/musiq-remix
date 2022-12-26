@@ -3,7 +3,11 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { NavLink, useLocation, useFetcher } from "@remix-run/react";
 import { AlbumIcon, AppleLogo, MusicSongNote } from "../icons";
-import { UserCircleIcon, Squares2X2Icon } from "@heroicons/react/20/solid";
+import {
+  UserCircleIcon,
+  Squares2X2Icon,
+  ClockIcon,
+} from "@heroicons/react/20/solid";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
 import type { AppContextType } from "~/appReducer";
 
@@ -81,6 +85,12 @@ export default function Layout({
               {isAuthenticated && (
                 <>
                   <li className="px-8">
+                    <NavLinkWrapper to="/library/recently-added">
+                      <ClockIcon className="h-5 w-5" />
+                      <span className="ml-2">Recently Added</span>
+                    </NavLinkWrapper>
+                  </li>
+                  <li className="px-8">
                     <NavLinkWrapper to="/library/albums">
                       <AlbumIcon className="h-5 w-5" />
                       <span className="ml-2">Albums</span>
@@ -133,7 +143,10 @@ export default function Layout({
       >
         <main className="h-full flex-1">
           <div className="fixed bottom-0 z-10 h-[65px] w-[calc(100%_-_300px)] bg-gray-100">
-            <div className="grid h-full grid-cols-[1fr_2fr_1fr] items-center">
+            <div
+              tabIndex={-1}
+              className="grid h-full grid-cols-[1fr_2fr_1fr] items-center"
+            >
               <TrackDisplay
                 player={appState?.player}
                 musicKit={appState?.musicKit}

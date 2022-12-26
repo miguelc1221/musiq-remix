@@ -123,6 +123,7 @@ export default function AlbumRoute() {
             !isSongInCurrentResults || !queueLoaded ? album.id : undefined
           }
           setQueueLoaded={setQueueLoaded}
+          className="mt-0 mr-0 ml-0 px-10 [&~div]:px-10"
         />
       </div>
     </>

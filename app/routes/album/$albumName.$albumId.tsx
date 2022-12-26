@@ -146,6 +146,7 @@ export default function AlbumRoute() {
             !isSongInCurrentResults || !queueLoaded ? results.id : undefined
           }
           setQueueLoaded={setQueueLoaded}
+          className="mt-0 mr-0 ml-0 px-10 [&~div]:px-10"
         />
       </div>
       <MusiqModal

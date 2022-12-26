@@ -154,3 +154,31 @@ export const getLibraryAlbums: MusicKit.API["library"]["albums"] = async (
     throw error;
   }
 };
+
+export const getLibraryRecentlyAdded: MusicKit.API["library"]["recentlyAdded"] =
+  async ({ userToken, ...params }: any) => {
+    try {
+      const response = await fetch(
+        `${meUrl}/library/recently-added?${new URLSearchParams(
+          params
+        ).toString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${developerToken}`,
+            "Music-User-Token": userToken,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.errors) {
+        throw data.error;
+      }
+
+      return data.data;
+    } catch (error) {
+      console.log(error, "error>");
+      throw error;
+    }
+  };

@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer components {
+  :focus-visible {
+    @apply focus:outline-none focus:ring-[4px] focus:ring-rose-300
+  }
 
   .trackStyles {
     @apply h-1 w-full cursor-pointer bg-rose-200 outline-none relative

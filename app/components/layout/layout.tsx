@@ -142,7 +142,7 @@ export default function Layout({
         ref={containerRef}
       >
         <main className="h-full flex-1">
-          <div className="fixed bottom-0 z-10 h-[65px] w-[calc(100%_-_300px)] bg-gray-100">
+          <div className="fixed bottom-0 z-[11] h-[65px] w-[calc(100%_-_300px)] bg-gray-100">
             <div
               tabIndex={-1}
               className="grid h-full grid-cols-[1fr_2fr_1fr] items-center"

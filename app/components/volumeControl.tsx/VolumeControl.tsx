@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { VolumeX3, VolumeX2, VolumeX1, VolumeX0 } from "../icons";
 
 export const VolumeControl = ({
@@ -12,6 +12,7 @@ export const VolumeControl = ({
   max: number | string;
   onVolumeChange: (volume: string) => void;
 }) => {
+  const volumeValueRef = useRef(Number(value));
   const volumeRef = useRef<HTMLInputElement>(null);
   const volumeNum = Number(value);
 
@@ -19,12 +20,24 @@ export const VolumeControl = ({
     <div className="flex items-center justify-center">
       <button
         onClick={(evt) => {
-          if (volumeRef.current) {
+          if (!volumeRef.current || volumeValueRef.current === 0) return;
+
+          if (volumeNum === 0) {
             volumeRef.current.style.setProperty(
               "--seek-before-width-volume",
-              `0%`
+              `${volumeValueRef.current * 100}%`
             );
+
+            return onVolumeChange(`${volumeValueRef.current}`);
           }
+
+          volumeRef.current.style.setProperty(
+            "--seek-before-width-volume",
+            `0%`
+          );
+
+          volumeValueRef.current = volumeNum;
+
           return onVolumeChange("0");
         }}
       >
@@ -52,9 +65,17 @@ export const VolumeControl = ({
             "--seek-before-width-volume",
             `${Number(targetValue) * 100}%`
           );
-
+          if (volumeValueRef) {
+            volumeValueRef.current = Number(evt.target.value);
+          }
           onVolumeChange(evt.target.value);
         }}
+        aria-label="Volume"
+        aria-valuemin={Number(min)}
+        aria-valuemax={Number(max)}
+        aria-orientation="horizontal"
+        aria-valuenow={Number(value)}
+        aria-valuetext={`${Number(value) * 100}%`}
       />
     </div>
   );

@@ -25,9 +25,5 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function AlbumRoute() {
   const songs = useLoaderData<MusicKit.Songs[]>();
 
-  return (
-    <>
-      <SongList songs={songs} />
-    </>
-  );
+  return <SongList songs={songs} />;
 }

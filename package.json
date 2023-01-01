@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "@heroicons/react": "^2.0.13",
+    "@reach/menu-button": "^0.18.0",
     "@remix-run/node": "^1.7.4",
     "@remix-run/react": "^1.7.4",
     "@remix-run/vercel": "^1.7.4",

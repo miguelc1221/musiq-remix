@@ -7,14 +7,18 @@ import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { useState, useEffect } from "react";
+import { getUserSession } from "~/server/session.server";
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
   if (!params.playlistId) {
     return;
   }
 
+  const session = await getUserSession(request);
+  const userToken = session.get("appleMusicToken");
+
   try {
-    const res = await getPlaylist(`/${params.playlistId}`);
+    const res = await getPlaylist(`/${params.playlistId}`, { userToken });
     return res;
   } catch (error) {
     return error;

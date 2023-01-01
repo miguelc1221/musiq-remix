@@ -4,6 +4,8 @@ import type { AppContextType } from "~/appReducer";
 import { calculateTime, formatArtworkURL } from "~/utils/helpers";
 import { SongControl } from "./SongControl";
 import { ExplicitIcon } from "../icons";
+import { MusiqMenuButton } from "../menuButton/MenuButton";
+import { useFetcher } from "@remix-run/react";
 
 export const SongItem = ({
   song,
@@ -21,27 +23,28 @@ export const SongItem = ({
   playlistId?: string;
   setQueueLoaded?: (b: boolean) => void;
 }) => {
+  const fetcher = useFetcher();
   const [isMouseOver, setIsMouseOver] = useState(false);
   const { player, musicKit } = useOutletContext<AppContextType>();
   const isSelectedSong = song.id === musicKit?.nowPlayingItem?.id;
+  const isAuthenticated = musicKit?.isAuthorized;
+  // Types need to be updated for v3
+  const inLibrary = (song.attributes as any)?.inLibrary;
 
   return (
     <div
-      role="rowgroup"
+      role="row"
       onMouseOver={() => setIsMouseOver(true)}
       onMouseLeave={() => setIsMouseOver(false)}
       {...otherProps}
     >
       <div
-        role="row"
+        tabIndex={0}
         className={`flex w-full items-center rounded-lg py-3 px-5 ${
           isSelectedSong ? "bg-indigo-500 text-white" : "hover:bg-slate-200 "
         }`}
       >
-        <div
-          role="cell"
-          className="mr-4 flex h-6 w-6 items-center justify-center"
-        >
+        <div className="mr-4 flex h-6 w-6 items-center justify-center">
           <SongControl
             defaultValue={`${index + 1}`}
             isLoading={player.playerState === "LOADING"}
@@ -81,7 +84,7 @@ export const SongItem = ({
             isSelectedSong={isSelectedSong}
           />
         </div>
-        <div className="flex flex-1 items-center" role="cell">
+        <div className="flex flex-1 items-center">
           <img
             className="mr-2 h-[40px] w-[40px] drop-shadow-md"
             src={formatArtworkURL(song.attributes?.artwork.url, 90, 90)}
@@ -99,15 +102,27 @@ export const SongItem = ({
             </span>
           </div>
         </div>
-        <div role="cell" className="flex-1">
+        <div className="flex-1">
           <span>{song.attributes?.albumName}</span>
         </div>
-        <div role="cell">
+        <div className="flex items-center">
           {song.attributes?.durationInMillis && (
             <time className="tabular-nums">
               {calculateTime(song.attributes?.durationInMillis)}
             </time>
           )}
+          <MusiqMenuButton
+            onAdd={() => {
+              return fetcher.submit(
+                { id: song.id, type: "songs" },
+                { method: "post", action: "/library/actions/add" }
+              );
+            }}
+            inLibrary={inLibrary}
+            className={`ml-4 ${
+              isMouseOver && isAuthenticated ? "visible" : "invisible"
+            }`}
+          />
         </div>
       </div>
     </div>

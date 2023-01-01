@@ -80,7 +80,11 @@ export default function Layout({
             </li>
           </ul>
           <div className="mt-6">
-            <span className="ml-2 px-8 text-[11px] font-bold">MY LIBRARY</span>
+            {isAuthenticated && (
+              <span className="ml-2 px-8 text-[11px] font-bold">
+                MY LIBRARY
+              </span>
+            )}
             <ul className="mt-2">
               {isAuthenticated && (
                 <>
@@ -138,6 +142,7 @@ export default function Layout({
         </nav>
       </aside>
       <div
+        id="mainWrapper"
         className="z-[1] h-auto w-full overflow-auto bg-white"
         ref={containerRef}
       >

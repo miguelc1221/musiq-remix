@@ -18,17 +18,15 @@ export const SongList = ({
   }
 
   return (
-    <div role="table" className="text-sm">
+    <div role="grid" className="text-sm">
       <div
-        role="rowgroup"
+        aria-hidden="true"
+        role="row"
         className={`sticky top-0 z-10 -mt-[37px] -ml-10 -mr-10 mb-4 bg-gray-100 px-[2.5rem] ${
           className || ""
         }`}
       >
-        <div
-          role="row"
-          className="flex w-full items-center rounded-lg py-2 px-5 "
-        >
+        <div className="flex w-full items-center rounded-lg py-2 px-5 ">
           <span
             role="columnheader"
             className="mr-4 flex h-6 w-6 items-center justify-center"
@@ -41,7 +39,9 @@ export const SongList = ({
           <span role="columnheader" className="flex-1">
             ALBUM
           </span>
-          <span role="columnheader">TIME</span>
+          <span role="columnheader" className="pr-8">
+            TIME
+          </span>
         </div>
       </div>
       {songs.map((song, index) => {

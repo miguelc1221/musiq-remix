@@ -33,6 +33,33 @@ export const CITY_CHARTS_ID = [
   "pl.8f35027eb4f5434691799f18390d885f",
 ];
 
+const fields = [
+  "albumName",
+  "artistName",
+  "artwork",
+  "attribution",
+  "composerName",
+  "contentRating",
+  "discNumber",
+  "durationInMillis",
+  "editorialNotes",
+  "genreNames",
+  "hasLyrics",
+  "isrc",
+  "movementCount",
+  "movementName",
+  "movementNumber",
+  "name",
+  "playParams",
+  "previews",
+  "releaseDate",
+  "trackNumber",
+  "url",
+  "workName",
+  "artistUrl",
+  "inLibrary",
+];
+
 export const getCharts: MusicKit.API["charts"] = async (types, params) => {
   try {
     const response = await fetch(
@@ -53,31 +80,45 @@ export const getCharts: MusicKit.API["charts"] = async (types, params) => {
   }
 };
 
-export const getAlbum: MusicKit.API["album"] = async (id) => {
+export const getAlbum: MusicKit.API["album"] = async (id, params) => {
   try {
-    const response = await fetch(`${rootUrl}/catalog/us/albums/${id}`, {
-      headers: {
-        Authorization: `Bearer ${developerToken}`,
-      },
-    });
+    const response = await fetch(
+      `${rootUrl}/catalog/us/albums/${id}?fields=${fields.join(",")}`,
+      {
+        headers: {
+          Authorization: `Bearer ${developerToken}`,
+          ...(params?.userToken
+            ? { "Music-User-Token": params?.userToken }
+            : {}),
+        },
+      }
+    );
+
     const data = await response.json();
 
     if (data.errors) {
       throw data.error;
     }
+
     return data.data[0];
   } catch (error) {
     throw error;
   }
 };
 
-export const getPlaylist: MusicKit.API["playlist"] = async (id) => {
+export const getPlaylist: MusicKit.API["playlist"] = async (id, params) => {
   try {
-    const response = await fetch(`${rootUrl}/catalog/us/playlists${id}`, {
-      headers: {
-        Authorization: `Bearer ${developerToken}`,
-      },
-    });
+    const response = await fetch(
+      `${rootUrl}/catalog/us/playlists${id}?fields=${fields.join(",")}`,
+      {
+        headers: {
+          Authorization: `Bearer ${developerToken}`,
+          ...(params?.userToken
+            ? { "Music-User-Token": params?.userToken }
+            : {}),
+        },
+      }
+    );
     const data = await response.json();
 
     if (data.errors) {
@@ -90,7 +131,6 @@ export const getPlaylist: MusicKit.API["playlist"] = async (id) => {
 };
 
 // Authenticated Personalized Calls
-
 export const getLibrarySongs: MusicKit.API["library"]["songs"] = async (
   ids = [],
   params
@@ -107,7 +147,9 @@ export const getLibrarySongs: MusicKit.API["library"]["songs"] = async (
       {
         headers: {
           Authorization: `Bearer ${developerToken}`,
-          "Music-User-Token": params?.userToken,
+          ...(params?.userToken
+            ? { "Music-User-Token": params?.userToken }
+            : {}),
         },
       }
     );
@@ -138,7 +180,9 @@ export const getLibraryAlbums: MusicKit.API["library"]["albums"] = async (
       {
         headers: {
           Authorization: `Bearer ${developerToken}`,
-          "Music-User-Token": params?.userToken,
+          ...(params?.userToken
+            ? { "Music-User-Token": params?.userToken }
+            : {}),
         },
       }
     );
@@ -165,7 +209,7 @@ export const getLibraryRecentlyAdded: MusicKit.API["library"]["recentlyAdded"] =
         {
           headers: {
             Authorization: `Bearer ${developerToken}`,
-            "Music-User-Token": userToken,
+            ...(userToken ? { "Music-User-Token": userToken } : {}),
           },
         }
       );
@@ -182,3 +226,26 @@ export const getLibraryRecentlyAdded: MusicKit.API["library"]["recentlyAdded"] =
       throw error;
     }
   };
+
+export const addToLibrary = async ({ userToken, ...params }: any) => {
+  try {
+    const response = await fetch(
+      `${meUrl}/library?${new URLSearchParams(params).toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${developerToken}`,
+          ...(userToken ? { "Music-User-Token": userToken } : {}),
+        },
+        method: "POST",
+      }
+    );
+
+    const string = await response.text();
+    const data = string === "" ? {} : JSON.parse(string);
+
+    return data;
+  } catch (error) {
+    console.log(error, "error");
+    throw error;
+  }
+};

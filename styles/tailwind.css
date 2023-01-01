@@ -105,4 +105,11 @@
     margin-top: -0.37rem   
   }
 
+  /* ReachUI MenuButton */
+  [data-reach-menu-items] {
+    @apply bg-gray-100 drop-shadow-md rounded-md border divide-y p-0
+  }
+  [data-reach-menu-item] {
+    @apply px-3 py-1 hover:bg-indigo-500
+  }
 }

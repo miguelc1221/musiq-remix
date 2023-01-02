@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import type { LoaderFunction } from "@remix-run/node"; // or cloudflare/deno
+import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node"; // or cloudflare/deno
 import { getPlaylist } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
 import { formatArtworkURL } from "~/utils/helpers";
@@ -109,7 +109,6 @@ export default function PlaylistRoute() {
   );
 }
 
-
-export function ErrorBoundary() {
-  return <MusiqErrorBoundary />;
-}
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  return <MusiqErrorBoundary error={error} />;
+};

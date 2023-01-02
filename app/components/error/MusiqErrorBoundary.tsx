@@ -2,10 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "@remix-run/react";
 
 export const MusiqErrorBoundary = ({
+  error,
   message = "Oops something went wrong. Please try again.",
 }: {
   message?: string;
+  error: Error;
 }) => {
+  console.log(error);
+
   const [retries, setRetries] = useState(0);
   const navigate = useNavigate();
   const handleClick = () => {

@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { redirect } from "@remix-run/node"; // or cloudflare/deno
 import { getLibraryAlbums } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
@@ -141,6 +141,11 @@ export default function AlbumRoute() {
   );
 }
 
-export function ErrorBoundary() {
-  return <MusiqErrorBoundary message="There was an error loading this album" />;
-}
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  return (
+    <MusiqErrorBoundary
+      message="There was an error loading this album"
+      error={error}
+    />
+  );
+};

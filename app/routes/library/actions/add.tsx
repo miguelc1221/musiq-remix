@@ -1,4 +1,5 @@
 import type { ActionFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { addToLibrary } from "~/server/musicKit.server";
 import { getUserSession } from "~/server/session.server";
@@ -13,16 +14,16 @@ export const action: ActionFunction = async ({ request }) => {
     const userToken = session.get("appleMusicToken");
 
     if (!userToken || !id || !type) {
-      return;
+      return redirect("/");
     }
 
-    const libType = `ids[${type}]`;
-
-    await addToLibrary({ [libType]: id, userToken });
+    await addToLibrary({ [`ids[${type}]`]: id, userToken });
 
     return json({ ok: "success" });
   } catch (error) {
     console.log(error, "ERROR - ADDING SONG TO LIBRARY");
-    return json({ error: (error as any)?.message });
+    if (error instanceof Error) {
+      return json({ error: error.message });
+    }
   }
 };

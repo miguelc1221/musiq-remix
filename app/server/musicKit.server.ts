@@ -161,7 +161,6 @@ export const getLibrarySongs: MusicKit.API["library"]["songs"] = async (
     }
     return data.data;
   } catch (error) {
-    console.log(error, "error>");
     throw error;
   }
 };
@@ -194,13 +193,12 @@ export const getLibraryAlbums: MusicKit.API["library"]["albums"] = async (
     }
     return data.data;
   } catch (error) {
-    console.log(error, "error>");
     throw error;
   }
 };
 
 export const getLibraryRecentlyAdded: MusicKit.API["library"]["recentlyAdded"] =
-  async ({ userToken, ...params }: any) => {
+  async ({ userToken, ...params }: { userToken: string }) => {
     try {
       const response = await fetch(
         `${meUrl}/library/recently-added?${new URLSearchParams(
@@ -222,12 +220,16 @@ export const getLibraryRecentlyAdded: MusicKit.API["library"]["recentlyAdded"] =
 
       return data.data;
     } catch (error) {
-      console.log(error, "error>");
       throw error;
     }
   };
 
-export const addToLibrary = async ({ userToken, ...params }: any) => {
+export const addToLibrary = async ({
+  userToken,
+  ...params
+}: {
+  userToken: string;
+}) => {
   try {
     const response = await fetch(
       `${meUrl}/library?${new URLSearchParams(params).toString()}`,
@@ -245,7 +247,6 @@ export const addToLibrary = async ({ userToken, ...params }: any) => {
 
     return data;
   } catch (error) {
-    console.log(error, "error");
     throw error;
   }
 };

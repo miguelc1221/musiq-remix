@@ -9,10 +9,13 @@ import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { getUserSession } from "~/server/session.server";
 import { useState, useEffect } from "react";
+import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   if (!params.albumId) {
-    return;
+    throw new Response("Require AlbumId", {
+      status: 404,
+    });
   }
 
   try {
@@ -25,9 +28,17 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
     const res = await getLibraryAlbums([params.albumId], { userToken });
 
+    if (!res.length) {
+      throw new Response("AlbumId not found", {
+        status: 404,
+      });
+    }
+
     return res;
   } catch (error) {
-    return error;
+    if (error instanceof Error) {
+      throw new Error(`Unhandled error: ${error.message}`);
+    }
   }
 };
 
@@ -128,4 +139,8 @@ export default function AlbumRoute() {
       </div>
     </>
   );
+}
+
+export function ErrorBoundary() {
+  return <MusiqErrorBoundary message="There was an error loading this album" />;
 }

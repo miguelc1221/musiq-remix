@@ -22,7 +22,9 @@ export const loader: LoaderFunction = async () => {
 
     return { ...res, cityCharts };
   } catch (error) {
-    return error;
+    if (error instanceof Error) {
+      throw new Error(`Unhandled error: ${error.message}`);
+    }
   }
 };
 

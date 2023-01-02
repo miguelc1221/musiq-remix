@@ -11,9 +11,13 @@ import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { getUserSession } from "~/server/session.server";
+import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
+
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (!params.albumId) {
-    return;
+    throw new Response("Require AlbumId", {
+      status: 404,
+    });
   }
 
   const session = await getUserSession(request);
@@ -24,7 +28,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
     return res;
   } catch (error) {
-    return error;
+    if (error instanceof Error) {
+      throw new Error(`Unhandled error: ${error.message}`);
+    }
   }
 };
 
@@ -170,4 +176,8 @@ export default function AlbumRoute() {
       </MusiqModal>
     </>
   );
+}
+
+export function ErrorBoundary() {
+  return <MusiqErrorBoundary message="There was an error loading this album" />;
 }

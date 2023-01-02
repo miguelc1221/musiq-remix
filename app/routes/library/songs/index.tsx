@@ -4,6 +4,7 @@ import { redirect } from "@remix-run/node"; // or cloudflare/deno
 import { getLibrarySongs } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
 import { getUserSession } from "~/server/session.server";
+import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -18,7 +19,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     return res;
   } catch (error) {
-    return error;
+    if (error instanceof Error) {
+      throw new Error(`Unhandled error: ${error.message}`);
+    }
   }
 };
 
@@ -26,4 +29,8 @@ export default function AlbumRoute() {
   const songs = useLoaderData<MusicKit.Songs[]>();
 
   return <SongList songs={songs} />;
+}
+
+export function ErrorBoundary() {
+  return <MusiqErrorBoundary />;
 }

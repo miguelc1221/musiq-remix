@@ -4,6 +4,7 @@ import { redirect } from "@remix-run/node"; // or cloudflare/deno
 import { getLibraryRecentlyAdded } from "~/server/musicKit.server";
 import { getUserSession } from "~/server/session.server";
 import { AlbumCard } from "~/components/albumCard/albumCard";
+import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -18,7 +19,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     return res;
   } catch (error) {
-    return error;
+    if (error instanceof Error) {
+      throw new Error(`Unhandled error: ${error.message}`);
+    }
   }
 };
 
@@ -41,4 +44,8 @@ export default function RecentlyAddedRoute() {
       </div>
     </>
   );
+}
+
+export function ErrorBoundary() {
+  return <MusiqErrorBoundary />;
 }

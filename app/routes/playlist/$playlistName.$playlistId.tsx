@@ -8,6 +8,7 @@ import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { useState, useEffect } from "react";
 import { getUserSession } from "~/server/session.server";
+import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (!params.playlistId) {
@@ -21,7 +22,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const res = await getPlaylist(`/${params.playlistId}`, { userToken });
     return res;
   } catch (error) {
-    return error;
+    if (error instanceof Error) {
+      throw new Error(`Unhandled error: ${error.message}`);
+    }
   }
 };
 
@@ -104,4 +107,9 @@ export default function PlaylistRoute() {
       </div>
     </>
   );
+}
+
+
+export function ErrorBoundary() {
+  return <MusiqErrorBoundary />;
 }

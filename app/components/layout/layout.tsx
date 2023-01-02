@@ -159,7 +159,7 @@ export default function Layout({
             </div>
           </div>
           <div
-            className={`pb-[100px] ${
+            className={`h-full pb-[100px] ${
               isAlbumUrl || isPlaylistUrl || isLibraryAlbumUrl
                 ? ""
                 : "mx-10 pt-[37px]"

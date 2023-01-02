@@ -15,7 +15,7 @@ const storage = createCookieSessionStorage({
     httpOnly: true, // for security reasons, make this cookie http only
     secrets: [sessionSecret], // replace this with an actual secret
     secure: process.env.NODE_ENV === "production", // enable this in prod only
-    // maxAge: 60 * 60 * 24 * 30,
+    maxAge: 60 * 60 * 24 * 180, // 6 months
   },
 });
 

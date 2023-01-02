@@ -114,7 +114,10 @@ export default function Layout({
                   onClick={async () => {
                     if (isAuthenticated) {
                       await appState?.musicKit?.unauthorize();
-                      return;
+                      return fetcher.submit(
+                        {},
+                        { method: "post", action: "/session/deleteSession" }
+                      );
                     }
 
                     try {

@@ -26,7 +26,7 @@ export const SongList = ({
           className || ""
         }`}
       >
-        <div className="flex w-full items-center rounded-lg py-2 px-5 ">
+        <div className="flex w-full items-center rounded-lg py-2 px-5 font-semibold">
           <span
             role="columnheader"
             className="mr-4 flex h-6 w-6 items-center justify-center"

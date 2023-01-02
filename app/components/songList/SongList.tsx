@@ -39,9 +39,7 @@ export const SongList = ({
           <span role="columnheader" className="flex-1">
             ALBUM
           </span>
-          <span role="columnheader" className="pr-8">
-            TIME
-          </span>
+          <span role="columnheader">TIME</span>
         </div>
       </div>
       {songs.map((song, index) => {

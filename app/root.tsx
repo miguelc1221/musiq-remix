@@ -28,7 +28,6 @@ import { getUserSession } from "./server/session.server";
 import { MusicKitEvents } from "./components/musicKitEvents/MusicKitEvents";
 
 import rccss from "react-multi-carousel/lib/styles.css";
-import reachuiMenuButton from "@reach/menu-button/styles.css";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -39,7 +38,6 @@ export const meta: MetaFunction = () => ({
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
   { rel: "stylesheet", href: rccss },
-  { rel: "stylesheet", href: reachuiMenuButton },
   { rel: "stylesheet", href: styles },
 ];
 

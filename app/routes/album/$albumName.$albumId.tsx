@@ -166,7 +166,7 @@ export default function AlbumRoute() {
         <div>
           {results.attributes?.editorialNotes?.standard && (
             <p
-              className="text-sm"
+              className="text-sm leading-normal"
               dangerouslySetInnerHTML={{
                 __html: results.attributes?.editorialNotes?.standard,
               }}

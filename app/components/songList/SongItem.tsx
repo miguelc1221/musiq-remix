@@ -4,8 +4,8 @@ import type { AppContextType } from "~/appReducer";
 import { calculateTime, formatArtworkURL } from "~/utils/helpers";
 import { SongControl } from "./SongControl";
 import { ExplicitIcon } from "../icons";
-import { MusiqMenuButton } from "../menuButton/MenuButton";
 import { useFetcher } from "@remix-run/react";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 export const SongItem = ({
   song,
@@ -106,23 +106,27 @@ export const SongItem = ({
           <span>{song.attributes?.albumName}</span>
         </div>
         <div className="flex items-center">
-          {song.attributes?.durationInMillis && (
-            <time className="tabular-nums">
-              {calculateTime(song.attributes?.durationInMillis)}
-            </time>
-          )}
-          <MusiqMenuButton
-            onAdd={() => {
+          <button
+            className={`mr-4 ${
+              isMouseOver && isAuthenticated && !inLibrary
+                ? "visible"
+                : "invisible"
+            }`}
+            onClick={() => {
               return fetcher.submit(
                 { id: song.id, type: "songs" },
                 { method: "post", action: "/library/actions/add" }
               );
             }}
-            inLibrary={inLibrary}
-            className={`ml-4 ${
-              isMouseOver && isAuthenticated ? "visible" : "invisible"
-            }`}
-          />
+          >
+            <PlusCircleIcon className="h-6 w-6 text-indigo-500" />
+          </button>
+
+          {song.attributes?.durationInMillis && (
+            <time className="tabular-nums">
+              {calculateTime(song.attributes?.durationInMillis)}
+            </time>
+          )}
         </div>
       </div>
     </div>

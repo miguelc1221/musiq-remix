@@ -1,7 +1,7 @@
 import type { AriaDialogProps } from "react-aria";
 import React from "react";
 import { useDialog } from "react-aria";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { IoCloseOutline } from "react-icons/io5";
 
 interface DialogProps extends AriaDialogProps {
   children: React.ReactNode;
@@ -31,7 +31,7 @@ export const Dialog = (props: DialogProps) => {
       <div className="sticky flex flex-col bg-indigo-500  p-8 text-white">
         <button className="close-button self-end" onClick={onClose}>
           <span className="sr-only">Close</span>
-          <XMarkIcon aria-hidden className="h-5 w-5" />
+          <IoCloseOutline aria-hidden className="h-5 w-5" />
         </button>
         <h1 {...titleProps} className="text-2xl font-bold">
           {props.title}

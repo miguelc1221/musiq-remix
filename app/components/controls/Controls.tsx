@@ -1,10 +1,5 @@
-import {
-  PlayIcon,
-  BackwardIcon,
-  ForwardIcon,
-  PauseIcon,
-} from "@heroicons/react/24/solid";
-import { RepeatIcon, RepeatOneIcon, ShuffleIcon } from "../icons";
+import { HiPlay, HiForward, HiBackward, HiPause } from "react-icons/hi2";
+import { TbRepeat, TbRepeatOnce, TbArrowsShuffle } from "react-icons/tb";
 import type { PlayerType } from "~/appReducer";
 import { useEffect, useState } from "react";
 
@@ -90,7 +85,7 @@ export const Controls = ({
           setShuffleMode(MusicKitShuffle.OFF);
         }}
       >
-        <ShuffleIcon className="h-5 w-5" />
+        <TbArrowsShuffle className="h-5 w-5" />
       </button>
       <button
         className={`duration-200 ease-in ${disableColor}`}
@@ -99,7 +94,7 @@ export const Controls = ({
           await musicKit?.skipToPreviousItem();
         }}
       >
-        <BackwardIcon className="h-7 w-7" />
+        <HiBackward className="h-7 w-7" />
       </button>
       <button
         className={`duration-200 ease-in ${disableColor}`}
@@ -117,9 +112,9 @@ export const Controls = ({
         }}
       >
         {!isPlaying ? (
-          <PlayIcon className="h-9 w-9" />
+          <HiPlay className="h-9 w-9" />
         ) : (
-          <PauseIcon className="h-9 w-9" />
+          <HiPause className="h-9 w-9" />
         )}
       </button>
       <button
@@ -134,7 +129,7 @@ export const Controls = ({
           await musicKit?.skipToNextItem();
         }}
       >
-        <ForwardIcon className="h-7 w-7" />
+        <HiForward className="h-7 w-7" />
       </button>
       <button
         className={`ml-1 cursor-default duration-200 ease-in ${disableColor} ${repeatOn}`}
@@ -154,9 +149,9 @@ export const Controls = ({
         }}
       >
         {repeatMode !== MusicKitRepeat.ONE ? (
-          <RepeatIcon className="h-5 w-5" />
+          <TbRepeat className="h-5 w-5" />
         ) : (
-          <RepeatOneIcon className="h-5 w-5" />
+          <TbRepeatOnce className="h-5 w-5" />
         )}
       </button>
     </div>

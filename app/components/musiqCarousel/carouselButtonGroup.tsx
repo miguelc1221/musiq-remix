@@ -1,5 +1,5 @@
 import type { ButtonGroupProps } from "react-multi-carousel/lib/types";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { HiOutlineChevronRight, HiOutlineChevronLeft } from "react-icons/hi2";
 
 export const ButtonGroup = ({
   next,
@@ -21,7 +21,7 @@ export const ButtonGroup = ({
           onClick={() => previous && previous()}
           className="hover:text-secondaryColor"
         >
-          <ChevronLeftIcon className="h-8 w-8" strokeWidth={1.5} />
+          <HiOutlineChevronLeft className="h-8 w-8" strokeWidth={1.5} />
         </button>
       </div>
       <div
@@ -33,7 +33,7 @@ export const ButtonGroup = ({
           onClick={() => next && next()}
           className="hover:text-secondaryColor"
         >
-          <ChevronRightIcon className="h-8 w-8" strokeWidth={1.5} />
+          <HiOutlineChevronRight className="h-8 w-8" strokeWidth={1.5} />
         </button>
       </div>
     </>

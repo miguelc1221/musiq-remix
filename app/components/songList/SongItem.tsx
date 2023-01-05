@@ -1,11 +1,12 @@
+import clsx from "clsx";
 import { useState } from "react";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { calculateTime, formatArtworkURL } from "~/utils/helpers";
 import { SongControl } from "./SongControl";
-import { ExplicitIcon } from "../icons";
+import { MdExplicit } from "react-icons/md";
+import { HiPlusCircle } from "react-icons/hi2";
 import { useFetcher } from "@remix-run/react";
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 export const SongItem = ({
   song,
@@ -40,9 +41,10 @@ export const SongItem = ({
     >
       <div
         tabIndex={0}
-        className={`flex w-full items-center rounded-lg py-3 px-5 ${
-          isSelectedSong ? "bg-indigo-500 text-white" : "hover:bg-slate-200 "
-        }`}
+        className={clsx("flex w-full items-center rounded-lg py-3 px-5", {
+          "bg-indigo-500 text-white": isSelectedSong,
+          "hover:bg-slate-200": !isSelectedSong,
+        })}
       >
         <div className="mr-4 flex h-6 w-6 items-center justify-center">
           <SongControl
@@ -95,7 +97,7 @@ export const SongItem = ({
             <span className="flex items-center text-xs">
               {song.attributes?.contentRating === "explicit" && (
                 <span className="mr-1">
-                  <ExplicitIcon className="h-4 w-4" />
+                  <MdExplicit className="h-4 w-4" />
                 </span>
               )}
               {song.attributes?.artistName}
@@ -107,11 +109,9 @@ export const SongItem = ({
         </div>
         <div className="flex items-center">
           <button
-            className={`mr-4 ${
-              isMouseOver && isAuthenticated && !inLibrary
-                ? "visible"
-                : "invisible"
-            }`}
+            className={clsx("mr-4", {
+              invisible: !isMouseOver || inLibrary || !isAuthenticated,
+            })}
             onClick={() => {
               return fetcher.submit(
                 { id: song.id, type: "songs" },
@@ -119,7 +119,9 @@ export const SongItem = ({
               );
             }}
           >
-            <PlusCircleIcon className="h-6 w-6 text-indigo-500" />
+            <HiPlusCircle
+              className={"h-6 w-6 text-indigo-500 hover:text-indigo-600"}
+            />
           </button>
 
           {song.attributes?.durationInMillis && (

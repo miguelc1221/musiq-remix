@@ -3,7 +3,7 @@ import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node"; /
 import { getPlaylist } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
 import { formatArtworkURL } from "~/utils/helpers";
-import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
+import { HiPlay, HiPause } from "react-icons/hi2";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { useState, useEffect } from "react";
@@ -88,9 +88,9 @@ export default function PlaylistRoute() {
             }}
           >
             {!isPlaying ? (
-              <PlayIcon className="h-7 w-7 text-white" />
+              <HiPlay className="h-7 w-7 text-white" />
             ) : (
-              <PauseIcon className="h-7 w-7 text-white" />
+              <HiPause className="h-7 w-7 text-white" />
             )}
           </button>
         </div>

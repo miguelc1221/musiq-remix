@@ -1,4 +1,4 @@
-import { PlayIcon } from "@heroicons/react/24/solid";
+import { HiPlay } from "react-icons/hi2";
 import { Link } from "@remix-run/react";
 import { formatArtworkURL, formatUrlName } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
@@ -34,9 +34,9 @@ export const PlayListCard = ({
                   });
                 }}
                 aria-label="play"
-                className="absolute left-3 bottom-2 z-[1] m-auto flex h-8 w-8 items-center justify-center rounded-full opacity-0 hover:bg-indigo-500 group-hover:opacity-100 [&>svg]:inline-block"
+                className="absolute left-3 bottom-2 z-[1] m-auto flex h-8 w-8 items-center justify-center rounded-full bg-stone-500 opacity-0 hover:bg-indigo-500 group-hover:opacity-100 [&>svg]:inline-block"
               >
-                <PlayIcon className="h-5 w-5 text-white" />
+                <HiPlay className="h-5 w-5 text-white" />
               </button>
             </>
           )}

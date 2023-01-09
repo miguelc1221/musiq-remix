@@ -2,14 +2,13 @@ import type { ReactNode } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { NavLink, useLocation, useFetcher } from "@remix-run/react";
-import { AlbumIcon, AppleLogo, MusicSongNote } from "../icons";
-import {
-  UserCircleIcon,
-  Squares2X2Icon,
-  ClockIcon,
-} from "@heroicons/react/20/solid";
+import { AppleLogo } from "../icons";
+import { IoIosAlbums, IoIosMusicalNote } from "react-icons/Io";
+import { FaUserCircle } from "react-icons/fa";
+import { HiSquares2X2, HiClock } from "react-icons/hi2";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
 import type { AppContextType } from "~/appReducer";
+import { SearchBox } from "~/routes/search/SearchBox";
 
 const NavLinkWrapper = ({
   children,
@@ -60,7 +59,7 @@ export default function Layout({
     <div className="flex h-screen">
       <aside
         aria-label="Sidebar"
-        className="sticky top-0 h-screen min-w-[300px] border-r bg-gray-100"
+        className="relative h-screen min-w-[300px] border-r bg-gray-100"
       >
         <nav>
           <ul className="flex flex-col gap-3">
@@ -72,9 +71,12 @@ export default function Layout({
                 </NavLink>
               </h1>
             </li>
+            <li className="mb-4 px-8">
+              <SearchBox />
+            </li>
             <li className="px-8">
               <NavLinkWrapper to="/browse">
-                <Squares2X2Icon className="h-5 w-5" />
+                <HiSquares2X2 className="h-5 w-5" />
                 <span className="ml-2">Browse</span>
               </NavLinkWrapper>
             </li>
@@ -90,19 +92,19 @@ export default function Layout({
                 <>
                   <li className="px-8">
                     <NavLinkWrapper to="/library/recently-added">
-                      <ClockIcon className="h-5 w-5" />
+                      <HiClock className="h-5 w-5" />
                       <span className="ml-2">Recently Added</span>
                     </NavLinkWrapper>
                   </li>
                   <li className="px-8">
                     <NavLinkWrapper to="/library/albums">
-                      <AlbumIcon className="h-5 w-5" />
+                      <IoIosAlbums className="h-5 w-5" />
                       <span className="ml-2">Albums</span>
                     </NavLinkWrapper>
                   </li>
                   <li className="px-8">
                     <NavLinkWrapper to="/library/songs">
-                      <MusicSongNote className="h-5 w-5" />
+                      <IoIosMusicalNote className="h-5 w-5" />
                       <span className="ml-2">Songs</span>
                     </NavLinkWrapper>
                   </li>
@@ -134,7 +136,7 @@ export default function Layout({
                     }
                   }}
                 >
-                  <UserCircleIcon className="h-6 w-6" />{" "}
+                  <FaUserCircle className="h-6 w-6" />{" "}
                   <span className="ml-2">
                     {isAuthenticated ? "Sign Out" : "Login"}
                   </span>
@@ -162,7 +164,7 @@ export default function Layout({
             </div>
           </div>
           <div
-            className={`h-full pb-[100px] ${
+            className={`pb-[100px] ${
               isAlbumUrl || isPlaylistUrl || isLibraryAlbumUrl
                 ? ""
                 : "mx-10 pt-[37px]"

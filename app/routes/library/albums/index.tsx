@@ -36,7 +36,7 @@ export default function AlbumRoute() {
               album={album}
               key={album.id}
               className="max-w-[13rem]"
-              linkTo={album.id}
+              linkToUrl={album.id}
             />
           );
         })}

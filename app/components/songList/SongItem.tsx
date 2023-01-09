@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useState } from "react";
-import { useOutletContext } from "@remix-run/react";
+import { useOutletContext, useSearchParams } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { calculateTime, formatArtworkURL } from "~/utils/helpers";
 import { SongControl } from "./SongControl";
@@ -24,10 +24,14 @@ export const SongItem = ({
   playlistId?: string;
   setQueueLoaded?: (b: boolean) => void;
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryId = searchParams.get("i");
   const fetcher = useFetcher();
   const [isMouseOver, setIsMouseOver] = useState(false);
   const { player, musicKit } = useOutletContext<AppContextType>();
-  const isSelectedSong = song.id === musicKit?.nowPlayingItem?.id;
+  const isSelectedSong = queryId
+    ? song.id === queryId
+    : song.id === musicKit?.nowPlayingItem?.id;
   const isAuthenticated = musicKit?.isAuthorized;
   // Types need to be updated for v3
   const inLibrary = (song.attributes as any)?.inLibrary;
@@ -77,6 +81,10 @@ export const SongItem = ({
 
               if (setQueueLoaded) {
                 setQueueLoaded(true);
+              }
+
+              if (queryId) {
+                setSearchParams({ i: song.id });
               }
               await musicKit?.changeToMediaItem(song.id);
             }}

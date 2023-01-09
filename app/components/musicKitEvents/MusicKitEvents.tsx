@@ -70,9 +70,31 @@ export const MusicKitEvents = ({
     [dispatch]
   );
 
+  const handleShuffleDidChange = useCallback(
+    (shuffle: number) => {
+      return dispatch({
+        type: AppReducerActionType.SET_SHUFFLE,
+        payload: shuffle,
+      });
+    },
+    [dispatch]
+  );
+
+  const handleRepeatDidChange = useCallback(
+    (repeat: number) => {
+      return dispatch({
+        type: AppReducerActionType.SET_REPEAT,
+        payload: repeat,
+      });
+    },
+    [dispatch]
+  );
+
   useMusicKitListener("playbackStateDidChange", handleApplePlaybackStateChange);
   useMusicKitListener("queueItemsDidChange", handleQueueItemsDidChange);
   useMusicKitListener("mediaItemStateDidChange", handleMediaItemStateDidChange);
+  useMusicKitListener("shuffleModeDidChange", handleShuffleDidChange);
+  useMusicKitListener("repeatModeDidChange", handleRepeatDidChange);
 
   return <></>;
 };

@@ -22,8 +22,8 @@ export const Controls = ({
   musicKit?: MusicKit.MusicKitInstance;
 }) => {
   const [isPlaying, setIsPlaying] = useState(player?.playerState === "PLAYING");
-  const [repeatMode, setRepeatMode] = useState(0);
-  const [shuffleMode, setShuffleMode] = useState(0);
+  const shuffleMode = player?.shuffleMode;
+  const repeatMode = player?.repeatMode;
   const isDisabled = !player?.queueLength;
   const disableColor = isDisabled
     ? "text-gray-300 hover:text-gray-300"
@@ -42,27 +42,6 @@ export const Controls = ({
   const playerState = player?.playerState;
 
   useEffect(() => {
-    if (shuffleMode === 0 && musicKit) {
-      musicKit.shuffleMode = MusicKitShuffle.ON;
-    }
-    if (shuffleMode === 1 && musicKit) {
-      musicKit.repeatMode = MusicKitShuffle.OFF;
-    }
-  }, [shuffleMode, musicKit]);
-
-  useEffect(() => {
-    if (repeatMode === 0 && musicKit) {
-      musicKit.repeatMode = MusicKitRepeat.ALL;
-    }
-    if (repeatMode === 1 && musicKit) {
-      musicKit.repeatMode = MusicKitRepeat.ONE;
-    }
-    if (repeatMode === 2 && musicKit) {
-      musicKit.repeatMode = MusicKitRepeat.ALL;
-    }
-  }, [repeatMode, musicKit]);
-
-  useEffect(() => {
     if (playerState === "PAUSE") {
       setIsPlaying(false);
     }
@@ -77,12 +56,14 @@ export const Controls = ({
         className={`mr-1 duration-200 ease-in ${disableColor} ${shuffleOn}`}
         disabled={isDisabled}
         onClick={() => {
+          if (!musicKit) return;
+
           if (shuffleMode === MusicKitShuffle.OFF) {
-            setShuffleMode(MusicKitShuffle.ON);
+            musicKit.shuffleMode = MusicKitShuffle.ON;
             return;
           }
 
-          setShuffleMode(MusicKitShuffle.OFF);
+          musicKit.shuffleMode = MusicKitShuffle.OFF;
         }}
       >
         <TbArrowsShuffle className="h-5 w-5" />
@@ -135,17 +116,19 @@ export const Controls = ({
         className={`ml-1 cursor-default duration-200 ease-in ${disableColor} ${repeatOn}`}
         disabled={isDisabled}
         onClick={() => {
+          if (!musicKit) return;
+
           if (repeatMode === MusicKitRepeat.NONE) {
-            setRepeatMode(MusicKitRepeat.ALL);
+            musicKit.repeatMode = MusicKitRepeat.ALL;
             return;
           }
 
           if (repeatMode === MusicKitRepeat.ALL) {
-            setRepeatMode(MusicKitRepeat.ONE);
+            musicKit.repeatMode = MusicKitRepeat.ONE;
             return;
           }
 
-          setRepeatMode(MusicKitRepeat.NONE);
+          musicKit.repeatMode = MusicKitRepeat.NONE;
         }}
       >
         {repeatMode !== MusicKitRepeat.ONE ? (

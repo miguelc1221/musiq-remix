@@ -130,6 +130,50 @@ export const getPlaylist: MusicKit.API["playlist"] = async (id, params) => {
   }
 };
 
+export type Term = { displayTerm: string; kind: string; searchTerm: string };
+export type Suggestion = {
+  kind: string;
+  content:
+    | MusicKit.Albums
+    | MusicKit.Artists
+    | MusicKit.Playlists
+    | MusicKit.Songs;
+};
+export type Suggestions = Suggestion | Term;
+export type SuggestionsResults = {
+  suggestions: Suggestions[];
+};
+
+export const searchMusickit = async (
+  term: string,
+  params: { userToken?: string } & MusicKit.QueryParameters = {}
+): Promise<SuggestionsResults> => {
+  const { userToken, ...otherParams } = params;
+
+  try {
+    const response = await fetch(
+      `${rootUrl}/catalog/us/search/suggestions?term=${term}&${new URLSearchParams(
+        otherParams
+      ).toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${developerToken}`,
+          ...(userToken ? { "Music-User-Token": userToken } : {}),
+        },
+      }
+    );
+    const data = await response.json();
+
+    if (data.errors) {
+      throw data.error;
+    }
+
+    return data.results;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Authenticated Personalized Calls
 export const getLibrarySongs: MusicKit.API["library"]["songs"] = async (
   ids = [],
@@ -198,7 +242,10 @@ export const getLibraryAlbums: MusicKit.API["library"]["albums"] = async (
 };
 
 export const getLibraryRecentlyAdded: MusicKit.API["library"]["recentlyAdded"] =
-  async ({ userToken, ...params }: { userToken: string }) => {
+  async ({
+    userToken,
+    ...params
+  }: { userToken: string } & MusicKit.QueryParameters) => {
     try {
       const response = await fetch(
         `${meUrl}/library/recently-added?${new URLSearchParams(

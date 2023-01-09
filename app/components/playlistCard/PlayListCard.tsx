@@ -1,21 +1,23 @@
 import { HiPlay } from "react-icons/hi2";
 import { Link } from "@remix-run/react";
-import { formatArtworkURL, formatUrlName } from "~/utils/helpers";
+import { formatArtworkURL, getLinkToUrl } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 
 export const PlayListCard = ({
   playList,
+  linkToUrl,
   ...otherProps
 }: {
   playList: MusicKit.Playlists;
+  linkToUrl?: string;
 }) => {
   const { musicKit } = useOutletContext<AppContextType>();
   const imageSrc = formatArtworkURL(playList?.attributes?.artwork?.url);
   const title = playList.attributes?.name;
   const subTitle = playList.attributes?.curatorName;
   const playListId = playList.id;
-  const playListUrl = `/playlist/${formatUrlName(title || "")}/${playListId}`;
+  const playListUrl = linkToUrl || getLinkToUrl(playList.attributes?.url);
 
   return (
     <div className="max-w-xs" {...otherProps}>

@@ -12,13 +12,8 @@ export const formatArtworkURL = (url = "", width = 220, height = 220) => {
     .replace("{f}", "jpeg");
 };
 
-export const formatUrlName = (str: string) => {
-  return str
-    .replace(/[^a-zA-Z0-9 ]/g, "")
-    .split(" ")
-    .filter(Boolean)
-    .join("-")
-    .toLowerCase();
+export const getLinkToUrl = (url: string = "") => {
+  return url.replace("https://music.apple.com/us", "");
 };
 
 export const calculateTime = (ms: number) => {

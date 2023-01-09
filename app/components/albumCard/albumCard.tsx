@@ -1,19 +1,19 @@
 import { HiPlay } from "react-icons/hi2";
 import { MdExplicit } from "react-icons/md";
 import { Link } from "@remix-run/react";
-import { formatArtworkURL } from "~/utils/helpers";
+import { formatArtworkURL, getLinkToUrl } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 
 export const AlbumCard = ({
   album,
-  linkTo = "/",
+  linkToUrl,
   className,
   ...otherProps
 }: {
   album: MusicKit.Albums;
-  linkTo: string;
   className?: string;
+  linkToUrl?: string;
 }) => {
   const { musicKit } = useOutletContext<AppContextType>();
   const imageSrc = formatArtworkURL(album?.attributes?.artwork?.url);
@@ -21,10 +21,11 @@ export const AlbumCard = ({
   const subTitle = album.attributes?.artistName;
   const albumId = album.id;
   const contentRating = album.attributes?.contentRating === "explicit";
+  const albumUrl = linkToUrl || getLinkToUrl(album.attributes?.url);
 
   return (
     <div className={`max-w-xs ${className || ""}`} {...otherProps}>
-      <Link to={linkTo}>
+      <Link to={albumUrl}>
         <div className="group relative cursor-pointer after:absolute after:top-0 after:left-0 after:h-full after:w-full after:rounded-md after:bg-stone-600 after:opacity-0 after:transition after:duration-300 after:ease-in-out [&:after:hover]:opacity-40">
           {imageSrc && (
             <>
@@ -52,7 +53,7 @@ export const AlbumCard = ({
         <div className="mt-2 flex flex-col gap-[2] text-sm">
           <div className="flex">
             <Link
-              to={linkTo}
+              to={albumUrl}
               className="block w-full truncate text-xs hover:underline"
             >
               {title}

@@ -6,6 +6,8 @@ export type PlayerType = {
   playerState: PlayerState;
   queueLength: number;
   selectedMediaItem?: MusicKit.MediaItem;
+  shuffleMode: number;
+  repeatMode: number;
 };
 
 export type initialStateType = {
@@ -21,6 +23,8 @@ export enum AppReducerActionType {
   SET_PLAYER_STATE,
   SET_QUEUE_LENGTH,
   SET_SELECTED_MEDIA_ITEM,
+  SET_SHUFFLE,
+  SET_REPEAT,
 }
 
 export type AppReducerAction =
@@ -38,7 +42,15 @@ export type AppReducerAction =
     }
   | {
       type: AppReducerActionType.SET_SELECTED_MEDIA_ITEM;
-      payload: any;
+      payload: MusicKit.MediaItem;
+    }
+  | {
+      type: AppReducerActionType.SET_SHUFFLE;
+      payload: number;
+    }
+  | {
+      type: AppReducerActionType.SET_REPEAT;
+      payload: number;
     };
 
 /**
@@ -50,6 +62,8 @@ export const appInitialState: initialStateType = {
     playerState: "PAUSE",
     queueLength: 0,
     selectedMediaItem: undefined,
+    shuffleMode: 0,
+    repeatMode: 0,
   },
 };
 
@@ -85,6 +99,22 @@ export const appReducer = (
         player: {
           ...state.player,
           selectedMediaItem: action.payload,
+        },
+      };
+    case AppReducerActionType.SET_SHUFFLE:
+      return {
+        ...state,
+        player: {
+          ...state.player,
+          shuffleMode: action.payload,
+        },
+      };
+    case AppReducerActionType.SET_REPEAT:
+      return {
+        ...state,
+        player: {
+          ...state.player,
+          repeatMode: action.payload,
         },
       };
     default:

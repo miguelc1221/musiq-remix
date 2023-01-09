@@ -37,7 +37,7 @@ export default function RecentlyAddedRoute() {
               album={album}
               key={album.id}
               className="max-w-[13rem]"
-              linkTo={`/library/albums/${album.id}`}
+              linkToUrl={`/library/albums/${album.id}`}
             />
           );
         })}

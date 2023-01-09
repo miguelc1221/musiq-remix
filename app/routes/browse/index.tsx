@@ -10,7 +10,6 @@ import { AlbumCard } from "~/components/albumCard/albumCard";
 import { SongCarouselList } from "~/components/songCarouselList/SongCarouselList";
 import getChunk from "lodash.chunk";
 import { PlayListCard } from "~/components/playlistCard/PlayListCard";
-import { formatUrlName } from "~/utils/helpers";
 
 export const loader: LoaderFunction = async () => {
   try {
@@ -49,13 +48,7 @@ export default function BrowseIndex() {
           <h2 className="mb-6 pl-4 text-xl font-bold">{albums[0].name}</h2>
           <MusiqCarousel>
             {albums[0].data.map((album, index) => {
-              const title = album.attributes?.name;
-              const albumId = album.id;
-              const albumUrl = `/album/${formatUrlName(
-                title || ""
-              )}/${albumId}`;
-
-              return <AlbumCard album={album} key={index} linkTo={albumUrl} />;
+              return <AlbumCard album={album} key={index} />;
             })}
           </MusiqCarousel>
         </div>

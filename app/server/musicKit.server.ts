@@ -130,6 +130,35 @@ export const getPlaylist: MusicKit.API["playlist"] = async (id, params) => {
   }
 };
 
+export const getArtist = async (
+  id: string,
+  params: { userToken?: string } & MusicKit.QueryParameters = {}
+): Promise<MusicKit.Artists> => {
+  const { userToken, ...otherParams } = params;
+
+  try {
+    const response = await fetch(
+      `${rootUrl}/catalog/us/artists/${id}?${new URLSearchParams(
+        otherParams
+      ).toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${developerToken}`,
+          ...(userToken ? { "Music-User-Token": userToken } : {}),
+        },
+      }
+    );
+    const data = await response.json();
+
+    if (data.errors) {
+      throw data.error;
+    }
+    return data.data[0];
+  } catch (error) {
+    throw error;
+  }
+};
+
 export type Term = { displayTerm: string; kind: string; searchTerm: string };
 export type Suggestion = {
   kind: string;

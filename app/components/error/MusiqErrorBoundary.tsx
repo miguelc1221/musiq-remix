@@ -23,7 +23,7 @@ export const MusiqErrorBoundary = ({
   };
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3">
+    <div className="flex h-[calc(100vh_-_100px)] flex-col items-center justify-center gap-3">
       <h2 className="text-lg">{message}</h2>
       <button
         className="rounded-full bg-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-sm"

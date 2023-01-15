@@ -1,6 +1,7 @@
 import type { PlayerType } from "~/appReducer";
 import { formatArtworkURL } from "~/utils/helpers";
-import { AppleIcon, MusicNote } from "../icons";
+import { AppleIcon } from "../icons";
+import { HiMusicNote } from "react-icons/hi";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
 import { Controls } from "../controls/Controls";
@@ -136,7 +137,7 @@ export const TrackDisplay = ({
           />
         ) : (
           <div className="flex h-[55px] w-[55px] items-center justify-center bg-gray-300">
-            <MusicNote className="h-7 w-7" />
+            <HiMusicNote className="h-7 w-7" />
           </div>
         )}
 

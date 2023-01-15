@@ -1,11 +1,18 @@
 import type { ReactNode } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
-import { NavLink, useLocation, useFetcher } from "@remix-run/react";
+import {
+  NavLink,
+  useLocation,
+  useFetcher,
+  useNavigate,
+} from "@remix-run/react";
 import { AppleLogo } from "../icons";
 import { IoIosAlbums, IoIosMusicalNote } from "react-icons/Io";
 import { FaUserCircle } from "react-icons/fa";
 import { HiSquares2X2, HiClock } from "react-icons/hi2";
+import { BsBoxArrowUpRight } from "react-icons/bs";
+import { SiApplemusic } from "react-icons/si";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
 import type { AppContextType } from "~/appReducer";
 import { SearchBox } from "~/routes/search/SearchBox";
@@ -47,9 +54,11 @@ export default function Layout({
   const fetcher = useFetcher();
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const isAlbumUrl = location.pathname.includes("/album/");
   const isLibraryAlbumUrl = location.pathname.includes("/albums/");
   const isPlaylistUrl = location.pathname.includes("/playlist/");
+  const isArtistUrl = location.pathname.includes("/artist/");
 
   useEffect(() => {
     containerRef.current?.scrollTo(0, 0);
@@ -61,7 +70,7 @@ export default function Layout({
         aria-label="Sidebar"
         className="relative h-screen min-w-[300px] border-r bg-gray-100"
       >
-        <nav>
+        <nav className="h-full">
           <ul className="flex flex-col gap-3">
             <li>
               <h1 className="flex items-center pl-[1.2rem] pt-6 pb-8 text-2xl font-bold text-indigo-500">
@@ -81,13 +90,13 @@ export default function Layout({
               </NavLinkWrapper>
             </li>
           </ul>
-          <div className="mt-6">
+          <div className="mt-6 h-full">
             {isAuthenticated && (
               <span className="ml-2 px-8 text-[11px] font-bold">
                 MY LIBRARY
               </span>
             )}
-            <ul className="mt-2">
+            <ul className="mt-2 flex h-full flex-col">
               {isAuthenticated && (
                 <>
                   <li className="px-8">
@@ -110,9 +119,9 @@ export default function Layout({
                   </li>
                 </>
               )}
-              <li className="px-8 pt-6">
+              <li className="flex-1 px-8 pt-6">
                 <span
-                  className="flex w-full cursor-pointer items-center justify-center border-t border-slate-300 p-4 font-bold hover:text-indigo-500"
+                  className="flex w-full cursor-pointer items-center border-t border-slate-300 px-2 pt-6 font-bold hover:text-indigo-500"
                   onClick={async () => {
                     if (isAuthenticated) {
                       await appState?.musicKit?.unauthorize();
@@ -142,6 +151,16 @@ export default function Layout({
                   </span>
                 </span>
               </li>
+              <li className="flex-1 px-8 pt-6">
+                <span
+                  className="flex w-full cursor-pointer items-center space-x-2 p-4 font-bold hover:text-indigo-500"
+                  onClick={() => window.location.replace("music://")}
+                >
+                  <SiApplemusic className="h-6 w-6" />
+                  <span className="ml-2">Open in Music</span>
+                  <BsBoxArrowUpRight className="h-3 w-3" />
+                </span>
+              </li>
             </ul>
           </div>
         </nav>
@@ -164,8 +183,8 @@ export default function Layout({
             </div>
           </div>
           <div
-            className={`pb-[100px] ${
-              isAlbumUrl || isPlaylistUrl || isLibraryAlbumUrl
+            className={`h-auto pb-[100px] ${
+              isAlbumUrl || isPlaylistUrl || isLibraryAlbumUrl || isArtistUrl
                 ? ""
                 : "mx-10 pt-[37px]"
             }`}

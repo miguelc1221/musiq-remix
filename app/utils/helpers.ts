@@ -1,4 +1,4 @@
-export const formatArtworkURL = (url = "", width = 220, height = 220) => {
+export const formatArtworkURL = (url = "", width = 240, height = 240) => {
   let h = height;
   let w = width;
 

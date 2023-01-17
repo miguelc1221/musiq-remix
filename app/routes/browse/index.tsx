@@ -6,7 +6,7 @@ import {
   getPlaylist,
 } from "~/server/musicKit.server";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
-import { AlbumCard } from "~/components/albumCard/albumCard";
+import { AlbumCard } from "~/components/albumCard/AlbumCard";
 import { SongCarouselList } from "~/components/songCarouselList/SongCarouselList";
 import getChunk from "lodash.chunk";
 import { PlayListCard } from "~/components/playlistCard/PlayListCard";
@@ -35,8 +35,6 @@ export default function BrowseIndex() {
     playlists: MusicKit.SearchChartResult<MusicKit.Playlists>[];
     cityCharts: MusicKit.Playlists[];
   }>();
-
-  const allSongsId = songs[0].data.map((song) => song.id);
 
   return (
     <>
@@ -79,7 +77,7 @@ export default function BrowseIndex() {
                   <SongCarouselList
                     songs={item}
                     key={index}
-                    allSongsId={allSongsId}
+                    allSongs={songs[0].data}
                   />
                 );
               })}

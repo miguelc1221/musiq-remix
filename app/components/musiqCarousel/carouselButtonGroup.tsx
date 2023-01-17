@@ -7,9 +7,11 @@ export const ButtonGroup = ({
   carouselState,
 }: ButtonGroupProps) => {
   const lastSlide =
-    carouselState?.currentSlide &&
-    carouselState?.currentSlide + carouselState?.slidesToShow ===
-      carouselState?.totalItems;
+    (carouselState?.currentSlide &&
+      carouselState?.currentSlide + carouselState?.slidesToShow ===
+        carouselState?.totalItems) ||
+    (carouselState?.totalItems &&
+      carouselState?.totalItems <= carouselState?.slidesToShow);
   return (
     <>
       <div

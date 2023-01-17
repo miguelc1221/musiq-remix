@@ -36,7 +36,7 @@ export const SongList = ({
           <span role="columnheader" className="flex-1">
             NAME
           </span>
-          <span role="columnheader" className="flex-1">
+          <span role="columnheader" className="mr-[2.3rem] flex-1">
             ALBUM
           </span>
           <span role="columnheader">TIME</span>

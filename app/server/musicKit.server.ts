@@ -175,15 +175,16 @@ export type SuggestionsResults = {
 
 export const searchMusickit = async (
   term: string,
+  searchSuggestions: boolean,
   params: { userToken?: string } & MusicKit.QueryParameters = {}
 ): Promise<SuggestionsResults> => {
   const { userToken, ...otherParams } = params;
 
   try {
     const response = await fetch(
-      `${rootUrl}/catalog/us/search/suggestions?term=${term}&${new URLSearchParams(
-        otherParams
-      ).toString()}`,
+      `${rootUrl}/catalog/us/search${
+        searchSuggestions ? "/suggestions" : "/"
+      }?term=${term}&${new URLSearchParams(otherParams).toString()}`,
       {
         headers: {
           Authorization: `Bearer ${developerToken}`,

@@ -3,7 +3,7 @@ import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { redirect } from "@remix-run/node"; // or cloudflare/deno
 import { getLibraryAlbums } from "~/server/musicKit.server";
 import { getUserSession } from "~/server/session.server";
-import { AlbumCard } from "~/components/albumCard/albumCard";
+import { AlbumCard } from "~/components/albumCard/AlbumCard";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
 
 export const loader: LoaderFunction = async ({ request }) => {

@@ -1,12 +1,7 @@
 import type { ReactNode } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
-import {
-  NavLink,
-  useLocation,
-  useFetcher,
-  useNavigate,
-} from "@remix-run/react";
+import { NavLink, useLocation, useFetcher } from "@remix-run/react";
 import { AppleLogo } from "../icons";
 import { IoIosAlbums, IoIosMusicalNote } from "react-icons/Io";
 import { FaUserCircle } from "react-icons/fa";
@@ -15,7 +10,7 @@ import { BsBoxArrowUpRight } from "react-icons/bs";
 import { SiApplemusic } from "react-icons/si";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
 import type { AppContextType } from "~/appReducer";
-import { SearchBox } from "~/routes/search/SearchBox";
+import { SearchBox } from "~/routes/search";
 
 const NavLinkWrapper = ({
   children,
@@ -54,7 +49,6 @@ export default function Layout({
   const fetcher = useFetcher();
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const navigate = useNavigate();
   const isAlbumUrl = location.pathname.includes("/album/");
   const isLibraryAlbumUrl = location.pathname.includes("/albums/");
   const isPlaylistUrl = location.pathname.includes("/playlist/");
@@ -119,9 +113,21 @@ export default function Layout({
                   </li>
                 </>
               )}
-              <li className="flex-1 px-8 pt-6">
-                <span
-                  className="flex w-full cursor-pointer items-center border-t border-slate-300 px-2 pt-6 font-bold hover:text-indigo-500"
+              <li className="px-8 pt-6">
+                <div className="cursor-pointer border-t border-slate-300 px-2 pt-6 hover:text-indigo-500">
+                  <button
+                    className="flex w-full cursor-pointer items-center space-x-2"
+                    onClick={() => window.location.replace("music://")}
+                  >
+                    <SiApplemusic className="h-6 w-6" />
+                    <span className="ml-2">Open in Music</span>
+                    <BsBoxArrowUpRight className="h-3 w-3" />
+                  </button>
+                </div>
+              </li>
+              <li className="px-8 pt-6">
+                <button
+                  className="flex w-full items-center px-2 font-bold hover:text-indigo-500"
                   onClick={async () => {
                     if (isAuthenticated) {
                       await appState?.musicKit?.unauthorize();
@@ -149,17 +155,7 @@ export default function Layout({
                   <span className="ml-2">
                     {isAuthenticated ? "Sign Out" : "Login"}
                   </span>
-                </span>
-              </li>
-              <li className="flex-1 px-8 pt-6">
-                <span
-                  className="flex w-full cursor-pointer items-center space-x-2 p-4 font-bold hover:text-indigo-500"
-                  onClick={() => window.location.replace("music://")}
-                >
-                  <SiApplemusic className="h-6 w-6" />
-                  <span className="ml-2">Open in Music</span>
-                  <BsBoxArrowUpRight className="h-3 w-3" />
-                </span>
+                </button>
               </li>
             </ul>
           </div>

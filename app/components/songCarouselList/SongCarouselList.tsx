@@ -78,12 +78,14 @@ const SongCarouselListItem = ({
 
 export const SongCarouselList = ({
   songs,
-  allSongsId,
+  allSongs = [],
   ...otherProps
 }: {
   songs: MusicKit.Songs[];
-  allSongsId: string[];
+  allSongs: MusicKit.Songs[];
 }) => {
+  const allSongsId = allSongs.map((song) => song.id);
+
   return (
     <div className="grid grid-cols-1 gap-2 divide-y" {...otherProps}>
       {songs.map((song, idx) => {

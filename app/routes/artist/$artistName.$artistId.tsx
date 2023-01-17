@@ -1,4 +1,5 @@
 import getChunk from "lodash.chunk";
+import clsx from "clsx";
 import { useState, useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
@@ -9,7 +10,7 @@ import { getUserSession } from "~/server/session.server";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
 import { SongCarouselList } from "~/components/songCarouselList/SongCarouselList";
-import { AlbumCard } from "~/components/albumCard/albumCard";
+import { AlbumCard } from "~/components/albumCard/AlbumCard";
 import { PlayListCard } from "~/components/playlistCard/PlayListCard";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
@@ -63,7 +64,7 @@ export default function ArtistRoute() {
   const playlists = results.views["featured-playlists"];
 
   const headerImg = formatArtworkURL(
-    results.attributes?.artwork.url,
+    results.attributes?.artwork?.url,
     2400,
     1350
   );
@@ -78,11 +79,25 @@ export default function ArtistRoute() {
   return (
     <>
       <div
-        className="relative mb-6 aspect-auto h-[40vh] max-h-[1680px] min-h-[350px] bg-cover bg-center bg-no-repeat after:absolute after:top-0 after:left-0 after:h-full after:w-full after:rounded-md after:bg-stone-600 after:opacity-60 after:transition after:duration-300 after:ease-in-out"
-        style={{ backgroundImage: `url(${headerImg})` }}
+        className={clsx(
+          "relative mb-6 aspect-auto h-[40vh] max-h-[1680px] min-h-[350px] bg-cover bg-center bg-no-repeat after:absolute after:top-0 after:left-0 after:h-full after:w-full after:opacity-60 after:transition after:duration-300 after:ease-in-out",
+          {
+            "after:bg-stone-600": headerImg,
+            "bg-rose-100 bg-gradient-to-t from-indigo-200/75 to-rose-100":
+              !headerImg,
+          }
+        )}
+        style={{
+          ...(headerImg ? { backgroundImage: `url(${headerImg})` } : {}),
+        }}
       >
         <div className="flex h-full">
-          <div className="z-10 flex items-end pl-8 pb-6 text-white">
+          <div
+            className={clsx("z-10 flex items-end pl-8 pb-6", {
+              "text-slate-700": !headerImg,
+              "text-white": headerImg,
+            })}
+          >
             <div className="flex items-center gap-4">
               <button
                 aria-label="play"
@@ -114,65 +129,73 @@ export default function ArtistRoute() {
           </div>
         </div>
       </div>
-      <div className="mb-6 px-10">
-        <h2 className="mb-6 pl-4 text-xl font-bold">Top Songs</h2>
-        <MusiqCarousel
-          responsive={{
-            desktop: {
-              breakpoint: { max: 3000, min: 1024 },
-              items: 3,
-              slidesToSlide: 3,
-            },
-            tablet: {
-              breakpoint: { max: 1024, min: 464 },
-              items: 2,
-              slidesToSlide: 2,
-            },
-            mobile: {
-              breakpoint: { max: 764, min: 0 },
-              items: 1,
-              slidesToSlide: 1,
-            },
-          }}
-        >
-          {getChunk(topSongs.data, 4).map((item, index) => {
-            return (
-              <SongCarouselList
-                songs={item}
-                key={index}
-                allSongsId={allSongsId}
-              />
-            );
-          })}
-        </MusiqCarousel>
-      </div>
+      {topSongs?.data?.length > 0 && (
+        <div className="mb-6 px-10">
+          <h2 className="mb-6 pl-4 text-xl font-bold">Top Songs</h2>
+          <MusiqCarousel
+            responsive={{
+              desktop: {
+                breakpoint: { max: 3000, min: 1024 },
+                items: 3,
+                slidesToSlide: 3,
+              },
+              tablet: {
+                breakpoint: { max: 1024, min: 464 },
+                items: 2,
+                slidesToSlide: 2,
+              },
+              mobile: {
+                breakpoint: { max: 764, min: 0 },
+                items: 1,
+                slidesToSlide: 1,
+              },
+            }}
+          >
+            {getChunk(topSongs.data, 4).map((item, index) => {
+              return (
+                <SongCarouselList
+                  songs={item}
+                  key={index}
+                  allSongs={topSongs.data}
+                />
+              );
+            })}
+          </MusiqCarousel>
+        </div>
+      )}
 
-      <div className="mb-6 px-10">
-        <h2 className="mb-6 pl-4 text-xl font-bold">Albums</h2>
-        <MusiqCarousel>
-          {fullAlbums.data.map((album, index) => {
-            return <AlbumCard album={album} key={index} />;
-          })}
-        </MusiqCarousel>
-      </div>
+      {fullAlbums?.data?.length > 0 && (
+        <div className="mb-6 px-10">
+          <h2 className="mb-6 pl-4 text-xl font-bold">Albums</h2>
+          <MusiqCarousel>
+            {fullAlbums.data.map((album, index) => {
+              return <AlbumCard album={album} key={index} />;
+            })}
+          </MusiqCarousel>
+        </div>
+      )}
 
-      <div className="mb-6 px-10">
-        <h2 className="mb-6 pl-4 text-xl font-bold">Appears on</h2>
-        <MusiqCarousel>
-          {appearsOnAlbums.data.map((album, index) => {
-            return <AlbumCard album={album} key={index} />;
-          })}
-        </MusiqCarousel>
-      </div>
+      {appearsOnAlbums?.data?.length > 0 && (
+        <div className="mb-6 px-10">
+          <h2 className="mb-6 pl-4 text-xl font-bold">Appears on</h2>
+          <MusiqCarousel>
+            {appearsOnAlbums.data.map((album, index) => {
+              return <AlbumCard album={album} key={index} />;
+            })}
+          </MusiqCarousel>
+        </div>
+      )}
 
-      <div className="mb-6 px-10">
-        <h2 className="mb-6 pl-4 text-xl font-bold">Featured Playlists</h2>
-        <MusiqCarousel>
-          {playlists.data.map((playlist, index) => {
-            return <PlayListCard playList={playlist} key={index} />;
-          })}
-        </MusiqCarousel>
-      </div>
+      {playlists?.data?.length > 0 && (
+        <div className="mb-6 px-10">
+          <h2 className="mb-6 pl-4 text-xl font-bold">Featured Playlists</h2>
+          <MusiqCarousel>
+            {playlists.data.map((playlist, index) => {
+              return <PlayListCard playList={playlist} key={index} />;
+            })}
+          </MusiqCarousel>
+        </div>
+      )}
     </>
   );
 }

@@ -54,7 +54,3 @@ export const timeConversion = (duration: number) => {
 
   return portions.join(" ");
 };
-
-export const getAlbumId = (url: string = "") => {
-  return new URL(url).pathname.split("/").filter(Boolean).pop();
-};

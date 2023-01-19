@@ -1,7 +1,7 @@
 import type { PlayerType } from "~/appReducer";
 import { formatArtworkURL } from "~/utils/helpers";
-import { AppleIcon } from "../icons";
 import { HiMusicNote } from "react-icons/hi";
+import { FaApple } from "react-icons/fa";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
 import { Controls } from "../controls/Controls";
@@ -164,7 +164,7 @@ export const TrackDisplay = ({
                 </time>
               </>
             ) : (
-              <AppleIcon className="h-8 w-8" />
+              <FaApple className="h-8 w-8" />
             )}
           </div>
 

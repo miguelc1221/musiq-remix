@@ -5,6 +5,7 @@ import { getLibrarySongs } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
 import { getUserSession } from "~/server/session.server";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
+import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -25,10 +26,14 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 };
 
-export default function AlbumRoute() {
+export default function LibrarySongsRoute() {
   const songs = useLoaderData<MusicKit.Songs[]>();
 
-  return <SongList songs={songs} />;
+  return (
+    <PageWrapper>
+      <SongList songs={songs} />
+    </PageWrapper>
+  );
 }
 
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {

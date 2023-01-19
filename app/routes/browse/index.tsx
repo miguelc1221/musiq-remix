@@ -1,3 +1,4 @@
+import getChunk from "lodash.chunk";
 import type { LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
@@ -8,8 +9,8 @@ import {
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
 import { AlbumCard } from "~/components/albumCard/AlbumCard";
 import { SongCarouselList } from "~/components/songCarouselList/SongCarouselList";
-import getChunk from "lodash.chunk";
 import { PlayListCard } from "~/components/playlistCard/PlayListCard";
+import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
 
 export const loader: LoaderFunction = async () => {
   try {
@@ -37,7 +38,7 @@ export default function BrowseIndex() {
   }>();
 
   return (
-    <>
+    <PageWrapper>
       <h1 className="mb-4 border-b border-slate-200 pb-6 text-3xl font-bold">
         Browse
       </h1>
@@ -101,6 +102,6 @@ export default function BrowseIndex() {
           </MusiqCarousel>
         </div>
       </div>
-    </>
+    </PageWrapper>
   );
 }

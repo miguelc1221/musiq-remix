@@ -1,12 +1,12 @@
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
+import type { AppContextType } from "~/appReducer";
 import { redirect } from "@remix-run/node"; // or cloudflare/deno
 import { getLibraryAlbums } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
 import { formatArtworkURL, timeConversion } from "~/utils/helpers";
 import { HiPlay, HiPause } from "react-icons/hi2";
 import { useOutletContext } from "@remix-run/react";
-import type { AppContextType } from "~/appReducer";
 import { getUserSession } from "~/server/session.server";
 import { useState, useEffect } from "react";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
@@ -42,7 +42,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   }
 };
 
-export default function AlbumRoute() {
+export default function LibraryAlbumRoute() {
   const results = useLoaderData<MusicKit.Albums[]>();
   const album = results[0];
   const { player, musicKit } = useOutletContext<AppContextType>();

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { NavLink, useLocation, useFetcher } from "@remix-run/react";
 import { AppleLogo } from "../icons";
 import { IoIosAlbums, IoIosMusicalNote } from "react-icons/Io";
+import { MdInfoOutline } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { HiSquares2X2, HiClock } from "react-icons/hi2";
 import { BsBoxArrowUpRight } from "react-icons/bs";
@@ -65,7 +66,7 @@ export default function Layout({
         className="relative h-screen min-w-[300px] border-r bg-gray-100"
       >
         <nav className="h-full">
-          <ul className="flex flex-col gap-3">
+          <ul className="flex flex-col">
             <li>
               <h1 className="flex items-center pl-[1.2rem] pt-6 pb-8 text-2xl font-bold text-indigo-500">
                 <NavLink to="/" className="flex items-end">
@@ -76,6 +77,12 @@ export default function Layout({
             </li>
             <li className="mb-4 px-8">
               <SearchBox />
+            </li>
+            <li className="px-8">
+              <NavLinkWrapper to="/about">
+                <MdInfoOutline className="h-5 w-5" />
+                <span className="ml-2">About</span>
+              </NavLinkWrapper>
             </li>
             <li className="px-8">
               <NavLinkWrapper to="/browse">
@@ -178,15 +185,7 @@ export default function Layout({
               />
             </div>
           </div>
-          <div
-            className={`h-auto pb-[100px] ${
-              isAlbumUrl || isPlaylistUrl || isLibraryAlbumUrl || isArtistUrl
-                ? ""
-                : "mx-10 pt-[37px]"
-            }`}
-          >
-            {children}
-          </div>
+          {children}
         </main>
       </div>
     </div>

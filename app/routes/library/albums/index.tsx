@@ -5,6 +5,7 @@ import { getLibraryAlbums } from "~/server/musicKit.server";
 import { getUserSession } from "~/server/session.server";
 import { AlbumCard } from "~/components/albumCard/AlbumCard";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
+import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -25,10 +26,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 };
 
-export default function AlbumRoute() {
+export default function LibraryAlbumsRoute() {
   const albums = useLoaderData<MusicKit.Albums[]>();
   return (
-    <>
+    <PageWrapper>
       <div className="flex flex-wrap gap-5">
         {albums.map((album) => {
           return (
@@ -41,7 +42,7 @@ export default function AlbumRoute() {
           );
         })}
       </div>
-    </>
+    </PageWrapper>
   );
 }
 

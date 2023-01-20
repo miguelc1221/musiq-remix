@@ -54,7 +54,7 @@ export default function PlaylistRoute() {
   }, [player.playerState]);
 
   return (
-    <>
+    <div className="pb-[100px]">
       <div className="flex min-h-[300px] items-center gap-6 bg-rose-100 bg-gradient-to-t from-indigo-200/75 to-rose-100 px-10">
         <div className="shrink-0">
           <img
@@ -105,7 +105,7 @@ export default function PlaylistRoute() {
           className="mt-0 mr-0 ml-0 px-10 [&~div]:px-10"
         />
       </div>
-    </>
+    </div>
   );
 }
 

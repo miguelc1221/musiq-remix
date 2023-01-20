@@ -50,10 +50,6 @@ export default function Layout({
   const fetcher = useFetcher();
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const isAlbumUrl = location.pathname.includes("/album/");
-  const isLibraryAlbumUrl = location.pathname.includes("/albums/");
-  const isPlaylistUrl = location.pathname.includes("/playlist/");
-  const isArtistUrl = location.pathname.includes("/artist/");
 
   useEffect(() => {
     containerRef.current?.scrollTo(0, 0);

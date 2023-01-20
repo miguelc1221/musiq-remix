@@ -77,7 +77,7 @@ export default function ArtistRoute() {
   const isPlayerPlaying = player.playerState === "PLAYING";
 
   return (
-    <>
+    <div className="pb-[100px]">
       <div
         className={clsx(
           "relative mb-6 aspect-auto h-[40vh] max-h-[1680px] min-h-[350px] bg-cover bg-center bg-no-repeat after:absolute after:top-0 after:left-0 after:h-full after:w-full after:opacity-60 after:transition after:duration-300 after:ease-in-out",
@@ -196,7 +196,7 @@ export default function ArtistRoute() {
           </MusiqCarousel>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

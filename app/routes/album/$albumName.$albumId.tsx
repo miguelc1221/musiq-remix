@@ -71,7 +71,7 @@ export default function AlbumRoute() {
   );
 
   return (
-    <>
+    <div className="pb-[100px]">
       <div className="flex min-h-[350px] items-center gap-6 bg-rose-100 bg-gradient-to-t from-indigo-200/75 to-rose-100 px-10">
         <div className="shrink-0">
           <img
@@ -174,7 +174,7 @@ export default function AlbumRoute() {
           )}
         </div>
       </MusiqModal>
-    </>
+    </div>
   );
 }
 

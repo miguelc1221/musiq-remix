@@ -233,7 +233,7 @@ export const getLibrarySongs: MusicKit.API["library"]["songs"] = async (
     if (data.errors) {
       throw data.error;
     }
-    return data.data;
+    return data;
   } catch (error) {
     throw error;
   }
@@ -265,7 +265,7 @@ export const getLibraryAlbums: MusicKit.API["library"]["albums"] = async (
     if (data.errors) {
       throw data.error;
     }
-    return data.data;
+    return data;
   } catch (error) {
     throw error;
   }

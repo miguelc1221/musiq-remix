@@ -12,16 +12,19 @@ import { SiApplemusic } from "react-icons/si";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
 import type { AppContextType } from "~/appReducer";
 import { SearchBox } from "~/routes/search";
+import type { RemixNavLinkProps } from "@remix-run/react/dist/components";
 
 const NavLinkWrapper = ({
   children,
   to,
+  prefetch,
 }: {
   children: React.ReactNode;
   to: string;
+  prefetch?: RemixNavLinkProps["prefetch"];
 }) => {
   const defaultClasses = "flex w-full items-center rounded-lg p-2";
-  const activeClasses = "bg-indigo-500 text-white";
+  const activeClasses = "bg-indigo-600 text-white";
   const hoverClass = "hover:bg-slate-200";
 
   return (
@@ -32,6 +35,7 @@ const NavLinkWrapper = ({
           ? `${defaultClasses} ${activeClasses}`
           : `${defaultClasses} ${hoverClass}`
       }
+      prefetch={prefetch}
     >
       {children}
     </NavLink>
@@ -64,7 +68,7 @@ export default function Layout({
         <nav className="h-full">
           <ul className="flex flex-col">
             <li>
-              <h1 className="flex items-center pl-[1.2rem] pt-6 pb-8 text-2xl font-bold text-indigo-500">
+              <h1 className="flex items-center pl-[1.2rem] pt-6 pb-8 text-2xl font-bold text-indigo-600">
                 <NavLink to="/" className="flex items-end">
                   <AppleLogo className="mr-2" />
                   Musiq Remix
@@ -81,7 +85,7 @@ export default function Layout({
               </NavLinkWrapper>
             </li>
             <li className="px-8">
-              <NavLinkWrapper to="/browse">
+              <NavLinkWrapper to="/browse" prefetch="render">
                 <HiSquares2X2 className="h-5 w-5" />
                 <span className="ml-2">Browse</span>
               </NavLinkWrapper>
@@ -117,7 +121,7 @@ export default function Layout({
                 </>
               )}
               <li className="px-8 pt-6">
-                <div className="cursor-pointer border-t border-slate-300 px-2 pt-6 hover:text-indigo-500">
+                <div className="cursor-pointer border-t border-slate-300 px-2 pt-6 hover:text-indigo-600">
                   <button
                     className="flex w-full cursor-pointer items-center space-x-2"
                     onClick={() => window.location.replace("music://")}
@@ -130,7 +134,7 @@ export default function Layout({
               </li>
               <li className="px-8 pt-6">
                 <button
-                  className="flex w-full items-center px-2 font-bold hover:text-indigo-500"
+                  className="flex w-full items-center px-2 font-bold hover:text-indigo-600"
                   onClick={async () => {
                     if (isAuthenticated) {
                       await appState?.musicKit?.unauthorize();

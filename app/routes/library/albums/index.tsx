@@ -1,37 +1,47 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
-import { redirect } from "@remix-run/node"; // or cloudflare/deno
+import { json } from "@remix-run/node";
 import { getLibraryAlbums } from "~/server/musicKit.server";
-import { getUserSession } from "~/server/session.server";
+import { requireAuthToken } from "~/server/session.server";
 import { AlbumCard } from "~/components/albumCard/AlbumCard";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
 import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
+import { Pagination } from "~/components/pagination/Pagination";
+
+const offsetLimit = 100;
 
 export const loader: LoaderFunction = async ({ request }) => {
-  try {
-    const session = await getUserSession(request);
-    const userToken = session.get("appleMusicToken");
+  const url = new URL(request.url);
+  const offset = url.searchParams.get("offset");
 
-    if (!userToken) {
-      return redirect("/");
-    }
+  const userToken = await requireAuthToken(request);
 
-    const res = await getLibraryAlbums(null, { userToken });
+  const results = await getLibraryAlbums(null, {
+    userToken,
+    limit: offsetLimit,
+    ...(offset ? { offset } : {}),
+  });
 
-    return res;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Unhandled error: ${error.message}`);
-    }
-  }
+  return json(results);
 };
 
 export default function LibraryAlbumsRoute() {
-  const albums = useLoaderData<MusicKit.Albums[]>();
+  const results = useLoaderData<{
+    data: MusicKit.Albums[];
+    meta: {
+      total: number;
+    };
+    next?: string;
+  }>();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const offset = searchParams.getAll("offset") || 0;
+  const numOffset = Number(offset);
+
   return (
     <PageWrapper>
       <div className="flex flex-wrap gap-5">
-        {albums.map((album) => {
+        {results.data.map((album) => {
           return (
             <AlbumCard
               album={album}
@@ -42,6 +52,21 @@ export default function LibraryAlbumsRoute() {
           );
         })}
       </div>
+      {results.next && (
+        <div className="mt-6 flex w-full items-center justify-center">
+          <Pagination
+            count={results.meta?.total}
+            offset={numOffset}
+            offsetLimit={offsetLimit}
+            onNextClick={() => {
+              navigate(`/library/albums?offset=${numOffset + offsetLimit}`);
+            }}
+            onPrevClick={() => {
+              navigate(`/library/albums?offset=${numOffset - offsetLimit}`);
+            }}
+          />
+        </div>
+      )}
     </PageWrapper>
   );
 }

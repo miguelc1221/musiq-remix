@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { useState, useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { getArtist } from "~/server/musicKit.server";
 import { formatArtworkURL } from "~/utils/helpers";
 import { HiPlay, HiPause } from "react-icons/hi2";
@@ -16,7 +17,6 @@ import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  console.log(params, "PARAMS>>>");
   if (!params.artistId) {
     throw new Response("Require Artist Id", {
       status: 404,
@@ -26,20 +26,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const session = await getUserSession(request);
   const userToken = session.get("appleMusicToken");
 
-  try {
-    const res = await getArtist(params.artistId, {
-      "limit[artists:top-songs]": 20,
-      "limit[artists:full-albums]": 20,
-      views: "appears-on-albums,full-albums,top-songs,featured-playlists",
-      userToken,
-    });
+  const results = await getArtist(params.artistId, {
+    "limit[artists:top-songs]": 20,
+    "limit[artists:full-albums]": 20,
+    views: "appears-on-albums,full-albums,top-songs,featured-playlists",
+    userToken,
+  });
 
-    return res;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Unhandled error: ${error.message}`);
-    }
-  }
+  return json(results);
 };
 
 export default function ArtistRoute() {
@@ -101,7 +95,7 @@ export default function ArtistRoute() {
             <div className="flex items-center gap-4">
               <button
                 aria-label="play"
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-600"
                 onClick={async () => {
                   if (!player.queueLength || !isSongInCurrentResults) {
                     await musicKit?.setQueue({

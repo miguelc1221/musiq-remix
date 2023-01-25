@@ -72,7 +72,7 @@ export default function PlaylistRoute() {
           </p>
           <button
             aria-label="play"
-            className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
+            className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-600"
             onClick={async () => {
               if (!player.queueLength || !isSongInCurrentResults) {
                 await musicKit?.setQueue({

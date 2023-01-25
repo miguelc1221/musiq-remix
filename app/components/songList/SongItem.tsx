@@ -46,7 +46,7 @@ export const SongItem = ({
       <div
         tabIndex={0}
         className={clsx("flex w-full items-center rounded-lg py-3 px-5", {
-          "bg-indigo-500 text-white": isSelectedSong,
+          "bg-indigo-600 text-white": isSelectedSong,
           "hover:bg-slate-200": !isSelectedSong,
         })}
       >
@@ -128,7 +128,7 @@ export const SongItem = ({
             }}
           >
             <HiPlusCircle
-              className={"h-6 w-6 text-indigo-500 hover:text-indigo-600"}
+              className={"h-6 w-6 text-indigo-600 hover:text-indigo-600"}
             />
           </button>
 

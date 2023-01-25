@@ -26,7 +26,7 @@ export const MusiqErrorBoundary = ({
     <div className="flex h-[calc(100vh_-_100px)] flex-col items-center justify-center gap-3">
       <h2 className="text-lg">{message}</h2>
       <button
-        className="rounded-full bg-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-sm"
+        className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm"
         onClick={handleClick}
       >
         Try Again

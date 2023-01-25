@@ -49,7 +49,7 @@ export const TrackDisplay = ({
         let progressBarStyleValue = Number(value) / duration;
         let progressBarValue = value;
 
-        if (value >= duration) {
+        if (value >= duration && !mouseIsDown.current) {
           progressBarStyleValue = 0;
           progressBarValue = 0;
         }
@@ -58,6 +58,10 @@ export const TrackDisplay = ({
           progressBar.current.value = `${progressBarValue}`;
         }
 
+        console.log(
+          { progressBarStyleValue, progressBarValue },
+          "progressBarValueprogressBarValue"
+        );
         progressBar.current.style.setProperty(
           "--seek-before-width",
           `${progressBarStyleValue * 100}%`

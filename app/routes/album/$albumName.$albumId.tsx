@@ -1,5 +1,6 @@
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { getAlbum } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
 import { formatArtworkURL, timeConversion } from "~/utils/helpers";
@@ -23,15 +24,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const session = await getUserSession(request);
   const userToken = session.get("appleMusicToken");
 
-  try {
-    const res = await getAlbum(params.albumId, { userToken });
+  const results = await getAlbum(params.albumId, { userToken });
 
-    return res;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Unhandled error: ${error.message}`);
-    }
-  }
+  return json(results);
 };
 
 export default function AlbumRoute() {
@@ -123,7 +118,7 @@ export default function AlbumRoute() {
           </div>
           <button
             aria-label="play"
-            className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-600"
             onClick={async () => {
               if (!player.queueLength || !isSongInCurrentResults) {
                 await musicKit?.setQueue({

@@ -1,5 +1,6 @@
 import getChunk from "lodash.chunk";
 import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
   CITY_CHARTS_ID,
@@ -13,19 +14,14 @@ import { PlayListCard } from "~/components/playlistCard/PlayListCard";
 import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
 
 export const loader: LoaderFunction = async () => {
-  try {
-    const res = await getCharts(["songs", "albums", "playlists"], {
+  const [charts, cityCharts] = await Promise.all([
+    getCharts(["songs", "albums", "playlists"], {
       limit: 36,
-    });
+    }),
+    getPlaylist(`?ids=${CITY_CHARTS_ID.join(",")}`),
+  ]);
 
-    const cityCharts = await getPlaylist(`?ids=${CITY_CHARTS_ID.join(",")}`);
-
-    return { ...res, cityCharts };
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Unhandled error: ${error.message}`);
-    }
-  }
+  return json({ ...charts, cityCharts });
 };
 
 export default function BrowseIndex() {

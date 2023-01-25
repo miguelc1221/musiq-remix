@@ -24,6 +24,7 @@ export const VolumeControl = ({
   return (
     <div className="flex items-center justify-center">
       <button
+        aria-label="Mute"
         onClick={(evt) => {
           if (!volumeRef.current || volumeValueRef.current === 0) return;
 

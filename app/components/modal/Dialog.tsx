@@ -28,7 +28,7 @@ export const Dialog = (props: DialogProps) => {
       ref={ref}
       className="flex max-h-[calc(100vh_-_150px)] flex-col overflow-hidden outline-none"
     >
-      <div className="sticky flex flex-col bg-indigo-500  p-8 text-white">
+      <div className="sticky flex flex-col bg-indigo-600  p-8 text-white">
         <button className="close-button self-end" onClick={onClose}>
           <span className="sr-only">Close</span>
           <IoCloseOutline aria-hidden className="h-5 w-5" />

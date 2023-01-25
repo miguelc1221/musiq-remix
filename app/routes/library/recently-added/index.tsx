@@ -1,29 +1,18 @@
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
-import { redirect } from "@remix-run/node"; // or cloudflare/deno
+import { json } from "@remix-run/node";
 import { getLibraryRecentlyAdded } from "~/server/musicKit.server";
-import { getUserSession } from "~/server/session.server";
+import { requireAuthToken } from "~/server/session.server";
 import { AlbumCard } from "~/components/albumCard/AlbumCard";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
 import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  try {
-    const session = await getUserSession(request);
-    const userToken = session.get("appleMusicToken");
+  const userToken = await requireAuthToken(request);
 
-    if (!userToken) {
-      return redirect("/");
-    }
+  const results = await getLibraryRecentlyAdded({ userToken, limit: 25 });
 
-    const res = await getLibraryRecentlyAdded({ userToken, limit: 25 });
-
-    return res;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Unhandled error: ${error.message}`);
-    }
-  }
+  return json(results);
 };
 
 export default function LibraryRecentlyAddedRoute() {

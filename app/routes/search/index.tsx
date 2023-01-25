@@ -186,7 +186,7 @@ export const SearchBox = () => {
                   {
                     "pb-2": index === termsList.length - 1,
                     "pt-2": index === 0,
-                    "text-indigo-500": cb.highlightedIndex === index,
+                    "text-indigo-600": cb.highlightedIndex === index,
                   }
                 )}
                 key={`${result.displayTerm}${index}`}

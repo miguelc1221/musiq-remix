@@ -45,6 +45,7 @@ const SongCarouselListItem = ({
           isPlaying={player.playerState === "PLAYING"}
           isLoading={player.playerState === "LOADING"}
           onPlayClick={async () => {
+            console.log(allSongsId, "allSongsId");
             await musicKit?.setQueue({
               songs: allSongsId,
             });

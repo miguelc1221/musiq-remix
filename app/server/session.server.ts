@@ -46,3 +46,14 @@ export const logoutUser = async (request: Request) => {
     },
   });
 };
+
+export const requireAuthToken = async (request: Request) => {
+  const session = await getUserSession(request);
+  const userToken = session.get("appleMusicToken");
+
+  if (!userToken) {
+    return redirect("/");
+  }
+
+  return userToken;
+};

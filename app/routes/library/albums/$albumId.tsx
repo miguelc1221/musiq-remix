@@ -1,13 +1,13 @@
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import type { AppContextType } from "~/appReducer";
-import { redirect } from "@remix-run/node"; // or cloudflare/deno
 import { getLibraryAlbums } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
 import { formatArtworkURL, timeConversion } from "~/utils/helpers";
 import { HiPlay, HiPause } from "react-icons/hi2";
 import { useOutletContext } from "@remix-run/react";
-import { getUserSession } from "~/server/session.server";
+import { requireAuthToken } from "~/server/session.server";
 import { useState, useEffect } from "react";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
 
@@ -18,28 +18,17 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     });
   }
 
-  try {
-    const session = await getUserSession(request);
-    const userToken = session.get("appleMusicToken");
+  const userToken = await requireAuthToken(request);
 
-    if (!userToken) {
-      return redirect("/");
-    }
+  const results = await getLibraryAlbums([params.albumId], { userToken });
 
-    const res = await getLibraryAlbums([params.albumId], { userToken });
-
-    if (!res.length) {
-      throw new Response("AlbumId not found", {
-        status: 404,
-      });
-    }
-
-    return res;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Unhandled error: ${error.message}`);
-    }
+  if (!results.length) {
+    throw new Response("AlbumId not found", {
+      status: 404,
+    });
   }
+
+  return json(results);
 };
 
 export default function LibraryAlbumRoute() {
@@ -102,7 +91,7 @@ export default function LibraryAlbumRoute() {
           </div>
           <button
             aria-label="play"
-            className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 hover:bg-indigo-600"
+            className="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-600"
             onClick={async () => {
               if (!player.queueLength || !isSongInCurrentResults) {
                 await musicKit?.setQueue({

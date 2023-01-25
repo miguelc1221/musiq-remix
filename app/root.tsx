@@ -43,7 +43,7 @@ export const links: LinksFunction = () => [
 
 const Document = ({ children }: { children?: ReactNode }) => {
   return (
-    <html lang="en" className="text-slate-700">
+    <html lang="en" className="leading-7 text-slate-700">
       <head>
         <Meta />
         <Links />

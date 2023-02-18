@@ -36,7 +36,7 @@ export default function BrowseIndex() {
   }>();
 
   return (
-    <PageWrapper className="max-w-[2500px]">
+    <PageWrapper className="max-w-[2000px]">
       <h1 className="mb-4 border-b border-slate-200 pb-6 text-3xl font-bold">
         Browse
       </h1>
@@ -55,7 +55,7 @@ export default function BrowseIndex() {
             <MusiqCarousel
               responsive={{
                 desktop: {
-                  breakpoint: { max: 3000, min: 1024 },
+                  breakpoint: { max: 5000, min: 1024 },
                   items: 3,
                   slidesToSlide: 3,
                 },

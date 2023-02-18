@@ -39,7 +39,7 @@ export default function LibrarySongsRoute() {
   const numOffset = Number(offset);
 
   return (
-    <PageWrapper>
+    <PageWrapper className="pt-0 md:pt-[42px]">
       <div>
         <SongList songs={results.data} />
       </div>

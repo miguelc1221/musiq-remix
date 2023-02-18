@@ -17,9 +17,11 @@ enum MusicKitShuffle {
 export const Controls = ({
   musicKit,
   player,
+  requireAuth,
 }: {
   player?: PlayerType;
   musicKit?: MusicKit.MusicKitInstance;
+  requireAuth?: () => Promise<void>;
 }) => {
   const [isPlaying, setIsPlaying] = useState(player?.playerState === "PLAYING");
   const shuffleMode = player?.shuffleMode;
@@ -123,9 +125,14 @@ export const Controls = ({
       </button>
       <button
         className={`ml-1 duration-200 ease-in ${disableColor} ${repeatOn}`}
-        disabled={isDisabled || !musicKit?.isAuthorized}
-        onClick={() => {
+        disabled={isDisabled}
+        onClick={async () => {
           if (!musicKit) return;
+
+          if (requireAuth) {
+            await requireAuth();
+            return;
+          }
 
           if (repeatMode === MusicKitRepeat.NONE) {
             musicKit.repeatMode = MusicKitRepeat.ALL;

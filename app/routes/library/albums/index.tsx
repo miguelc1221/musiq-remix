@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const userToken = await requireAuthToken(request);
 
-  const results = await getLibraryAlbums(null, {
+  const results = await getLibraryAlbums([], {
     userToken,
     limit: offsetLimit,
     ...(offset ? { offset } : {}),

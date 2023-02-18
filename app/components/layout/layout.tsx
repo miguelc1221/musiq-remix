@@ -1,12 +1,15 @@
 import type { ReactNode } from "react";
-import { useRef } from "react";
+import clsx from "clsx";
+import { useRef, useCallback, useState } from "react";
 import { useEffect } from "react";
 import { NavLink, useLocation, useFetcher } from "@remix-run/react";
 import { AppleLogo } from "../icons";
 import { IoIosAlbums, IoIosMusicalNote } from "react-icons/Io";
 import { MdInfoOutline } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
+import { RxHamburgerMenu } from "react-icons/rx";
 import { HiSquares2X2, HiClock } from "react-icons/hi2";
+import { IoCloseOutline } from "react-icons/io5";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import { SiApplemusic } from "react-icons/si";
 import { TrackDisplay } from "../trackDisplay/TrackDisplay";
@@ -18,9 +21,11 @@ const NavLinkWrapper = ({
   children,
   to,
   prefetch,
+  onClick,
 }: {
   children: React.ReactNode;
   to: string;
+  onClick?: () => void;
   prefetch?: RemixNavLinkProps["prefetch"];
 }) => {
   const defaultClasses = "flex w-full items-center rounded-lg p-2";
@@ -29,6 +34,7 @@ const NavLinkWrapper = ({
 
   return (
     <NavLink
+      onClick={onClick}
       to={to}
       className={({ isActive }) =>
         isActive
@@ -51,9 +57,27 @@ export default function Layout({
   isAuthenticated?: boolean;
   children?: ReactNode;
 }) {
+  const [isOpen, toggleOpen] = useState(false);
   const fetcher = useFetcher();
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+
+  const closeToggle = useCallback(() => toggleOpen(false), []);
+
+  const authenticateUser = useCallback(async () => {
+    try {
+      const token = await appState?.musicKit?.authorize();
+
+      if (token) {
+        fetcher.submit(
+          { appleMusicToken: token },
+          { method: "post", action: "/session/newSession" }
+        );
+      }
+    } catch (error) {
+      console.log(error, "Authorization Error");
+    }
+  }, [appState?.musicKit, fetcher]);
 
   useEffect(() => {
     containerRef.current?.scrollTo(0, 0);
@@ -63,13 +87,36 @@ export default function Layout({
     <div className="flex h-screen">
       <aside
         aria-label="Sidebar"
-        className="relative h-screen min-w-[300px] border-r bg-gray-100"
+        className={clsx(
+          "relative h-screen min-w-[300px] border-r bg-gray-100 transition-all md:absolute md:z-10 md:w-full md:overflow-hidden md:duration-300 md:ease-in",
+          {
+            "md:h-[45px]": !isOpen,
+          }
+        )}
       >
+        <div className=" hidden h-[42px] w-full items-center justify-end md:flex">
+          <RxHamburgerMenu
+            className={clsx("z-20 mr-6 h-6 w-6 cursor-pointer", {
+              hidden: isOpen,
+            })}
+            onClick={() => toggleOpen(!isOpen)}
+          />
+          <IoCloseOutline
+            className={clsx("z-20 mr-6 h-6 w-6 cursor-pointer", {
+              hidden: !isOpen,
+            })}
+            onClick={() => toggleOpen(!isOpen)}
+          />
+        </div>
         <nav className="h-full">
           <ul className="flex flex-col">
             <li>
-              <h1 className="flex items-center pl-[1.2rem] pt-6 pb-8 text-2xl font-bold text-indigo-600">
-                <NavLink to="/" className="flex items-end">
+              <h1 className="flex items-center pl-[1.2rem] pt-6 pb-8 text-2xl font-bold text-indigo-600 md:pt-0">
+                <NavLink
+                  to="/"
+                  className="flex items-end"
+                  onClick={closeToggle}
+                >
                   <AppleLogo className="mr-2" />
                   Musiq Remix
                 </NavLink>
@@ -79,13 +126,17 @@ export default function Layout({
               <SearchBox />
             </li>
             <li className="px-8">
-              <NavLinkWrapper to="/about">
+              <NavLinkWrapper to="/about" onClick={closeToggle}>
                 <MdInfoOutline className="h-5 w-5" />
                 <span className="ml-2">About</span>
               </NavLinkWrapper>
             </li>
             <li className="px-8">
-              <NavLinkWrapper to="/browse" prefetch="render">
+              <NavLinkWrapper
+                to="/browse"
+                prefetch="render"
+                onClick={closeToggle}
+              >
                 <HiSquares2X2 className="h-5 w-5" />
                 <span className="ml-2">Browse</span>
               </NavLinkWrapper>
@@ -101,19 +152,22 @@ export default function Layout({
               {isAuthenticated && (
                 <>
                   <li className="px-8">
-                    <NavLinkWrapper to="/library/recently-added">
+                    <NavLinkWrapper
+                      to="/library/recently-added"
+                      onClick={closeToggle}
+                    >
                       <HiClock className="h-5 w-5" />
                       <span className="ml-2">Recently Added</span>
                     </NavLinkWrapper>
                   </li>
                   <li className="px-8">
-                    <NavLinkWrapper to="/library/albums">
+                    <NavLinkWrapper to="/library/albums" onClick={closeToggle}>
                       <IoIosAlbums className="h-5 w-5" />
                       <span className="ml-2">Albums</span>
                     </NavLinkWrapper>
                   </li>
                   <li className="px-8">
-                    <NavLinkWrapper to="/library/songs">
+                    <NavLinkWrapper to="/library/songs" onClick={closeToggle}>
                       <IoIosMusicalNote className="h-5 w-5" />
                       <span className="ml-2">Songs</span>
                     </NavLinkWrapper>
@@ -144,18 +198,7 @@ export default function Layout({
                       );
                     }
 
-                    try {
-                      const token = await appState?.musicKit?.authorize();
-
-                      if (token) {
-                        fetcher.submit(
-                          { appleMusicToken: token },
-                          { method: "post", action: "/session/newSession" }
-                        );
-                      }
-                    } catch (error) {
-                      console.log(error, "Authorization Error");
-                    }
+                    await authenticateUser();
                   }}
                 >
                   <FaUserCircle className="h-6 w-6" />{" "}
@@ -174,14 +217,15 @@ export default function Layout({
         ref={containerRef}
       >
         <main className="h-full flex-1">
-          <div className="fixed bottom-0 z-[11] h-[65px] w-[calc(100%_-_300px)] bg-gray-100">
+          <div className="fixed bottom-0 z-[11] h-[65px] w-[calc(100%_-_300px)] bg-gray-100 md:w-full lg:h-[92px]">
             <div
               tabIndex={-1}
-              className="grid h-full grid-cols-[1fr_2fr_1fr] items-center"
+              className="grid h-full grid-cols-[1fr_2fr_1fr] items-center lg:block"
             >
               <TrackDisplay
                 player={appState?.player}
                 musicKit={appState?.musicKit}
+                requireAuth={isAuthenticated ? undefined : authenticateUser}
               />
             </div>
           </div>

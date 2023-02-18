@@ -5,7 +5,7 @@ import type { CarouselProps } from "react-multi-carousel/lib/types";
 
 const defaultResponsiveProp = {
   desktop: {
-    breakpoint: { max: 3000, min: 1024 },
+    breakpoint: { max: 5000, min: 1024 },
     items: 6,
     slidesToSlide: 6,
   },

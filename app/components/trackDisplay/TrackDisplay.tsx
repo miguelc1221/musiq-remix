@@ -17,9 +17,11 @@ interface MusickitPlayBackTime {
 export const TrackDisplay = ({
   player,
   musicKit,
+  requireAuth,
 }: {
   player?: PlayerType;
   musicKit?: MusicKit.MusicKitInstance;
+  requireAuth?: () => Promise<void>;
 }) => {
   const [currentTime, setCurrentTime] = useState<MusickitPlayBackTime | null>(
     null
@@ -45,6 +47,7 @@ export const TrackDisplay = ({
   const changePlayerCurrentTime = useCallback(
     (value: number) => {
       const duration = getDuration();
+
       if (progressBar.current && duration && audioPlayer.current) {
         let progressBarStyleValue = Number(value) / duration;
         let progressBarValue = value;
@@ -58,10 +61,6 @@ export const TrackDisplay = ({
           progressBar.current.value = `${progressBarValue}`;
         }
 
-        console.log(
-          { progressBarStyleValue, progressBarValue },
-          "progressBarValueprogressBarValue"
-        );
         progressBar.current.style.setProperty(
           "--seek-before-width",
           `${progressBarStyleValue * 100}%`
@@ -81,7 +80,12 @@ export const TrackDisplay = ({
     [changePlayerCurrentTime]
   );
 
+  const handleNowPlayingWillChange = useCallback(() => {
+    changePlayerCurrentTime(0);
+  }, [changePlayerCurrentTime]);
+
   useMusicKitListener("playbackTimeDidChange", handlePlaybackTimeDidChange);
+  useMusicKitListener("nowPlayingItemWillChange", handleNowPlayingWillChange);
 
   useEffect(() => {
     const audioRef = document.querySelector("audio");
@@ -126,9 +130,26 @@ export const TrackDisplay = ({
 
   return (
     <>
-      <Controls musicKit={musicKit} player={player} />
-
-      <div className="grid grid-cols-[auto_1fr] items-center">
+      <div className="flex items-center justify-around">
+        <Controls
+          musicKit={musicKit}
+          player={player}
+          requireAuth={requireAuth}
+        />
+        <VolumeControl
+          className="hidden lg:flex"
+          onVolumeChange={onVolumeChange}
+          min="0"
+          max="1"
+          value={volume}
+        />
+      </div>
+      <div className="relative grid grid-cols-[auto_1fr] items-center">
+        {requireAuth && selectedSong && (
+          <span className="absolute right-2 top-2 z-50 rounded-md bg-rose-600 px-3 py-[0.13rem] text-[10px] font-bold uppercase leading-normal text-white">
+            PREVIEW
+          </span>
+        )}
         {selectedSong ? (
           <img
             src={formatArtworkURL(
@@ -194,6 +215,7 @@ export const TrackDisplay = ({
       </div>
 
       <VolumeControl
+        className="lg:hidden"
         onVolumeChange={onVolumeChange}
         min="0"
         max="1"

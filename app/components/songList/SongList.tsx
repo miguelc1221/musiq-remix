@@ -22,7 +22,7 @@ export const SongList = ({
       <div
         aria-hidden="true"
         role="row"
-        className={`sticky top-0 z-10 -mt-[37px] -ml-10 -mr-10 mb-4 bg-gray-100 px-[2.5rem] ${
+        className={`sticky top-0 z-10 -ml-10 -mr-10 mb-4 bg-gray-100 px-[2.5rem] md:top-[42px] ${
           className || ""
         }`}
       >
@@ -36,7 +36,7 @@ export const SongList = ({
           <span role="columnheader" className="flex-1">
             NAME
           </span>
-          <span role="columnheader" className="mr-[2.3rem] flex-1">
+          <span role="columnheader" className="mr-[2.3rem] flex-1 md:hidden">
             ALBUM
           </span>
           <span role="columnheader">TIME</span>

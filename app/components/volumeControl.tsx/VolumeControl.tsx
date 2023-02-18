@@ -11,8 +11,10 @@ export const VolumeControl = ({
   min,
   max,
   onVolumeChange,
+  className,
 }: {
   value: string;
+  className?: string;
   min: number | string;
   max: number | string;
   onVolumeChange: (volume: string) => void;
@@ -22,7 +24,7 @@ export const VolumeControl = ({
   const volumeNum = Number(value);
 
   return (
-    <div className="flex items-center justify-center">
+    <div className={`flex items-center justify-center ${className}`}>
       <button
         aria-label="Mute"
         onClick={(evt) => {

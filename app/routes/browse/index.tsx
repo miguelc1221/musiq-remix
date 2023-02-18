@@ -17,6 +17,8 @@ export const loader: LoaderFunction = async () => {
   const [charts, cityCharts] = await Promise.all([
     getCharts(["songs", "albums", "playlists"], {
       limit: 36,
+      "fields[songs]":
+        "artistName,artistUrl,artwork,contentRating,editorialArtwork,name,releaseDate,url",
     }),
     getPlaylist(`?ids=${CITY_CHARTS_ID.join(",")}`),
   ]);
@@ -34,7 +36,7 @@ export default function BrowseIndex() {
   }>();
 
   return (
-    <PageWrapper>
+    <PageWrapper className="max-w-[2500px]">
       <h1 className="mb-4 border-b border-slate-200 pb-6 text-3xl font-bold">
         Browse
       </h1>

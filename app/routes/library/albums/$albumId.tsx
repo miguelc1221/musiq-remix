@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
   const results = await getLibraryAlbums([params.albumId], { userToken });
 
-  if (!results.length) {
+  if (!results.data?.length) {
     throw new Response("AlbumId not found", {
       status: 404,
     });
@@ -32,8 +32,15 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export default function LibraryAlbumRoute() {
-  const results = useLoaderData<MusicKit.Albums[]>();
-  const album = results[0];
+  const results = useLoaderData<{
+    data: MusicKit.Albums[];
+    meta: {
+      total: number;
+    };
+    next?: string;
+  }>();
+
+  const album = results?.data[0];
   const { player, musicKit } = useOutletContext<AppContextType>();
   const [isPlaying, setIsPlaying] = useState(player?.playerState === "PLAYING");
   const [queueLoaded, setQueueLoaded] = useState(false);
@@ -123,7 +130,7 @@ export default function LibraryAlbumRoute() {
             !isSongInCurrentResults || !queueLoaded ? album.id : undefined
           }
           setQueueLoaded={setQueueLoaded}
-          className="mt-0 mr-0 ml-0 px-10 [&~div]:px-10"
+          className="mt-0 mr-0 ml-0 px-10 md:px-2 [&~div]:px-10 md:[&~div]:px-2"
         />
       </div>
     </div>

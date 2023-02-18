@@ -41,8 +41,6 @@ export default function ArtistRoute() {
   const { player, musicKit } = useOutletContext<AppContextType>();
   const [isPlaying, setIsPlaying] = useState(player?.playerState === "PLAYING");
 
-  console.log(results, "results>>");
-
   useEffect(() => {
     if (player.playerState === "PAUSE") {
       setIsPlaying(false);

@@ -112,7 +112,7 @@ export const SongItem = ({
             </span>
           </div>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 md:hidden">
           <span>{song.attributes?.albumName}</span>
         </div>
         <div className="flex items-center">

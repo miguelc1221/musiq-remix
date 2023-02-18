@@ -239,10 +239,16 @@ export const getLibrarySongs: MusicKit.API["library"]["songs"] = async (
   }
 };
 
-export const getLibraryAlbums: MusicKit.API["library"]["albums"] = async (
-  ids = [],
-  params
-) => {
+export const getLibraryAlbums = async (
+  ids: string[] | [] = [],
+  params: any
+): Promise<{
+  data: MusicKit.Albums[];
+  meta: {
+    total: number;
+  };
+  next?: string;
+}> => {
   const limit = params?.limit || 100;
   const offset = params?.offset || 0;
   try {

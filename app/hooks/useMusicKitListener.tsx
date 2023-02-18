@@ -7,7 +7,7 @@ export const useMusicKitListener = (
   useEffect(() => {
     const musicKit = window.MusicKit;
 
-    if (musicKit?.errors.length || !musicKit) {
+    if (musicKit?.errors?.length || !musicKit) {
       return;
     }
 

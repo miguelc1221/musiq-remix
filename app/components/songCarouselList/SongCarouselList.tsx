@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { formatArtworkURL } from "~/utils/helpers";
+import { Link } from "@remix-run/react";
+import { formatArtworkURL, getLinkToUrl } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { SongControl } from "../songList/SongControl";
@@ -45,7 +46,6 @@ const SongCarouselListItem = ({
           isPlaying={player.playerState === "PLAYING"}
           isLoading={player.playerState === "LOADING"}
           onPlayClick={async () => {
-            console.log(allSongsId, "allSongsId");
             await musicKit?.setQueue({
               songs: allSongsId,
             });
@@ -63,9 +63,12 @@ const SongCarouselListItem = ({
           </span>
         </div>
         <div className="flex">
-          <span className="truncate text-xs text-slate-500">
+          <Link
+            className="truncate text-xs text-slate-500 hover:underline"
+            to={getLinkToUrl(song.attributes?.artistUrl)}
+          >
             {song.attributes?.artistName}
-          </span>
+          </Link>
           {contentRating && (
             <span className="ml-1">
               <MdExplicit className="h-4 w-4" />

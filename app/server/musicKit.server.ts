@@ -97,7 +97,7 @@ export const getAlbum: MusicKit.API["album"] = async (id, params) => {
     const data = await response.json();
 
     if (data.errors) {
-      throw data.error;
+      throw data.errors;
     }
 
     return data.data[0];
@@ -122,7 +122,7 @@ export const getPlaylist: MusicKit.API["playlist"] = async (id, params) => {
     const data = await response.json();
 
     if (data.errors) {
-      throw data.error;
+      throw data.errors;
     }
     return data.data;
   } catch (error) {
@@ -151,7 +151,7 @@ export const getArtist = async (
     const data = await response.json();
 
     if (data.errors) {
-      throw data.error;
+      throw data.errors;
     }
     return data.data[0];
   } catch (error) {
@@ -195,7 +195,7 @@ export const searchMusickit = async (
     const data = await response.json();
 
     if (data.errors) {
-      throw data.error;
+      throw data.errors;
     }
 
     return data.results;
@@ -205,107 +205,60 @@ export const searchMusickit = async (
 };
 
 // Authenticated Personalized Calls
-export const getLibrarySongs: MusicKit.API["library"]["songs"] = async (
-  ids = [],
-  params
-) => {
+export const getLibrarySongs = async (ids: string[] | [] = [], params: any) => {
   const limit = params?.limit || 100;
   const offset = params?.offset || 0;
-  try {
-    const response = await fetch(
-      `${meUrl}/library/songs?${new URLSearchParams({
-        limit,
-        offset,
-        ...(ids?.length ? { ids: ids.join(",") } : {}),
-      }).toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${developerToken}`,
-          ...(params?.userToken
-            ? { "Music-User-Token": params?.userToken }
-            : {}),
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.errors) {
-      throw data.error;
+  const response = await fetch(
+    `${meUrl}/library/songs?${new URLSearchParams({
+      limit,
+      offset,
+      ...(ids?.length ? { ids: ids.join(",") } : {}),
+    }).toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${developerToken}`,
+        ...(params?.userToken ? { "Music-User-Token": params?.userToken } : {}),
+      },
     }
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  );
+
+  return await response.json();
 };
 
-export const getLibraryAlbums = async (
-  ids: string[] | [] = [],
-  params: any
-): Promise<{
-  data: MusicKit.Albums[];
-  meta: {
-    total: number;
-  };
-  next?: string;
-}> => {
+export const getLibraryAlbums = async (ids: string[] | [] = [], params: any) => {
   const limit = params?.limit || 100;
   const offset = params?.offset || 0;
-  try {
-    const response = await fetch(
-      `${meUrl}/library/albums?${new URLSearchParams(
-        ids?.length ? { ids: ids.join(",") } : { limit, offset }
-      ).toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${developerToken}`,
-          ...(params?.userToken
-            ? { "Music-User-Token": params?.userToken }
-            : {}),
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.errors) {
-      throw data.error;
+  const response = await fetch(
+    `${meUrl}/library/albums?${new URLSearchParams(
+      ids?.length ? { ids: ids.join(",") } : { limit, offset }
+    ).toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${developerToken}`,
+        ...(params?.userToken ? { "Music-User-Token": params?.userToken } : {}),
+      },
     }
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  );
+
+  return await response.json();
 };
 
-export const getLibraryRecentlyAdded: MusicKit.API["library"]["recentlyAdded"] =
-  async ({
-    userToken,
-    ...params
-  }: { userToken: string } & MusicKit.QueryParameters) => {
-    try {
-      const response = await fetch(
-        `${meUrl}/library/recently-added?${new URLSearchParams(
-          params
-        ).toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${developerToken}`,
-            ...(userToken ? { "Music-User-Token": userToken } : {}),
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.errors) {
-        throw data.error;
-      }
-
-      return data.data;
-    } catch (error) {
-      throw error;
+export const getLibraryRecentlyAdded = async ({
+  userToken,
+  ...params
+}: { userToken: string } & MusicKit.QueryParameters) => {
+  const response = await fetch(
+    `${meUrl}/library/recently-added?${new URLSearchParams(params).toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${developerToken}`,
+        ...(userToken ? { "Music-User-Token": userToken } : {}),
+      },
     }
-  };
+  );
+
+  return await response.json();
+};
 
 export const addToLibrary = async ({
   userToken,

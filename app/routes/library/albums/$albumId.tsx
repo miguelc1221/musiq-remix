@@ -1,3 +1,4 @@
+import type { CatchBoundaryComponent } from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -10,6 +11,7 @@ import { useOutletContext } from "@remix-run/react";
 import { requireAuthToken } from "~/server/session.server";
 import { useState, useEffect } from "react";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
+import { MusiqCatchBoundary } from "~/components/error/MusiqCatchBoundary";
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   if (!params.albumId) {
@@ -21,6 +23,16 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const userToken = await requireAuthToken(request);
 
   const results = await getLibraryAlbums([params.albumId], { userToken });
+
+  if (results.errors) {
+    if (results.errors[0]?.status === "403") {
+      throw new Response(results.errors[0]?.detail, { status: 403 });
+    } else {
+      throw new Response(results.errors[0]?.detail, {
+        status: Number(results.errors[0]?.status),
+      });
+    }
+  }
 
   if (!results.data?.length) {
     throw new Response("AlbumId not found", {
@@ -136,6 +148,10 @@ export default function LibraryAlbumRoute() {
     </div>
   );
 }
+
+export const CatchBoundary: CatchBoundaryComponent = () => {
+  return <MusiqCatchBoundary />;
+};
 
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   return (

@@ -1,10 +1,12 @@
 import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
+import type { CatchBoundaryComponent } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getLibraryAlbums } from "~/server/musicKit.server";
 import { requireAuthToken } from "~/server/session.server";
 import { AlbumCard } from "~/components/albumCard/AlbumCard";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
+import { MusiqCatchBoundary } from "~/components/error/MusiqCatchBoundary";
 import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
 import { Pagination } from "~/components/pagination/Pagination";
 
@@ -21,6 +23,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     limit: offsetLimit,
     ...(offset ? { offset } : {}),
   });
+
+  if (results.errors) {
+    if (results.errors[0]?.status === "403") {
+      throw new Response(results.errors[0]?.detail, { status: 403 });
+    } else {
+      throw new Response(results.errors[0]?.detail, {
+        status: Number(results.errors[0]?.status),
+      });
+    }
+  }
 
   return json(results);
 };
@@ -70,6 +82,10 @@ export default function LibraryAlbumsRoute() {
     </PageWrapper>
   );
 }
+
+export const CatchBoundary: CatchBoundaryComponent = () => {
+  return <MusiqCatchBoundary />;
+};
 
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   return <MusiqErrorBoundary error={error} />;

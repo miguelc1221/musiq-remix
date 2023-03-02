@@ -110,6 +110,7 @@ export default function App() {
         console.log(err);
       }
     };
+
     if (!state.musicKit && developerToken && window.MusicKit) {
       configureMusicKit();
     } else {

@@ -3,9 +3,8 @@ import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getLibrarySongs } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/SongList";
-import { requireAuthToken } from "~/server/session.server";
+import { logoutUser, requireAuthToken } from "~/server/session.server";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
-import { MusiqCatchBoundary } from "~/components/error/MusiqCatchBoundary";
 import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
 import { Pagination } from "~/components/pagination/Pagination";
 
@@ -25,7 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   if (results.errors) {
     if (results.errors[0]?.status === "403") {
-      throw new Response(results.errors[0]?.detail, { status: 403 });
+      return logoutUser(request);
     } else {
       throw new Response(results.errors[0]?.detail, {
         status: Number(results.errors[0]?.status),
@@ -49,9 +48,6 @@ export default function LibrarySongsRoute() {
   const offset = searchParams.getAll("offset") || 0;
   const numOffset = Number(offset);
 
-  if (!results.data) {
-    return <h1>hello</h1>;
-  }
   return (
     <PageWrapper className="!pt-[0rem] md:mx-0 md:pt-[42px]">
       <div>
@@ -75,10 +71,6 @@ export default function LibrarySongsRoute() {
     </PageWrapper>
   );
 }
-
-export const CatchBoundary = () => {
-  return <MusiqCatchBoundary />;
-};
 
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   return <MusiqErrorBoundary error={error} />;

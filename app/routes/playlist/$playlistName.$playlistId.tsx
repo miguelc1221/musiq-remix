@@ -9,6 +9,7 @@ import type { AppContextType } from "~/appReducer";
 import { useState, useEffect } from "react";
 import { getUserSession } from "~/server/session.server";
 import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
+import { json } from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (!params.playlistId) {
@@ -20,7 +21,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   try {
     const res = await getPlaylist(`/${params.playlistId}`, { userToken });
-    return res;
+    return json(res.data);
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Unhandled error: ${error.message}`);

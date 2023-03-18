@@ -88,7 +88,7 @@ export default function Layout({
       <aside
         aria-label="Sidebar"
         className={clsx(
-          "relative h-screen min-w-[300px] overflow-hidden border-r bg-gray-100 transition-all md:absolute md:z-10 md:w-full md:duration-300 md:ease-in",
+          "relative h-screen min-w-[300px] border-r bg-gray-100 transition-all md:absolute md:z-10 md:w-full md:overflow-hidden md:duration-300 md:ease-in",
           {
             "md:h-[45px]": !isOpen,
           }

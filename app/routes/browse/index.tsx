@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async () => {
     getPlaylist(`?ids=${CITY_CHARTS_ID.join(",")}`),
   ]);
 
-  return json({ ...charts, cityCharts });
+  return json({ ...charts.results, cityCharts: cityCharts.data });
 };
 
 export default function BrowseIndex() {

@@ -60,74 +60,54 @@ const fields = [
   "inLibrary",
 ];
 
-export const getCharts: MusicKit.API["charts"] = async (types, params) => {
-  try {
-    const response = await fetch(
-      `${rootUrl}/catalog/us/charts?types=${types.join(
-        ","
-      )}&${new URLSearchParams(params).toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${developerToken}`,
-        },
-      }
-    );
-    const data = await response.json();
-
-    return data.results;
-  } catch (error) {
-    throw error;
-  }
+export const getCharts = async (
+  types: MusicKit.MusicCatalogChartRequestable[],
+  params: MusicKit.QueryParameters
+) => {
+  const response = await fetch(
+    `${rootUrl}/catalog/us/charts?types=${types.join(
+      ","
+    )}&${new URLSearchParams(params).toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${developerToken}`,
+      },
+    }
+  );
+  return await response.json();
 };
 
-export const getAlbum: MusicKit.API["album"] = async (id, params) => {
-  try {
-    const response = await fetch(
-      `${rootUrl}/catalog/us/albums/${id}?fields=${fields.join(",")}`,
-      {
-        headers: {
-          Authorization: `Bearer ${developerToken}`,
-          ...(params?.userToken
-            ? { "Music-User-Token": params?.userToken }
-            : {}),
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.errors) {
-      throw data.errors;
+export const getAlbum = async (
+  id: string,
+  params: MusicKit.QueryParameters
+) => {
+  const response = await fetch(
+    `${rootUrl}/catalog/us/albums/${id}?fields=${fields.join(",")}`,
+    {
+      headers: {
+        Authorization: `Bearer ${developerToken}`,
+        ...(params?.userToken ? { "Music-User-Token": params?.userToken } : {}),
+      },
     }
+  );
 
-    return data.data[0];
-  } catch (error) {
-    throw error;
-  }
+  return await response.json();
 };
 
-export const getPlaylist: MusicKit.API["playlist"] = async (id, params) => {
-  try {
-    const response = await fetch(
-      `${rootUrl}/catalog/us/playlists${id}?fields=${fields.join(",")}`,
-      {
-        headers: {
-          Authorization: `Bearer ${developerToken}`,
-          ...(params?.userToken
-            ? { "Music-User-Token": params?.userToken }
-            : {}),
-        },
-      }
-    );
-    const data = await response.json();
-
-    if (data.errors) {
-      throw data.errors;
+export const getPlaylist = async (
+  id: string,
+  params?: MusicKit.QueryParameters
+) => {
+  const response = await fetch(
+    `${rootUrl}/catalog/us/playlists${id}?fields=${fields.join(",")}`,
+    {
+      headers: {
+        Authorization: `Bearer ${developerToken}`,
+        ...(params?.userToken ? { "Music-User-Token": params?.userToken } : {}),
+      },
     }
-    return data.data;
-  } catch (error) {
-    throw error;
-  }
+  );
+  return await response.json();
 };
 
 export const getArtist = async (
@@ -136,27 +116,19 @@ export const getArtist = async (
 ): Promise<MusicKit.Artists> => {
   const { userToken, ...otherParams } = params;
 
-  try {
-    const response = await fetch(
-      `${rootUrl}/catalog/us/artists/${id}?${new URLSearchParams(
-        otherParams
-      ).toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${developerToken}`,
-          ...(userToken ? { "Music-User-Token": userToken } : {}),
-        },
-      }
-    );
-    const data = await response.json();
-
-    if (data.errors) {
-      throw data.errors;
+  const response = await fetch(
+    `${rootUrl}/catalog/us/artists/${id}?${new URLSearchParams(
+      otherParams
+    ).toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${developerToken}`,
+        ...(userToken ? { "Music-User-Token": userToken } : {}),
+      },
     }
-    return data.data[0];
-  } catch (error) {
-    throw error;
-  }
+  );
+
+  return await response.json();
 };
 
 export type Term = { displayTerm: string; kind: string; searchTerm: string };
@@ -177,31 +149,21 @@ export const searchMusickit = async (
   term: string,
   searchSuggestions: boolean,
   params: { userToken?: string } & MusicKit.QueryParameters = {}
-): Promise<SuggestionsResults> => {
+): Promise<{ results: SuggestionsResults }> => {
   const { userToken, ...otherParams } = params;
 
-  try {
-    const response = await fetch(
-      `${rootUrl}/catalog/us/search${
-        searchSuggestions ? "/suggestions" : "/"
-      }?term=${term}&${new URLSearchParams(otherParams).toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${developerToken}`,
-          ...(userToken ? { "Music-User-Token": userToken } : {}),
-        },
-      }
-    );
-    const data = await response.json();
-
-    if (data.errors) {
-      throw data.errors;
+  const response = await fetch(
+    `${rootUrl}/catalog/us/search${
+      searchSuggestions ? "/suggestions" : "/"
+    }?term=${term}&${new URLSearchParams(otherParams).toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${developerToken}`,
+        ...(userToken ? { "Music-User-Token": userToken } : {}),
+      },
     }
-
-    return data.results;
-  } catch (error) {
-    throw error;
-  }
+  );
+  return await response.json();
 };
 
 // Authenticated Personalized Calls

@@ -82,14 +82,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   const session = await getUserSession(request);
   const token = session.get("appleMusicToken");
 
-  console.log(token, "ITS THE TOKEN<<<<<<");
-  return json({ developerToken, isAuthenticated: !!token });
+  return json({ developerToken, sessionToken: !!token });
 };
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, appInitialState);
 
-  const { developerToken, isAuthenticated } = useLoaderData();
+  const { developerToken, sessionToken } = useLoaderData();
 
   useEffect(() => {
     const configureMusicKit = async () => {
@@ -122,8 +121,6 @@ export default function App() {
     };
   }, [developerToken, state.musicKit]);
 
-  console.log(state, "STATE>>>>>>>musicKitContext>>>>");
-
   return (
     <Document>
       {state?.musicKit && (
@@ -131,7 +128,9 @@ export default function App() {
       )}
       <Layout
         appState={{ ...state, dispatch }}
-        isAuthenticated={isAuthenticated}
+        isAuthenticated={
+          state?.musicKit && state.musicKit.isAuthorized && sessionToken
+        }
       >
         <Outlet context={{ ...state, dispatch }} />
       </Layout>

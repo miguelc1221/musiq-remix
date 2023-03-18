@@ -26,7 +26,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const results = await getAlbum(params.albumId, { userToken });
 
-  return json(results);
+  return json(results.data[0]);
 };
 
 export default function AlbumRoute() {

@@ -81,12 +81,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   if (suggestions) {
     return json({
-      suggestions: searchResults.suggestions,
+      suggestions: searchResults.results?.suggestions,
     });
   }
 
   return json({
-    results: searchResults,
+    results: searchResults.results,
   });
 };
 

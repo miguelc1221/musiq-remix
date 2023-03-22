@@ -4,9 +4,8 @@ import { useOutletContext, useSearchParams } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { calculateTime, formatArtworkURL } from "~/utils/helpers";
 import { SongControl } from "./songControl";
-import { MdExplicit } from "react-icons/md";
-import { HiPlusCircle } from "react-icons/hi2";
 import { useFetcher } from "@remix-run/react";
+import { CirclePlusIcon, ExplicitIcon } from "../icons";
 
 export const SongItem = ({
   song,
@@ -105,7 +104,7 @@ export const SongItem = ({
             <span className="flex items-center text-xs">
               {song.attributes?.contentRating === "explicit" && (
                 <span className="mr-1">
-                  <MdExplicit className="h-4 w-4" />
+                  <ExplicitIcon className="h-4 w-4" />
                 </span>
               )}
               {song.attributes?.artistName}
@@ -127,7 +126,7 @@ export const SongItem = ({
               );
             }}
           >
-            <HiPlusCircle
+            <CirclePlusIcon
               className={"h-6 w-6 text-indigo-600 hover:text-indigo-600"}
             />
           </button>

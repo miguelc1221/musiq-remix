@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { formatArtworkURL, getLinkToUrl } from "~/utils/helpers";
-import { GiMusicSpell } from "react-icons/gi";
+import { MusicSpellIcon } from "../icons";
 
 export const ArtistCard = ({
   artist,
@@ -33,7 +33,7 @@ export const ArtistCard = ({
             </>
           ) : (
             <div className="flex h-full items-center justify-center rounded-full bg-gray-100 shadow-md">
-              <GiMusicSpell className="h-[50%] w-[50%]" />
+              <MusicSpellIcon className="h-[50%] w-[50%]" />
             </div>
           )}
         </div>

@@ -5,11 +5,11 @@ import type { AppContextType } from "~/appReducer";
 import { getLibraryAlbums } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/songList";
 import { formatArtworkURL, timeConversion } from "~/utils/helpers";
-import { HiPlay, HiPause } from "react-icons/hi2";
 import { useOutletContext } from "@remix-run/react";
 import { logoutUser, requireAuthToken } from "~/server/session.server";
 import { useState, useEffect } from "react";
 import { MusiqErrorBoundary } from "~/components/error/musiqErrorBoundary";
+import { PauseIcon, PlayIcon } from "~/components/icons";
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   if (!params.albumId) {
@@ -126,9 +126,9 @@ export default function LibraryAlbumRoute() {
             }}
           >
             {!isPlaying ? (
-              <HiPlay className="h-7 w-7 text-white" />
+              <PlayIcon className="h-7 w-7 text-white" />
             ) : (
-              <HiPause className="h-7 w-7 text-white" />
+              <PauseIcon className="h-7 w-7 text-white" />
             )}
           </button>
         </div>

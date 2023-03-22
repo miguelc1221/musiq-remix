@@ -1,4 +1,4 @@
-export const Equalizer = (props: React.ComponentProps<"svg">) => {
+export const EqualizerIcon = (props: React.ComponentProps<"svg">) => {
   return (
     <svg
       width="55"

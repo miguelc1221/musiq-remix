@@ -6,7 +6,6 @@ import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getArtist } from "~/server/musicKit.server";
 import { formatArtworkURL } from "~/utils/helpers";
-import { HiPlay, HiPause } from "react-icons/hi2";
 import { getUserSession } from "~/server/session.server";
 import { MusiqErrorBoundary } from "~/components/error/musiqErrorBoundary";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
@@ -15,6 +14,7 @@ import { AlbumCard } from "~/components/albumCard/albumCard";
 import { PlayListCard } from "~/components/playlistCard/playListCard";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
+import { PauseIcon, PlayIcon } from "~/components/icons";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (!params.artistId) {
@@ -33,7 +33,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     userToken,
   });
 
-  return json(results);
+  return json(results.data[0]);
 };
 
 export default function ArtistRoute() {
@@ -111,9 +111,9 @@ export default function ArtistRoute() {
                 }}
               >
                 {isPlaying ? (
-                  <HiPause className="h-7 w-7 text-white" />
+                  <PauseIcon className="h-7 w-7 text-white" />
                 ) : (
-                  <HiPlay className="h-7 w-7 text-white" />
+                  <PlayIcon className="h-7 w-7 text-white" />
                 )}
               </button>
               <h1 className="text-5xl font-bold">{results.attributes?.name}</h1>

@@ -1,4 +1,4 @@
-import { HiArrowSmLeft, HiArrowSmRight } from "react-icons/hi";
+import { ArrowLeft, ArrowRight } from "../icons";
 
 export const Pagination = ({
   count,
@@ -33,7 +33,7 @@ export const Pagination = ({
           onClick={onPrevClick}
           disabled={currentIndex === 1}
         >
-          <HiArrowSmLeft className="mr-2 h-5 w-5" />
+          <ArrowLeft className="mr-2 h-5 w-5" />
           Prev
         </button>
         <button
@@ -42,7 +42,7 @@ export const Pagination = ({
           disabled={currentIndex === showingIndexTotal}
         >
           Next
-          <HiArrowSmRight className="ml-2 h-5 w-5" />
+          <ArrowRight className="ml-2 h-5 w-5" />
         </button>
       </div>
     </div>

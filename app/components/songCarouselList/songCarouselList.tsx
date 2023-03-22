@@ -4,7 +4,7 @@ import { formatArtworkURL, getLinkToUrl } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { SongControl } from "../songList/songControl";
-import { MdExplicit } from "react-icons/md";
+import { ExplicitIcon } from "../icons";
 
 const SongCarouselListItem = ({
   song,
@@ -71,7 +71,7 @@ const SongCarouselListItem = ({
           </Link>
           {contentRating && (
             <span className="ml-1">
-              <MdExplicit className="h-4 w-4" />
+              <ExplicitIcon className="h-4 w-4" />
             </span>
           )}
         </div>

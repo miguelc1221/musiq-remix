@@ -1,12 +1,11 @@
 import type { PlayerType } from "~/appReducer";
 import { formatArtworkURL } from "~/utils/helpers";
-import { HiMusicNote } from "react-icons/hi";
-import { FaApple } from "react-icons/fa";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { VolumeControl } from "../volumeControl/volumeControl";
 import { Controls } from "../controls/controls";
 import { useMusicKitListener } from "~/hooks/useMusicKitListener";
 import { calculateTime } from "~/utils/helpers";
+import { AppleIcon, MusicNote } from "../icons";
 
 interface MusickitPlayBackTime {
   currentPlaybackDuration: number;
@@ -162,7 +161,7 @@ export const TrackDisplay = ({
           />
         ) : (
           <div className="flex h-[55px] w-[55px] items-center justify-center bg-gray-300">
-            <HiMusicNote className="h-7 w-7" />
+            <MusicNote className="h-7 w-7" />
           </div>
         )}
 
@@ -189,7 +188,7 @@ export const TrackDisplay = ({
                 </time>
               </>
             ) : (
-              <FaApple className="h-8 w-8" />
+              <AppleIcon className="h-8 w-8" />
             )}
           </div>
 

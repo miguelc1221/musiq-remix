@@ -1,7 +1,14 @@
-import { HiPlay, HiForward, HiBackward, HiPause } from "react-icons/hi2";
-import { TbRepeat, TbRepeatOnce, TbArrowsShuffle } from "react-icons/tb";
 import type { PlayerType } from "~/appReducer";
 import { useEffect, useState } from "react";
+import {
+  PlayIcon,
+  PauseIcon,
+  ForwardIcon,
+  BackwardIcon,
+  RepeatIcon,
+  RepeatOnceIcon,
+  ShuffleIcon,
+} from "../icons";
 
 enum MusicKitRepeat {
   NONE,
@@ -74,7 +81,7 @@ export const Controls = ({
         }}
         aria-label={shuffleAriaLabel}
       >
-        <TbArrowsShuffle className="h-5 w-5" aria-hidden={true} />
+        <ShuffleIcon className="h-5 w-5" aria-hidden={true} />
       </button>
       <button
         className={`duration-200 ease-in ${disableColor}`}
@@ -84,7 +91,7 @@ export const Controls = ({
         }}
         aria-label={"Previous"}
       >
-        <HiBackward className="h-7 w-7" aria-hidden={true} />
+        <BackwardIcon className="h-7 w-7" aria-hidden={true} />
       </button>
       <button
         className={`duration-200 ease-in ${disableColor}`}
@@ -103,9 +110,9 @@ export const Controls = ({
         aria-label={!isPlaying ? "Play" : "Pause"}
       >
         {!isPlaying ? (
-          <HiPlay className="h-9 w-9" aria-hidden={true} />
+          <PlayIcon className="h-9 w-9" aria-hidden={true} />
         ) : (
-          <HiPause className="h-9 w-9" aria-hidden={true} />
+          <PauseIcon className="h-9 w-9" aria-hidden={true} />
         )}
       </button>
       <button
@@ -121,7 +128,7 @@ export const Controls = ({
         }}
         aria-label={"Next"}
       >
-        <HiForward className="h-7 w-7" aria-hidden={true} />
+        <ForwardIcon className="h-7 w-7" aria-hidden={true} />
       </button>
       <button
         className={`ml-1 duration-200 ease-in ${disableColor} ${repeatOn}`}
@@ -151,9 +158,9 @@ export const Controls = ({
         aria-label={repeatAriaLabel}
       >
         {repeatMode !== MusicKitRepeat.ONE ? (
-          <TbRepeat className="h-5 w-5" aria-hidden={true} />
+          <RepeatIcon className="h-5 w-5" aria-hidden={true} />
         ) : (
-          <TbRepeatOnce className="h-5 w-5" aria-hidden={true} />
+          <RepeatOnceIcon className="h-5 w-5" aria-hidden={true} />
         )}
       </button>
     </div>

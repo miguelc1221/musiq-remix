@@ -1,5 +1,4 @@
-import { HiPlay, HiPause } from "react-icons/hi2";
-import { Equalizer } from "~/components/icons";
+import { EqualizerIcon, PlayIcon, PauseIcon } from "~/components/icons";
 import { Spinner } from "../spinner/spinner";
 
 export const SongControl = ({
@@ -33,7 +32,7 @@ export const SongControl = ({
   ) {
     return (
       <button onClick={onPlayClick} className={className}>
-        <HiPlay className="h-5 w-5" />
+        <PlayIcon className="h-5 w-5" />
       </button>
     );
   }
@@ -42,7 +41,7 @@ export const SongControl = ({
     if (isPlaying && isMouseOver) {
       return (
         <button onClick={onPauseClick} className={className}>
-          <HiPause className="h-6 w-6" />
+          <PauseIcon className="h-6 w-6" />
         </button>
       );
     }
@@ -53,7 +52,7 @@ export const SongControl = ({
 
     return (
       <div className={className}>
-        <Equalizer className="h-6 w-6 fill-white" />
+        <EqualizerIcon className="h-6 w-6 fill-white" />
       </div>
     );
   }

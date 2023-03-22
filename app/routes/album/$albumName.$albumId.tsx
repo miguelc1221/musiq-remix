@@ -8,11 +8,11 @@ import { useOverlayTriggerState } from "@react-stately/overlays";
 import { MusiqModal } from "~/components/modal/musiqModal";
 import { useButton } from "@react-aria/button";
 import { useRef, useState, useEffect } from "react";
-import { HiPlay, HiPause } from "react-icons/hi2";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { getUserSession } from "~/server/session.server";
 import { MusiqErrorBoundary } from "~/components/error/musiqErrorBoundary";
+import { PauseIcon, PlayIcon } from "~/components/icons";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (!params.albumId) {
@@ -136,9 +136,9 @@ export default function AlbumRoute() {
             }}
           >
             {!isPlaying ? (
-              <HiPlay className="h-7 w-7 text-white" />
+              <PlayIcon className="h-7 w-7 text-white" />
             ) : (
-              <HiPause className="h-7 w-7 text-white" />
+              <PauseIcon className="h-7 w-7 text-white" />
             )}
           </button>
         </div>

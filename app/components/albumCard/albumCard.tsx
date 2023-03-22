@@ -1,9 +1,8 @@
-import { HiPlay } from "react-icons/hi2";
-import { MdExplicit } from "react-icons/md";
 import { Link } from "@remix-run/react";
 import { formatArtworkURL, getLinkToUrl } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
+import { PlayIcon, ExplicitIcon } from "~/components/icons";
 
 export const AlbumCard = ({
   album,
@@ -42,7 +41,7 @@ export const AlbumCard = ({
                 aria-label="play"
                 className="absolute left-3 bottom-2 z-[1] m-auto flex h-8 w-8 items-center justify-center rounded-full bg-stone-500 opacity-0 hover:bg-indigo-600 group-hover:opacity-100 [&>svg]:inline-block"
               >
-                <HiPlay className="h-5 w-5 text-white" />
+                <PlayIcon className="h-5 w-5 text-white" />
               </button>
             </>
           )}
@@ -60,7 +59,7 @@ export const AlbumCard = ({
             </Link>
             {contentRating && (
               <span>
-                <MdExplicit className="h-4 w-4" />
+                <ExplicitIcon className="h-4 w-4" />
               </span>
             )}
           </div>

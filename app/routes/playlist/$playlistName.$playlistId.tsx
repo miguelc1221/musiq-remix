@@ -3,13 +3,13 @@ import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node"; /
 import { getPlaylist } from "~/server/musicKit.server";
 import { SongList } from "~/components/songList/songList";
 import { formatArtworkURL } from "~/utils/helpers";
-import { HiPlay, HiPause } from "react-icons/hi2";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { useState, useEffect } from "react";
 import { getUserSession } from "~/server/session.server";
 import { MusiqErrorBoundary } from "~/components/error/musiqErrorBoundary";
 import { json } from "@remix-run/node";
+import { PauseIcon, PlayIcon } from "~/components/icons";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (!params.playlistId) {
@@ -89,9 +89,9 @@ export default function PlaylistRoute() {
             }}
           >
             {!isPlaying ? (
-              <HiPlay className="h-7 w-7 text-white" />
+              <PlayIcon className="h-7 w-7 text-white" />
             ) : (
-              <HiPause className="h-7 w-7 text-white" />
+              <PauseIcon className="h-7 w-7 text-white" />
             )}
           </button>
         </div>

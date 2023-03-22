@@ -1,10 +1,10 @@
 import { useRef } from "react";
 import {
-  ImVolumeMute2,
-  ImVolumeLow,
-  ImVolumeMedium,
-  ImVolumeHigh,
-} from "react-icons/im";
+  VolumeHighIcon,
+  VolumeLowIcon,
+  VolumeMediumIcon,
+  VolumeMuteIcon,
+} from "../icons";
 
 export const VolumeControl = ({
   value,
@@ -49,15 +49,15 @@ export const VolumeControl = ({
           return onVolumeChange("0");
         }}
       >
-        {volumeNum === 0 && <ImVolumeMute2 className="h-4 w-4" />}
+        {volumeNum === 0 && <VolumeMuteIcon className="h-4 w-4" />}
         {volumeNum > 0 && volumeNum <= 0.33 && (
-          <ImVolumeLow className="h-4 w-4" />
+          <VolumeLowIcon className="h-4 w-4" />
         )}
         {volumeNum > 0.33 && volumeNum <= 0.66 && (
-          <ImVolumeMedium className="h-4 w-4" />
+          <VolumeMediumIcon className="h-4 w-4" />
         )}
         {volumeNum > 0.66 && volumeNum <= 1 && (
-          <ImVolumeHigh className="h-4 w-4" />
+          <VolumeHighIcon className="h-4 w-4" />
         )}
       </button>
       <label htmlFor='volume-progress"' className="sr-only">

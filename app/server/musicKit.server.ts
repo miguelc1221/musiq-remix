@@ -113,7 +113,7 @@ export const getPlaylist = async (
 export const getArtist = async (
   id: string,
   params: { userToken?: string } & MusicKit.QueryParameters = {}
-): Promise<MusicKit.Artists> => {
+): Promise<{ data: MusicKit.Artists[] }> => {
   const { userToken, ...otherParams } = params;
 
   const response = await fetch(

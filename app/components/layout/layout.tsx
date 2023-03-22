@@ -3,15 +3,19 @@ import clsx from "clsx";
 import { useRef, useCallback, useState } from "react";
 import { useEffect } from "react";
 import { NavLink, useLocation, useFetcher } from "@remix-run/react";
-import { AppleLogo } from "../icons";
-import { IoIosAlbums, IoIosMusicalNote } from "react-icons/Io";
-import { MdInfoOutline } from "react-icons/md";
-import { FaUserCircle } from "react-icons/fa";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { HiSquares2X2, HiClock } from "react-icons/hi2";
-import { IoCloseOutline } from "react-icons/io5";
-import { BsBoxArrowUpRight } from "react-icons/bs";
-import { SiApplemusic } from "react-icons/si";
+import {
+  AppleLogo,
+  AboutIcon,
+  AppleMusicLogo,
+  BrowseIcon,
+  LibAlbumsIcon,
+  LibSongsIcon,
+  LibRecentlyIcon,
+  UserIcon,
+  HamburgerMenuIcon,
+  CloseIcon,
+  BoxArrowUpRightIcon,
+} from "../icons";
 import { TrackDisplay } from "../trackDisplay/trackDisplay";
 import type { AppContextType } from "~/appReducer";
 import { SearchBox } from "~/routes/search";
@@ -95,13 +99,13 @@ export default function Layout({
         )}
       >
         <div className=" hidden h-[42px] w-full items-center justify-end md:flex">
-          <RxHamburgerMenu
+          <HamburgerMenuIcon
             className={clsx("z-20 mr-6 h-6 w-6 cursor-pointer", {
               hidden: isOpen,
             })}
             onClick={() => toggleOpen(!isOpen)}
           />
-          <IoCloseOutline
+          <CloseIcon
             className={clsx("z-20 mr-6 h-6 w-6 cursor-pointer", {
               hidden: !isOpen,
             })}
@@ -127,7 +131,7 @@ export default function Layout({
             </li>
             <li className="px-8">
               <NavLinkWrapper to="/" onClick={closeToggle}>
-                <MdInfoOutline className="h-5 w-5" />
+                <AboutIcon className="h-5 w-5" />
                 <span className="ml-2">About</span>
               </NavLinkWrapper>
             </li>
@@ -137,7 +141,7 @@ export default function Layout({
                 prefetch="render"
                 onClick={closeToggle}
               >
-                <HiSquares2X2 className="h-5 w-5" />
+                <BrowseIcon className="h-5 w-5" />
                 <span className="ml-2">Browse</span>
               </NavLinkWrapper>
             </li>
@@ -156,19 +160,19 @@ export default function Layout({
                       to="/library/recently-added"
                       onClick={closeToggle}
                     >
-                      <HiClock className="h-5 w-5" />
+                      <LibRecentlyIcon className="h-5 w-5" />
                       <span className="ml-2">Recently Added</span>
                     </NavLinkWrapper>
                   </li>
                   <li className="px-8">
                     <NavLinkWrapper to="/library/albums" onClick={closeToggle}>
-                      <IoIosAlbums className="h-5 w-5" />
+                      <LibAlbumsIcon className="h-5 w-5" />
                       <span className="ml-2">Albums</span>
                     </NavLinkWrapper>
                   </li>
                   <li className="px-8">
                     <NavLinkWrapper to="/library/songs" onClick={closeToggle}>
-                      <IoIosMusicalNote className="h-5 w-5" />
+                      <LibSongsIcon className="h-5 w-5" />
                       <span className="ml-2">Songs</span>
                     </NavLinkWrapper>
                   </li>
@@ -180,9 +184,9 @@ export default function Layout({
                     className="flex w-full cursor-pointer items-center space-x-2"
                     onClick={() => window.location.replace("music://")}
                   >
-                    <SiApplemusic className="h-6 w-6" />
+                    <AppleMusicLogo className="h-6 w-6" />
                     <span className="ml-2">Open in Music</span>
-                    <BsBoxArrowUpRight className="h-3 w-3" />
+                    <BoxArrowUpRightIcon className="h-3 w-3" />
                   </button>
                 </div>
               </li>
@@ -201,7 +205,7 @@ export default function Layout({
                     await authenticateUser();
                   }}
                 >
-                  <FaUserCircle className="h-6 w-6" />{" "}
+                  <UserIcon className="h-6 w-6" />{" "}
                   <span className="ml-2">
                     {isAuthenticated ? "Sign Out" : "Login"}
                   </span>

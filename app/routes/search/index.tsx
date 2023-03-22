@@ -1,7 +1,5 @@
 import clsx from "clsx";
 import getChunk from "lodash.chunk";
-import { MdExplicit } from "react-icons/md";
-import { BiSearch } from "react-icons/bi";
 import type { LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
@@ -24,6 +22,8 @@ import { AlbumCard } from "~/components/albumCard/albumCard";
 import { PlayListCard } from "~/components/playlistCard/playListCard";
 import { SongCarouselList } from "~/components/songCarouselList/songCarouselList";
 import { ArtistCard } from "~/components/artistCard/artistCard";
+import { ExplicitIcon, SearchIcon } from "~/components/icons";
+import { PageWrapper } from "~/components/pageWrapper/pageWrapper";
 
 const isTerm = (term: Term | Suggestions): term is Term => {
   return (term as Term).searchTerm !== undefined;
@@ -150,7 +150,7 @@ export const SearchBox = () => {
   return (
     <div className="relative">
       <div className="relative">
-        <BiSearch className="absolute left-2 top-0 bottom-0 m-auto h-[50%] w-5" />
+        <SearchIcon className="absolute left-2 top-0 bottom-0 m-auto h-[50%] w-5" />
         <input
           placeholder="Search"
           {...cb.getInputProps({
@@ -192,7 +192,7 @@ export const SearchBox = () => {
                 key={`${result.displayTerm}${index}`}
                 {...cb.getItemProps({ item: result, index })}
               >
-                <BiSearch className="mr-2 h-4 w-4" /> {result.displayTerm}
+                <SearchIcon className="mr-2 h-4 w-4" /> {result.displayTerm}
               </li>
             );
           })}
@@ -237,7 +237,7 @@ export const SearchBox = () => {
                       <span>{result.content.attributes?.name}</span>
                       {contentRating && (
                         <span>
-                          <MdExplicit className="h-3 w-3" />
+                          <ExplicitIcon className="h-3 w-3" />
                         </span>
                       )}
                     </span>
@@ -266,7 +266,7 @@ export default function SearchRoute() {
   }>();
 
   return (
-    <>
+    <PageWrapper>
       <div>
         {results.artists?.data && (
           <div className="mb-6">
@@ -333,6 +333,6 @@ export default function SearchRoute() {
           </div>
         )}
       </div>
-    </>
+    </PageWrapper>
   );
 }

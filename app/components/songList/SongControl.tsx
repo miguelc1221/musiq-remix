@@ -1,6 +1,6 @@
 import { HiPlay, HiPause } from "react-icons/hi2";
 import { Equalizer } from "~/components/icons";
-import { Spinner } from "../spinner/Spinner";
+import { Spinner } from "../spinner/spinner";
 
 export const SongControl = ({
   className,

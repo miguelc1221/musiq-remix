@@ -1,5 +1,5 @@
 import { AppleLogo } from "~/components/icons";
-import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
+import { PageWrapper } from "~/components/pageWrapper/pageWrapper";
 
 export default function AboutRoute() {
   return (

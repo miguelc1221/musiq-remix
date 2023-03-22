@@ -1,14 +1,14 @@
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node"; // or cloudflare/deno
 import { getPlaylist } from "~/server/musicKit.server";
-import { SongList } from "~/components/songList/SongList";
+import { SongList } from "~/components/songList/songList";
 import { formatArtworkURL } from "~/utils/helpers";
 import { HiPlay, HiPause } from "react-icons/hi2";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { useState, useEffect } from "react";
 import { getUserSession } from "~/server/session.server";
-import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
+import { MusiqErrorBoundary } from "~/components/error/musiqErrorBoundary";
 import { json } from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ request, params }) => {

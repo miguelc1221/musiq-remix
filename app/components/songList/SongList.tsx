@@ -1,4 +1,4 @@
-import { SongItem } from "./SongItem";
+import { SongItem } from "./songItem";
 
 export const SongList = ({
   songs,

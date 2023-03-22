@@ -25,7 +25,7 @@ import {
   AppReducerActionType,
 } from "./appReducer";
 import { getUserSession } from "./server/session.server";
-import { MusicKitEvents } from "./components/musicKitEvents/MusicKitEvents";
+import { MusicKitEvents } from "./components/musicKitEvents/musicKitEvents";
 
 import rccss from "react-multi-carousel/lib/styles.css";
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useOutletContext, useSearchParams } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { calculateTime, formatArtworkURL } from "~/utils/helpers";
-import { SongControl } from "./SongControl";
+import { SongControl } from "./songControl";
 import { MdExplicit } from "react-icons/md";
 import { HiPlusCircle } from "react-icons/hi2";
 import { useFetcher } from "@remix-run/react";

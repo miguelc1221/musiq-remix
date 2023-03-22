@@ -17,13 +17,13 @@ import type {
   Term,
 } from "~/server/musicKit.server";
 import invariant from "tiny-invariant";
-import { Spinner } from "../../components/spinner/Spinner";
+import { Spinner } from "../../components/spinner/spinner";
 import { formatArtworkURL, getLinkToUrl } from "~/utils/helpers";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
-import { AlbumCard } from "~/components/albumCard/AlbumCard";
-import { PlayListCard } from "~/components/playlistCard/PlayListCard";
-import { SongCarouselList } from "~/components/songCarouselList/SongCarouselList";
-import { ArtistCard } from "~/components/artistCard/ArtistCard";
+import { AlbumCard } from "~/components/albumCard/albumCard";
+import { PlayListCard } from "~/components/playlistCard/playListCard";
+import { SongCarouselList } from "~/components/songCarouselList/songCarouselList";
+import { ArtistCard } from "~/components/artistCard/artistCard";
 
 const isTerm = (term: Term | Suggestions): term is Term => {
   return (term as Term).searchTerm !== undefined;

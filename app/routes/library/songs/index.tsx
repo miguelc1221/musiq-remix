@@ -2,11 +2,11 @@ import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getLibrarySongs } from "~/server/musicKit.server";
-import { SongList } from "~/components/songList/SongList";
+import { SongList } from "~/components/songList/songList";
 import { logoutUser, requireAuthToken } from "~/server/session.server";
-import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
-import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
-import { Pagination } from "~/components/pagination/Pagination";
+import { MusiqErrorBoundary } from "~/components/error/musiqErrorBoundary";
+import { PageWrapper } from "~/components/pageWrapper/pageWrapper";
+import { Pagination } from "~/components/pagination/pagination";
 
 const offsetLimit = 100;
 

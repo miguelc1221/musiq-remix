@@ -12,7 +12,7 @@ import { HiSquares2X2, HiClock } from "react-icons/hi2";
 import { IoCloseOutline } from "react-icons/io5";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import { SiApplemusic } from "react-icons/si";
-import { TrackDisplay } from "../trackDisplay/TrackDisplay";
+import { TrackDisplay } from "../trackDisplay/trackDisplay";
 import type { AppContextType } from "~/appReducer";
 import { SearchBox } from "~/routes/search";
 import type { RemixNavLinkProps } from "@remix-run/react/dist/components";

@@ -1,5 +1,5 @@
-import { Modal } from "./Modal";
-import { Dialog } from "./Dialog";
+import { Modal } from "./modal";
+import { Dialog } from "./dialog";
 import type { OverlayTriggerState } from "react-stately";
 
 interface MusiqModalProps {

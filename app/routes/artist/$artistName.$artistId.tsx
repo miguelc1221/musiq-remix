@@ -8,11 +8,11 @@ import { getArtist } from "~/server/musicKit.server";
 import { formatArtworkURL } from "~/utils/helpers";
 import { HiPlay, HiPause } from "react-icons/hi2";
 import { getUserSession } from "~/server/session.server";
-import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
+import { MusiqErrorBoundary } from "~/components/error/musiqErrorBoundary";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
-import { SongCarouselList } from "~/components/songCarouselList/SongCarouselList";
-import { AlbumCard } from "~/components/albumCard/AlbumCard";
-import { PlayListCard } from "~/components/playlistCard/PlayListCard";
+import { SongCarouselList } from "~/components/songCarouselList/songCarouselList";
+import { AlbumCard } from "~/components/albumCard/albumCard";
+import { PlayListCard } from "~/components/playlistCard/playListCard";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 

@@ -3,7 +3,7 @@ import { Link } from "@remix-run/react";
 import { formatArtworkURL, getLinkToUrl } from "~/utils/helpers";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
-import { SongControl } from "../songList/SongControl";
+import { SongControl } from "../songList/songControl";
 import { MdExplicit } from "react-icons/md";
 
 const SongCarouselListItem = ({

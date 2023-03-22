@@ -2,17 +2,17 @@ import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getAlbum } from "~/server/musicKit.server";
-import { SongList } from "~/components/songList/SongList";
+import { SongList } from "~/components/songList/songList";
 import { formatArtworkURL, timeConversion } from "~/utils/helpers";
 import { useOverlayTriggerState } from "@react-stately/overlays";
-import { MusiqModal } from "~/components/modal/MusiqModal";
+import { MusiqModal } from "~/components/modal/musiqModal";
 import { useButton } from "@react-aria/button";
 import { useRef, useState, useEffect } from "react";
 import { HiPlay, HiPause } from "react-icons/hi2";
 import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { getUserSession } from "~/server/session.server";
-import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
+import { MusiqErrorBoundary } from "~/components/error/musiqErrorBoundary";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   if (!params.albumId) {

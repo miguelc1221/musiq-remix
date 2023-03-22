@@ -3,10 +3,10 @@ import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getLibraryAlbums } from "~/server/musicKit.server";
 import { logoutUser, requireAuthToken } from "~/server/session.server";
-import { AlbumCard } from "~/components/albumCard/AlbumCard";
-import { MusiqErrorBoundary } from "~/components/error/MusiqErrorBoundary";
-import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
-import { Pagination } from "~/components/pagination/Pagination";
+import { AlbumCard } from "~/components/albumCard/albumCard";
+import { MusiqErrorBoundary } from "~/components/error/musiqErrorBoundary";
+import { PageWrapper } from "~/components/pageWrapper/pageWrapper";
+import { Pagination } from "~/components/pagination/pagination";
 
 const offsetLimit = 100;
 

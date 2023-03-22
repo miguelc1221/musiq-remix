@@ -8,10 +8,10 @@ import {
   getPlaylist,
 } from "~/server/musicKit.server";
 import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
-import { AlbumCard } from "~/components/albumCard/AlbumCard";
-import { SongCarouselList } from "~/components/songCarouselList/SongCarouselList";
-import { PlayListCard } from "~/components/playlistCard/PlayListCard";
-import { PageWrapper } from "~/components/pageWrapper/PageWrapper";
+import { AlbumCard } from "~/components/albumCard/albumCard";
+import { SongCarouselList } from "~/components/songCarouselList/songCarouselList";
+import { PlayListCard } from "~/components/playlistCard/playListCard";
+import { PageWrapper } from "~/components/pageWrapper/pageWrapper";
 
 export const loader: LoaderFunction = async () => {
   const [charts, cityCharts] = await Promise.all([

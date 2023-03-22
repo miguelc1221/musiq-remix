@@ -3,7 +3,7 @@ import { formatArtworkURL } from "~/utils/helpers";
 import { HiMusicNote } from "react-icons/hi";
 import { FaApple } from "react-icons/fa";
 import { useRef, useEffect, useState, useCallback } from "react";
-import { VolumeControl } from "../volumeControl.tsx/VolumeControl";
+import { VolumeControl } from "../volumeControl/volumeControl";
 import { Controls } from "../controls/controls";
 import { useMusicKitListener } from "~/hooks/useMusicKitListener";
 import { calculateTime } from "~/utils/helpers";

@@ -11,16 +11,21 @@ export default function AboutRoute() {
         </h1>
         <div className="max-w-[1100px] px-14 pb-[14rem] text-lg leading-relaxed tracking-normal md:px-8">
           <p className="mb-4">
-            Musiq Remix is a music streaming app that is a clone of Apple Music,
-            built with{" "}
-            <a href="https://remix.run/" className="font-bold text-indigo-600">
+            Musiq Remix is a music streaming app built with the goal of learning
+            the{" "}
+            <a
+              href="https://remix.run/"
+              className="font-bold text-indigo-600"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               Remix
-            </a>
-            . It utilizes Apple's MusicKit JS, a JavaScript library that enables
-            developers to access Apple Music's catalog and user's personal music
-            library. This allows users to listen to their favorite songs and
-            discover new music just like they would on the official Apple Music
-            app.
+            </a>{" "}
+            framework. It utilizes Apple's MusicKit JS, a JavaScript library
+            that enables developers to access Apple Music's catalog and user's
+            personal music library. This allows users to listen to their
+            favorite songs and discover new music just like they would on the
+            official Apple Music app.
           </p>
           <p className="text-base font-bold">
             Musiq Remix is not affliated with Apple, Inc. Apple logo and Apple

@@ -41,6 +41,11 @@ export const meta: MetaFunction = () => ({
 });
 
 export const links: LinksFunction = () => [
+  {
+    rel: "icon",
+    href: "/favicon.svg",
+    type: "image/svg+xml",
+  },
   { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
   { rel: "stylesheet", href: rccss },
   { rel: "stylesheet", href: styles },

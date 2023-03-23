@@ -29,10 +29,15 @@ import { MusicKitEvents } from "./components/musicKitEvents/musicKitEvents";
 
 import rccss from "react-multi-carousel/lib/styles.css";
 
+const description =
+  "A music streaming app that is a clone of Apple Music, built with Remix. It utilizes Apple's MusicKit JS, a JavaScript library that enables developers to access Apple Music's catalog and user's personal music library.";
+
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "New Remix App",
+  title: "Musiq Remix",
   viewport: "width=device-width,initial-scale=1",
+  description,
+  "og:description": description,
 });
 
 export const links: LinksFunction = () => [

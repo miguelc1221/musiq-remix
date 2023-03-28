@@ -1,10 +1,10 @@
-import { AppleLogo } from "~/components/icons";
+import { AppleLogo, GithubIcon } from "~/components/icons";
 import { PageWrapper } from "~/components/pageWrapper/pageWrapper";
 
 export default function AboutRoute() {
   return (
     <PageWrapper className="lg:mx-0">
-      <div className="flex flex-col items-center justify-center pt-[5%]">
+      <div className="flex flex-col items-center justify-center pt-[8%] text-center">
         <AppleLogo className="h-20 w-20" />
         <h1 className="mb-6 text-5xl font-extrabold text-indigo-600">
           Musiq Remix
@@ -30,6 +30,17 @@ export default function AboutRoute() {
           <p className="text-base font-bold">
             Musiq Remix is not affliated with Apple, Inc. Apple logo and Apple
             Music are trademarks of Apple, Inc.
+          </p>
+          <p className="mt-6 flex items-center justify-center">
+            <a
+              href="https://github.com/miguelc1221/musiq-remix"
+              target={"_blank"}
+              rel="noreferrer"
+              className="ease focus:shadow-outline flex w-[150px] select-none items-center justify-center space-x-2 rounded-md border border-indigo-600 bg-indigo-600 px-4 py-2 text-white transition duration-500 hover:bg-indigo-700 focus:outline-none"
+            >
+              <GithubIcon className="h-6 w-6" />
+              <span>Github</span>
+            </a>
           </p>
         </div>
       </div>

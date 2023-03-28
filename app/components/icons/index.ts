@@ -31,3 +31,4 @@ export { ChevronLeftIcon } from "./chevronLeftIcon";
 export { ChevronRightIcon } from "./chevronRightIcon";
 export { ArrowLeft } from "./arrowLeft";
 export { ArrowRight } from "./arrowRight";
+export { GithubIcon } from "./githubIcon";

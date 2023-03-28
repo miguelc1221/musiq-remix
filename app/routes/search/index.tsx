@@ -59,7 +59,6 @@ const getSubtitle = (suggestion: Suggestion) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  // await requireUser(request)
   const url = new URL(request.url);
   const term = url.searchParams.get("term");
   const suggestions = url.searchParams.get("suggestions");
@@ -129,8 +128,9 @@ export const SearchBox = () => {
 
       return "";
     },
-    onInputValueChange: ({ inputValue }) => {
-      if (!inputValue) return "";
+    onInputValueChange: ({ inputValue, isOpen}) => {
+      if (!inputValue || !isOpen) return "";
+
       suggestionsFetcher.submit(
         { term: inputValue ?? "", suggestions: "1" },
         { method: "get", action: "/search?index" }
@@ -199,7 +199,6 @@ export const SearchBox = () => {
         {displayMenu &&
           suggestionsList.map((result, index) => {
             const resultSubTitle = getSubtitle(result);
-            // const linkTo = getLinkToUrl(result.content.attributes?.url);
             const resultIndex = index + termsList.length;
             let contentRating;
 

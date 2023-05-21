@@ -56,7 +56,7 @@ export default function PlaylistRoute() {
 
   return (
     <div className="pb-[100px]">
-      <div className="flex min-h-[300px] items-center gap-6 bg-rose-100 bg-gradient-to-t from-indigo-200/75 to-rose-100 px-10">
+      <div className="flex min-h-[300px] items-center gap-6 bg-rose-100 bg-gradient-to-t from-indigo-200/75 to-rose-100 px-10 md:min-h-[550px] md:flex-col md:pt-[75px]">
         <div className="shrink-0">
           <img
             src={formatArtworkURL(playlist.attributes?.artwork?.url, 300, 300)}
@@ -64,7 +64,7 @@ export default function PlaylistRoute() {
             className="h-[250px] w-[250px] drop-shadow-md"
           />
         </div>
-        <div>
+        <div className="w-full">
           <h1 className="text-2xl font-bold">{playlist.attributes?.name}</h1>
           <p className="py-2 text-lg font-semibold">
             <span className="uppercase">

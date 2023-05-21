@@ -9,7 +9,7 @@ export default function AboutRoute() {
         <h1 className="mb-6 text-5xl font-extrabold text-indigo-600">
           Musiq Remix
         </h1>
-        <div className="max-w-[1100px] px-14 pb-[14rem] text-lg leading-relaxed tracking-normal md:px-8">
+        <div className="max-w-[1100px] px-14 pb-[14rem] text-lg leading-relaxed tracking-normal md:px-8 md:pb-0">
           <p className="mb-4">
             Musiq Remix is a music streaming app built with the goal of learning
             the{" "}

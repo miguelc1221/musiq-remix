@@ -36,7 +36,7 @@ export default function BrowseIndex() {
   }>();
 
   return (
-    <PageWrapper className="max-w-[2000px]">
+    <PageWrapper className="max-w-[2000px] !overflow-visible">
       <h1 className="mb-4 border-b border-slate-200 pb-6 text-3xl font-bold">
         Browse
       </h1>

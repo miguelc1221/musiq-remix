@@ -265,7 +265,7 @@ export default function SearchRoute() {
   }>();
 
   return (
-    <PageWrapper>
+    <PageWrapper className="!overflow-visible">
       <div>
         {results.artists?.data && (
           <div className="mb-6">

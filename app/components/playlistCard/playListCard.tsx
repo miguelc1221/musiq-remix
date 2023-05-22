@@ -14,6 +14,11 @@ export const PlayListCard = ({
 }) => {
   const { musicKit } = useOutletContext<AppContextType>();
   const imageSrc = formatArtworkURL(playList?.attributes?.artwork?.url);
+  const imageSrcMobile = formatArtworkURL(
+    playList?.attributes?.artwork?.url,
+    400,
+    400
+  );
   const title = playList.attributes?.name;
   const subTitle = playList.attributes?.curatorName;
   const playListId = playList.id;
@@ -25,7 +30,20 @@ export const PlayListCard = ({
         <div className="group relative cursor-pointer after:absolute after:top-0 after:left-0 after:h-full after:w-full after:rounded-md after:bg-stone-600 after:opacity-0 after:transition after:duration-300 after:ease-in-out [&:after:hover]:opacity-40">
           {imageSrc && (
             <>
-              <img src={imageSrc} className="w-full rounded-md" alt={title} />
+              <picture>
+                <source
+                  srcSet={imageSrcMobile}
+                  media="(max-width: 1024px)"
+                  className="w-full rounded-md"
+                />
+                <source
+                  srcSet={imageSrc}
+                  media="(max-width:1679px)"
+                  className="w-full rounded-md"
+                />
+
+                <img src={imageSrc} className="w-full rounded-md" alt={title} />
+              </picture>
               <button
                 onClick={async (e) => {
                   e.preventDefault();

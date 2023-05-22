@@ -217,7 +217,7 @@ export default function Layout({
       </aside>
       <div
         id="mainWrapper"
-        className="z-[1] h-auto w-full overflow-auto bg-white"
+        className="z-[1] w-full overflow-auto bg-white supports-[max-height:100cqh]:max-h-[100cqh] supports-[max-height:100svh]:max-h-[100svh]"
         ref={containerRef}
       >
         <main className="h-full flex-1">

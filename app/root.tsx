@@ -12,6 +12,7 @@ import {
   ScrollRestoration,
   Outlet,
 } from "@remix-run/react";
+import { getSelectorsByUserAgent } from "react-device-detect";
 import Layout from "./components/layout/layout";
 import styles from "./tailwind.css";
 import type { ReactNode } from "react";
@@ -91,14 +92,20 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getUserSession(request);
   const token = session.get("appleMusicToken");
+  const userAgent = request.headers.get("user-agent");
+  let isMobile = false;
 
-  return json({ developerToken, sessionToken: !!token });
+  if (userAgent) {
+    isMobile = getSelectorsByUserAgent(userAgent).isMobile;
+  }
+
+  return json({ developerToken, sessionToken: !!token, isMobile });
 };
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, appInitialState);
 
-  const { developerToken, sessionToken } = useLoaderData();
+  const { developerToken, sessionToken, isMobile } = useLoaderData();
 
   useEffect(() => {
     const configureMusicKit = async () => {
@@ -137,6 +144,7 @@ export default function App() {
         <MusicKitEvents dispatch={dispatch} player={state?.player} />
       )}
       <Layout
+        isMobile={isMobile}
         appState={{ ...state, dispatch }}
         isAuthenticated={
           state?.musicKit && state.musicKit.isAuthorized && sessionToken

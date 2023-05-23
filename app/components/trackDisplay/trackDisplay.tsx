@@ -17,10 +17,12 @@ export const TrackDisplay = ({
   player,
   musicKit,
   requireAuth,
+  isMobile = false,
 }: {
   player?: PlayerType;
   musicKit?: MusicKit.MusicKitInstance;
   requireAuth?: () => Promise<void>;
+  isMobile?: boolean;
 }) => {
   const [currentTime, setCurrentTime] = useState<MusickitPlayBackTime | null>(
     null
@@ -135,13 +137,15 @@ export const TrackDisplay = ({
           player={player}
           requireAuth={requireAuth}
         />
-        <VolumeControl
-          className="hidden lg:flex"
-          onVolumeChange={onVolumeChange}
-          min="0"
-          max="1"
-          value={volume}
-        />
+        {!isMobile && (
+          <VolumeControl
+            className="hidden lg:flex"
+            onVolumeChange={onVolumeChange}
+            min="0"
+            max="1"
+            value={volume}
+          />
+        )}
       </div>
       <div className="relative grid grid-cols-[auto_1fr] items-center">
         {requireAuth && selectedSong && (

@@ -56,10 +56,12 @@ export default function Layout({
   appState,
   isAuthenticated,
   children,
+  isMobile = false,
 }: {
   appState?: AppContextType;
   isAuthenticated?: boolean;
   children?: ReactNode;
+  isMobile?: boolean;
 }) {
   const [isOpen, toggleOpen] = useState(false);
   const fetcher = useFetcher();
@@ -230,6 +232,7 @@ export default function Layout({
                 player={appState?.player}
                 musicKit={appState?.musicKit}
                 requireAuth={isAuthenticated ? undefined : authenticateUser}
+                isMobile
               />
             </div>
           </div>

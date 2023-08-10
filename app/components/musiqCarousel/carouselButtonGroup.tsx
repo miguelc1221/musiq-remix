@@ -22,6 +22,7 @@ export const ButtonGroup = ({
         <button
           onClick={() => previous && previous()}
           className="hover:text-secondaryColor"
+          aria-label="Previous slide"
         >
           <ChevronLeftIcon className="h-8 w-8" strokeWidth={1.5} />
         </button>
@@ -34,6 +35,7 @@ export const ButtonGroup = ({
         <button
           onClick={() => next && next()}
           className="hover:text-secondaryColor"
+          aria-label="Next slide"
         >
           <ChevronRightIcon className="h-8 w-8" strokeWidth={1.5} />
         </button>

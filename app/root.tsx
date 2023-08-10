@@ -47,6 +47,8 @@ export const links: LinksFunction = () => [
     href: "/favicon.svg",
     type: "image/svg+xml",
   },
+
+  { rel: "preconnect", href: "https://rsms.me/" },
   { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
   { rel: "stylesheet", href: rccss },
   { rel: "stylesheet", href: styles },

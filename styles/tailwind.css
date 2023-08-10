@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root { 
+  font-family: 'Inter', sans-serif; 
+}
+
+@supports (font-variation-settings: normal) {
+  :root { font-family: 'Inter var', sans-serif; }
+}
+
 @layer components {
   :focus-visible {
     @apply focus:outline-none focus:ring-[4px] focus:ring-rose-300

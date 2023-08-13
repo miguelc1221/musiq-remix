@@ -12,13 +12,13 @@ import {
   ScrollRestoration,
   Outlet,
   useNavigation,
+  useLoaderData,
 } from "@remix-run/react";
 import { getSelectorsByUserAgent } from "react-device-detect";
 import Layout from "./components/layout/layout";
 import styles from "./tailwind.css";
 import type { ReactNode } from "react";
 import { useEffect, useReducer } from "react";
-import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node"; // or cloudflare/deno
 import { developerToken } from "./server/developerToken.server";
 import {
@@ -117,7 +117,7 @@ export default function App() {
   const isBusy = navigation.state !== "idle";
 
   const showSpinner = useSpinDelay(isBusy, {
-    delay: 350,
+    delay: 500,
     minDuration: 200,
   });
 

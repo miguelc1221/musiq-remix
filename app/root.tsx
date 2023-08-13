@@ -11,6 +11,7 @@ import {
   Scripts,
   ScrollRestoration,
   Outlet,
+  useNavigation,
 } from "@remix-run/react";
 import { getSelectorsByUserAgent } from "react-device-detect";
 import Layout from "./components/layout/layout";
@@ -27,8 +28,10 @@ import {
 } from "./appReducer";
 import { getUserSession } from "./server/session.server";
 import { MusicKitEvents } from "./components/musicKitEvents/musicKitEvents";
-
 import rccss from "react-multi-carousel/lib/styles.css";
+import { Spinner } from "./components/spinner/spinner";
+import { PageWrapper } from "./components/pageWrapper/pageWrapper";
+import { useSpinDelay } from "spin-delay";
 
 const description =
   "A music streaming app that is a clone of Apple Music, built with Remix. It utilizes Apple's MusicKit JS, a JavaScript library that enables developers to access Apple Music's catalog and user's personal music library.";
@@ -105,9 +108,18 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function App() {
+  const navigation = useNavigation();
+
   const [state, dispatch] = useReducer(appReducer, appInitialState);
 
   const { developerToken, sessionToken, isMobile } = useLoaderData();
+
+  const isBusy = navigation.state !== "idle";
+
+  const showSpinner = useSpinDelay(isBusy, {
+    delay: 350,
+    minDuration: 200,
+  });
 
   useEffect(() => {
     const configureMusicKit = async () => {
@@ -152,7 +164,13 @@ export default function App() {
           state?.musicKit && state.musicKit.isAuthorized && sessionToken
         }
       >
-        <Outlet context={{ ...state, dispatch }} />
+        {showSpinner ? (
+          <PageWrapper className="flex items-center justify-center">
+            <Spinner className="h-8 w-8 dark:text-indigo-600" />
+          </PageWrapper>
+        ) : (
+          <Outlet context={{ ...state, dispatch }} />
+        )}
       </Layout>
     </Document>
   );

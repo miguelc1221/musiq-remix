@@ -30,6 +30,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     "limit[artists:top-songs]": 20,
     "limit[artists:full-albums]": 20,
     views: "appears-on-albums,full-albums,top-songs,featured-playlists",
+    "fields[songs]":
+      "artistName,artistUrl,artwork,contentRating,editorialArtwork,name,releaseDate,url",
     userToken,
   });
 

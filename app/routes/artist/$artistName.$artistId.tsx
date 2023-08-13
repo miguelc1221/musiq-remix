@@ -71,7 +71,7 @@ export default function ArtistRoute() {
   const isPlayerPlaying = player.playerState === "PLAYING";
 
   return (
-    <div className="pb-[100px]">
+    <div className="pb-[100px] md:pt-[42px]">
       <div
         className={clsx(
           "relative mb-6 aspect-auto h-[40vh] max-h-[1680px] min-h-[350px] bg-cover bg-center bg-no-repeat after:absolute after:top-0 after:left-0 after:h-full after:w-full after:opacity-60 after:transition after:duration-300 after:ease-in-out",
@@ -118,7 +118,9 @@ export default function ArtistRoute() {
                   <PlayIcon className="h-7 w-7 text-white" />
                 )}
               </button>
-              <h1 className="text-5xl font-bold">{results.attributes?.name}</h1>
+              <h1 className="text-5xl font-bold md:text-3xl">
+                {results.attributes?.name}
+              </h1>
             </div>
           </div>
         </div>

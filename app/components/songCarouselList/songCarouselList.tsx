@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Link } from "@remix-run/react";
+import { Link, useOutletContext } from "@remix-run/react";
 import { formatArtworkURL, getLinkToUrl } from "~/utils/helpers";
-import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { SongControl } from "../songList/songControl";
 import { ExplicitIcon } from "../icons";
@@ -20,7 +19,18 @@ const SongCarouselListItem = ({
   const { player, musicKit } = useOutletContext<AppContextType>();
   const isSelectedSong = song.id === player?.selectedMediaItem?.id;
   const contentRating = song.attributes?.contentRating === "explicit";
+  let songArtistUrl = getLinkToUrl(song.attributes?.artistUrl);
 
+  if (song.attributes?.artistUrl?.includes("viewCollaboration")) {
+    const regex = /ids=(\d+)-/;
+    const match = song.attributes?.artistUrl.match(regex);
+    let firstId;
+
+    if (match && match[1]) {
+      firstId = match[1];
+    }
+    songArtistUrl = `/artist/collab/${firstId}`;
+  }
   return (
     <div
       {...otherProps}
@@ -65,7 +75,7 @@ const SongCarouselListItem = ({
         <div className="flex">
           <Link
             className="truncate text-xs text-slate-500 hover:underline"
-            to={getLinkToUrl(song.attributes?.artistUrl)}
+            to={songArtistUrl}
           >
             {song.attributes?.artistName}
           </Link>

@@ -1,7 +1,7 @@
 import getChunk from "lodash.chunk";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useOutletContext } from "@remix-run/react";
 import type { LoaderFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getArtist } from "~/server/musicKit.server";
@@ -12,7 +12,6 @@ import { MusiqCarousel } from "~/components/musiqCarousel/musiqCarousel";
 import { SongCarouselList } from "~/components/songCarouselList/songCarouselList";
 import { AlbumCard } from "~/components/albumCard/albumCard";
 import { PlayListCard } from "~/components/playlistCard/playListCard";
-import { useOutletContext } from "@remix-run/react";
 import type { AppContextType } from "~/appReducer";
 import { PauseIcon, PlayIcon } from "~/components/icons";
 

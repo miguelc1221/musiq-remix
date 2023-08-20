@@ -48,12 +48,19 @@ export const links: LinksFunction = () => [
   {
     rel: "preload",
     as: "font",
-    href: "/fonts/Inter-Regular.woff2",
+    href: "/fonts/Inter-roman.var.woff2",
     type: "font/woff2",
     crossOrigin: "anonymous",
   },
   {
     rel: "preload",
+    as: "font",
+    href: "/fonts/Inter-Regular.woff2",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  {
+    rel: "preconnect",
     as: "font",
     href: "/fonts/Inter-Bold.woff2",
     type: "font/woff2",

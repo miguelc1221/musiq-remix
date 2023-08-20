@@ -46,13 +46,45 @@ export const meta: MetaFunction = () => ({
 
 export const links: LinksFunction = () => [
   {
+    rel: "preload",
+    as: "font",
+    href: "/fonts/Inter-Regular.woff2",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  {
+    rel: "preload",
+    as: "font",
+    href: "/fonts/Inter-Bold.woff2",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  {
+    rel: "preload",
+    as: "font",
+    href: "/fonts/Inter-ExtraBold.woff2",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  {
+    rel: "preconnect",
+    as: "font",
+    href: "/fonts/Inter-Medium.woff2",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  {
+    rel: "preconnect",
+    as: "font",
+    href: "/fonts/Inter-SemiBold.woff2",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  {
     rel: "icon",
     href: "/favicon.svg",
     type: "image/svg+xml",
   },
-
-  { rel: "preload", href: "https://rsms.me/", as: "font" },
-  { rel: "preload", href: "https://rsms.me/inter/inter.css", as: "font" },
   { rel: "stylesheet", href: rccss },
   { rel: "stylesheet", href: styles },
 ];
